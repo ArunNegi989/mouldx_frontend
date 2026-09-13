@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import StatsBar from "./StatsBar";
-import FeaturedMoulds from "./FeaturedMoulds";
+import MouldExplore from "./MouldExplore";
 import styles from "./CustomerHome.module.css";
 import mouldchair from "@/public/images/mould-and-chair.png"
 
@@ -46,10 +46,8 @@ export default function CustomerHome() {
         </div>
       </section>
 
-     
-
       <StatsBar />
-      <FeaturedMoulds />
+      <MouldExplore />
     </div>
   );
 }

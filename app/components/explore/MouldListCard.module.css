@@ -1,0 +1,138 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f6f7f9;
+  border-radius: 16px;
+  padding: 10px;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.thumbWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #dbeafe;
+}
+
+.thumb {
+  object-fit: cover;
+}
+
+.cardInfo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cardName {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardMeta {
+  margin-top: 3px;
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badgeFree {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.badgeLow {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badgeBooked {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Very small phones */
+@media (max-width: 359px) {
+  .card {
+    gap: 10px;
+    padding: 9px;
+  }
+  .thumbWrap {
+    width: 44px;
+    height: 44px;
+  }
+  .cardName {
+    font-size: 12px;
+  }
+  .cardMeta {
+    font-size: 10px;
+  }
+  .badge {
+    font-size: 9px;
+    padding: 4px 7px;
+  }
+}
+
+/* Modern iPhones (360px – 430px) */
+@media (min-width: 360px) and (max-width: 430px) {
+  .thumbWrap {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Tablets and up */
+@media (min-width: 640px) {
+  .card {
+    gap: 14px;
+    padding: 12px;
+  }
+  .thumbWrap {
+    width: 60px;
+    height: 60px;
+  }
+  .cardName {
+    font-size: 15px;
+  }
+  .cardMeta {
+    font-size: 13px;
+  }
+  .badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .thumbWrap {
+    width: 72px;
+    height: 72px;
+  }
+}
