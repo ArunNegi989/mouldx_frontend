@@ -3,6 +3,7 @@
 import { use } from "react";
 import Link from "next/link";
 import styles from "./BookingDetail.module.css";
+import ActiveRentalPanel from "./ActiveRentalPanel";
 
 interface TimelineStep {
   id: string;
@@ -11,7 +12,7 @@ interface TimelineStep {
   meta: string;
 }
 
-interface BookingDetail {
+interface BookingDetailRaw {
   id: string;
   code: string;
   name: string;
@@ -25,10 +26,15 @@ interface BookingDetail {
   paymentMethod: "Platform" | "Direct to Owner";
   status: string;
   steps: TimelineStep[];
+  returnDueAt?: string; // sirf active rentals ke liye
+}
+
+interface BookingDetail extends BookingDetailRaw {
+  awaitingReceipt: boolean; // dispatch ho chuka, mould customer tak pahunch gaya, receipt confirm hona baaki
 }
 
 // TEMP dummy data — real booking API se aayega, id se fetch hoga
-const DUMMY_BOOKINGS: Record<string, BookingDetail> = {
+const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
   "BK-24581": {
     id: "BK-24581",
     code: "MX-000123",
@@ -60,11 +66,69 @@ const DUMMY_BOOKINGS: Record<string, BookingDetail> = {
     securityDeposit: 18000,
     platformFee: 250,
     paymentMethod: "Platform",
-    status: "Confirmed",
+    status: "Arrived",
     steps: [
       { id: "payment", title: "Payment received", status: "done", meta: "2 days ago" },
       { id: "approval", title: "Owner approval", status: "done", meta: "Approved" },
-      { id: "dispatch", title: "Dispatch", status: "pending", meta: "Scheduled · 22 Sep" },
+      { id: "dispatch", title: "Dispatch", status: "done", meta: "Arrived at your location" },
+    ],
+  },
+  "BK-24390": {
+    id: "BK-24390",
+    code: "MX-000077",
+    name: "Die-Cast Housing Mould",
+    image: "https://picsum.photos/seed/mould3/300/300",
+    city: "Aurangabad",
+    dateRange: "5 – 12 Sep",
+    days: 7,
+    pricePerDay: 2000,
+    securityDeposit: 20000,
+    platformFee: 250,
+    paymentMethod: "Platform",
+    status: "In Progress",
+    returnDueAt: "2026-09-20T18:00:00",
+    steps: [
+      { id: "payment", title: "Payment received", status: "done", meta: "8 days ago" },
+      { id: "approval", title: "Owner approval", status: "done", meta: "Approved" },
+      { id: "dispatch", title: "Dispatch", status: "done", meta: "Delivered" },
+    ],
+  },
+  "BK-23988": {
+    id: "BK-23988",
+    code: "MX-000045",
+    name: "Single Cavity Chair Mould",
+    image: "https://picsum.photos/seed/mould4/300/300",
+    city: "Pune",
+    dateRange: "10 – 15 Aug",
+    days: 5,
+    pricePerDay: 1500,
+    securityDeposit: 12000,
+    platformFee: 250,
+    paymentMethod: "Platform",
+    status: "Completed",
+    steps: [
+      { id: "payment", title: "Payment received", status: "done", meta: "1 month ago" },
+      { id: "approval", title: "Owner approval", status: "done", meta: "Approved" },
+      { id: "dispatch", title: "Dispatch", status: "done", meta: "Returned" },
+    ],
+  },
+  "BK-23850": {
+    id: "BK-23850",
+    code: "MX-000210",
+    name: "Blow Mould — Bottle 1L",
+    image: "https://picsum.photos/seed/mould5/300/300",
+    city: "Nashik",
+    dateRange: "1 – 6 Aug",
+    days: 5,
+    pricePerDay: 1900,
+    securityDeposit: 14000,
+    platformFee: 250,
+    paymentMethod: "Platform",
+    status: "Cancelled",
+    steps: [
+      { id: "payment", title: "Payment received", status: "done", meta: "1 month ago" },
+      { id: "approval", title: "Owner approval", status: "pending", meta: "Cancelled by owner" },
+      { id: "dispatch", title: "Dispatch", status: "upcoming", meta: "—" },
     ],
   },
 };
@@ -75,9 +139,9 @@ export default function BookingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const booking = DUMMY_BOOKINGS[id];
+  const raw = DUMMY_BOOKINGS[id];
 
-  if (!booking) {
+  if (!raw) {
     return (
       <div className={styles.notFound}>
         <p className={styles.notFoundText}>Booking not found.</p>
@@ -88,11 +152,19 @@ export default function BookingDetailPage({
     );
   }
 
+  // status "Arrived" ho to hi receipt confirm karne wala CTA dikhega
+  const booking: BookingDetail = {
+    ...raw,
+    awaitingReceipt: raw.status === "Arrived",
+  };
+
+  const isActiveRental = raw.status === "In Progress" && Boolean(raw.returnDueAt);
+
   const rent = booking.pricePerDay * booking.days;
   const total = rent + booking.securityDeposit + booking.platformFee;
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${booking.awaitingReceipt ? styles.pageWithCta : ""}`}>
       {/* ---------- Header ---------- */}
       <header className={styles.header}>
         <Link href="/bookings" className={styles.iconBtn} aria-label="Go back">
@@ -107,6 +179,29 @@ export default function BookingDetailPage({
       </header>
 
       <div className={styles.content}>
+        {/* ---------- Active rental panel ---------- */}
+        {isActiveRental && raw.returnDueAt && (
+          <ActiveRentalPanel
+            bookingId={booking.id}
+            mouldName={booking.name}
+            mouldCode={booking.code}
+            returnDueAt={raw.returnDueAt}
+          />
+        )}
+
+        {/* ---------- Awaiting receipt banner ---------- */}
+        {booking.awaitingReceipt && (
+          <div className={styles.receiptBanner}>
+            <span className={styles.receiptIcon} aria-hidden>📦</span>
+            <div>
+              <p className={styles.receiptTitle}>Mould has arrived</p>
+              <p className={styles.receiptSubtitle}>
+                Confirm receipt by uploading a photo — this starts your rental timer.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ---------- Mould summary ---------- */}
         <div className={styles.summaryRow}>
           <div className={styles.thumbWrap}>
@@ -121,7 +216,9 @@ export default function BookingDetailPage({
               {booking.dateRange} · {booking.days} days
             </p>
           </div>
-          <span className={styles.statusBadge}>{booking.status}</span>
+          <span className={`${styles.statusBadge} ${isActiveRental ? styles.statusBadgeActive : ""}`}>
+            {booking.status}
+          </span>
         </div>
 
         {/* ---------- Timeline ---------- */}
@@ -197,6 +294,15 @@ export default function BookingDetailPage({
           </div>
         </div>
       </div>
+
+      {/* ---------- Sticky Confirm Receipt CTA ---------- */}
+      {booking.awaitingReceipt && (
+        <div className={styles.ctaBar}>
+          <Link href={`/bookings/${booking.id}/receive`} className={styles.ctaBtn}>
+            Confirm Receipt →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

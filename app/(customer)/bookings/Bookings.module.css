@@ -213,3 +213,31 @@
     max-width: 640px;
   }
 }
+
+/* Add these to Bookings.module.css — they support the new
+   "Confirm Received" button on ARRIVED cards in the list page */
+
+.cardWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.receiveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #0f172a; /* dark slate — tweak to match your brand color */
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+
+.receiveBtn:active {
+  opacity: 0.85;
+}

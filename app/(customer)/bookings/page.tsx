@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./Bookings.module.css";
 
 type TabKey = "upcoming" | "active" | "completed";
-type BookingStatus = "APPROVAL PENDING" | "CONFIRMED" | "IN PROGRESS" | "COMPLETED" | "CANCELLED";
+type BookingStatus = "APPROVAL PENDING" | "CONFIRMED" | "ARRIVED" | "IN PROGRESS" | "COMPLETED" | "CANCELLED";
 
 interface Booking {
   id: string;
@@ -41,7 +41,7 @@ const BOOKINGS: Booking[] = [
     code: "MX-000198",
     name: "Blow Mould — 5L Can",
     dateRange: "22 – 28 Sep",
-    status: "CONFIRMED",
+    status: "ARRIVED",
     tab: "upcoming",
     initial: "B",
     gradient: "linear-gradient(135deg, #818cf8, #7c3aed)",
@@ -81,6 +81,7 @@ const BOOKINGS: Booking[] = [
 const STATUS_CLASS: Record<BookingStatus, string> = {
   "APPROVAL PENDING": "badgePending",
   CONFIRMED: "badgeConfirmed",
+  ARRIVED: "badgeArrived",
   "IN PROGRESS": "badgeActive",
   COMPLETED: "badgeCompleted",
   CANCELLED: "badgeCancelled",
