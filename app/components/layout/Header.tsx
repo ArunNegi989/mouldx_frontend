@@ -2,30 +2,36 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Bell, User } from "lucide-react";
-import styles from "./Header.module.css";
 import Image from "next/image";
-
-const MENU_ITEMS = [
-  { label: "Notifications", href: "#", icon: Bell },
-  { label: "Profile", href: "/profile", icon: User },
-];
+import styles from "./Header.module.css";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isOwner = pathname.startsWith("/owner");
+
+  const homeHref = isOwner ? "/owner" : "/home";
+  const profileHref = isOwner ? "/owner/profile" : "/profile";
+
+  const menuItems = [
+    { label: "Notifications", href: "#", icon: Bell },
+    { label: "Profile", href: profileHref, icon: User },
+  ];
 
   return (
     <header className={styles.header}>
-      <Link href="/home" className={styles.logoLink}>
-  <Image
-    src="/images/logo.png"
-    alt="MouldX"
-    width={140}
-    height={32}
-    priority
-    className={styles.logoImg}
-  />
-</Link>
+      <Link href={homeHref} className={styles.logoLink}>
+        <Image
+          src="/images/logo.png"
+          alt="MouldX"
+          width={140}
+          height={32}
+          priority
+          className={styles.logoImg}
+        />
+      </Link>
 
       <button
         aria-label={open ? "Close menu" : "Open menu"}
@@ -41,7 +47,7 @@ export default function Header() {
           <div className={styles.backdrop} onClick={() => setOpen(false)} />
 
           <div className={styles.dropdown}>
-            {MENU_ITEMS.map(({ label, href, icon: Icon }) => (
+            {menuItems.map(({ label, href, icon: Icon }) => (
               <Link
                 key={label}
                 href={href}

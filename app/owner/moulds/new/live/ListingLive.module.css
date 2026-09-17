@@ -1,0 +1,265 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  padding-bottom: 130px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f1f3;
+  z-index: 10;
+}
+
+.iconBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.brand {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.brandAccent {
+  color: #22d3ee;
+}
+
+/* ---------- Content ---------- */
+.content {
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.subtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* ---------- Hero status card ---------- */
+.heroCard {
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.28);
+  animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.heroCard::before {
+  content: "";
+  position: absolute;
+  right: -35px;
+  top: -35px;
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+
+.approvedPill {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 5px 11px;
+  border-radius: 9999px;
+}
+
+.heroHeading {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 0;
+  font-size: 30px;
+  font-weight: 800;
+  color: #0b1120;
+  line-height: 1.1;
+}
+
+.heroSubtext {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(11, 17, 32, 0.75);
+}
+
+/* ---------- Listing status card ---------- */
+.card {
+  margin-top: 20px;
+  background: #fafafa;
+  border: 1px solid #eef0f2;
+  border-radius: 18px;
+  padding: 18px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.livePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #d1fae5;
+  color: #059669;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 11px;
+  border-radius: 9999px;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #059669;
+}
+
+.mouldIdText {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.mouldIdValue {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+/* ---------- Stats ---------- */
+.statsGrid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  animation: fadeUp 0.5s 0.15s ease both;
+}
+
+.statChip {
+  background: #fafafa;
+  border: 1px solid #eef0f2;
+  border-radius: 14px;
+  padding: 16px 10px;
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.statLabel {
+  margin-top: 4px;
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+/* ---------- CTA ---------- */
+.ctaBar {
+  position: fixed;
+  bottom: 72px;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid #f1f1f3;
+  padding: 14px 20px;
+  z-index: 20;
+}
+
+.ctaBtn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 640px) {
+  .content {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .ctaBar > * {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .heroHeading {
+    font-size: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+}
