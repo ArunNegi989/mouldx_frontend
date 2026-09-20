@@ -1,0 +1,181 @@
+.shell {
+  min-height: 100vh;
+  background: #f1f4f9;
+  display: flex;
+}
+
+/* ---------- Mobile top bar ---------- */
+.mobileBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+}
+
+.mobileMenuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  cursor: pointer;
+}
+
+.mobileBrand {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.mobileSpacer {
+  width: 34px;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 35;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #f1f4f9;
+  padding: 24px 16px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: -260px;
+  z-index: 40;
+  overflow-y: auto;
+  transition: left 0.25s ease;
+}
+
+.sidebarOpen {
+  left: 0;
+}
+
+.brandRow {
+  padding: 0 8px 22px;
+}
+
+.brand {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.brandAccent {
+  color: #22d3ee;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.navSectionLabel {
+  padding: 0 10px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #9aa1b0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 4px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.navItem:hover {
+  background: #e8ecf3;
+}
+
+/* Active item = bordered white box, like the reference */
+.navItemActive {
+  background: #ffffff;
+  border-color: #dbe1ec;
+  color: #0891b2;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.navIcon {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.navLabel {
+  flex: 1;
+}
+
+.navBadge {
+  flex-shrink: 0;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 9999px;
+  background: #06b6d4;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Main content ---------- */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 20px 16px;
+  padding-top: 78px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 1024px) {
+  .mobileBar {
+    display: none;
+  }
+  .backdrop {
+    display: none;
+  }
+  .sidebar {
+    position: sticky;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
+  .main {
+    padding: 36px 44px;
+    padding-top: 36px;
+    background: #f6f7fb;
+  }
+}

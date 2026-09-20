@@ -1,0 +1,417 @@
+.page {
+  max-width: 1600px;
+}
+
+/* ---------- Header ---------- */
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.countPill {
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+}
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.searchWrap {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.searchInput {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchInput:focus {
+  border-color: #22d3ee;
+}
+
+.tabs {
+  flex-shrink: 0;
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.tabBtn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tabBtnActive {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+/* ---------- Table (desktop) ---------- */
+.card {
+  margin-top: 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 8px;
+  display: none;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #9ca3af;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.table td {
+  padding: 14px;
+  font-size: 13px;
+  color: #374151;
+  border-bottom: 1px solid #f5f6f8;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clickableRow:hover {
+  background: #f9fafb;
+}
+
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.mutedCell {
+  color: #9ca3af;
+  font-size: 12.5px;
+}
+
+.kycPill {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.kycVerified {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.kycPending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.kycNa {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+.actionCell {
+  text-align: right;
+}
+
+.viewLink {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.emptyText {
+  text-align: center;
+  font-size: 13px;
+  color: #9ca3af;
+  padding: 30px 0;
+}
+
+/* ---------- Mobile cards ---------- */
+.mobileList {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobileCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+}
+
+.mobileCardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobileMeta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.mobileCardBottom {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f5f6f8;
+}
+.eyeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.eyeBtn:hover {
+  background: #cffafe;
+  transform: translateY(-1px);
+}
+
+.deleteBtn {
+  margin-left: 6px;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.deleteBtn:hover {
+  background: #fecaca;
+}
+
+/* ---------- Delete confirmation modal ---------- */
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 130;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmContent {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirmIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmTitle {
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.confirmText {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.confirmActions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.confirmCancelBtn {
+  flex: 1;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: linear-gradient(90deg, #f87171 0%, #dc2626 100%);
+}
+/* ---------- Responsive ---------- */
+
+@media (min-width: 640px) {
+  .searchWrap {
+    flex: 1 1 auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    display: block;
+  }
+  .mobileList {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 24px;
+  }
+}

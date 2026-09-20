@@ -1,0 +1,267 @@
+.page {
+  max-width: 1600px;
+}
+
+/* ---------- Header ---------- */
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.pendingPill {
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+}
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+}
+
+.searchWrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.searchInput {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchInput:focus {
+  border-color: #22d3ee;
+}
+
+.filterBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---------- Table (desktop) ---------- */
+.card {
+  margin-top: 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 8px;
+  display: none;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #9ca3af;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.table td {
+  padding: 14px;
+  font-size: 13px;
+  color: #374151;
+  border-bottom: 1px solid #f5f6f8;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.idCell {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.mutedCell {
+  color: #9ca3af;
+  font-size: 12.5px;
+}
+
+.amountCell {
+  font-weight: 800;
+  color: #111827;
+  font-size: 13px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.paymentCaptured {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.paymentProcessing {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.paymentFailed {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.statusPending {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.statusApproved {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.statusRejected {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.actionCell {
+  text-align: right;
+}
+
+.reviewBtn {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.emptyText {
+  text-align: center;
+  font-size: 13px;
+  color: #9ca3af;
+  padding: 30px 0;
+}
+
+/* ---------- Mobile cards ---------- */
+.mobileList {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobileCard {
+  display: block;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  text-decoration: none;
+}
+
+.mobileCardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mobileMeta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.mobileCardBottom {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f5f6f8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 768px) {
+  .card {
+    display: block;
+  }
+  .mobileList {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 24px;
+  }
+}

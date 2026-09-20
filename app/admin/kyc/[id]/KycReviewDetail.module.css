@@ -1,0 +1,458 @@
+.page {
+  max-width: 1600px;
+}
+
+.notFound {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.notFoundText {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.notFoundLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* ---------- Header ---------- */
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.statusPill {
+  flex-shrink: 0;
+  background: #fef3c7;
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+/* ---------- Grid layout (mobile: single column stack) ---------- */
+.layout {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.docsArea {
+  order: 1;
+}
+
+.decisionArea {
+  order: 2;
+}
+
+.detailsArea {
+  order: 3;
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 4px;
+}
+
+/* ---------- Details row (full-width, 3-column on wide screens) ---------- */
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* ---------- Documents grid ---------- */
+.docsGrid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.docThumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  aspect-ratio: 1;
+  background: #f6f7fb;
+  border: 1px solid #eef0f5;
+  border-radius: 10px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.docThumb:hover {
+  background: #eef0f5;
+  transform: translateY(-1px);
+}
+
+.docIcon {
+  font-size: 18px;
+}
+
+.docLabel {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* ---------- Detail rows — full-width divider ---------- */
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f1f5;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.detailRowLast {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detailLabel {
+  font-size: 11px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.detailValue {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* ---------- Decision panel ---------- */
+.decisionCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  position: sticky;
+  top: 16px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 4px 0 8px;
+}
+
+.textarea {
+  width: 100%;
+  background: #f6f7fb;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 90px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.textarea:focus {
+  border-color: #22d3ee;
+  background: #ffffff;
+}
+
+.approveBtn {
+  width: 100%;
+  margin-top: 14px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 100%);
+  transition: opacity 0.15s ease;
+}
+
+.approveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rejectBtn {
+  width: 100%;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: linear-gradient(90deg, #f87171 0%, #dc2626 100%);
+  transition: opacity 0.15s ease;
+}
+
+.rejectBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Document preview modal ---------- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 1600px;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalHeader {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.modalTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.modalCloseBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalBody {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  background: #f6f7fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalImage {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Small phones (≤380px) */
+@media (max-width: 380px) {
+  .title {
+    font-size: 16px;
+  }
+  .card {
+    padding: 12px;
+  }
+  .docsGrid {
+    gap: 6px;
+  }
+  .detailLabel,
+  .detailValue {
+    font-size: 11px;
+  }
+}
+
+/* Phones → small tablets (381px–639px) */
+@media (min-width: 381px) and (max-width: 639px) {
+  .title {
+    font-size: 17px;
+  }
+}
+
+/* Tablets (640px–899px) */
+@media (min-width: 640px) {
+  .title {
+    font-size: 19px;
+  }
+  .card {
+    padding: 18px;
+  }
+  .docsGrid {
+    gap: 10px;
+  }
+}
+
+/* Small laptops (900px–1023px) — details go 3-column here */
+@media (min-width: 900px) {
+  .detailsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop (1024px+) — grid areas: docs+decision on top row, details spans full width below */
+@media (min-width: 1024px) {
+  .title {
+    font-size: 21px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-areas:
+      "docs decision"
+      "details details";
+    gap: 18px;
+  }
+
+  .docsArea {
+    grid-area: docs;
+  }
+
+  .decisionArea {
+    grid-area: decision;
+  }
+
+  .detailsArea {
+    grid-area: details;
+  }
+
+  .detailsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
+
+/* Large desktops (1280px+) */
+@media (min-width: 1280px) {
+  .layout {
+    grid-template-columns: 1.8fr 1fr;
+    gap: 22px;
+  }
+  .docsGrid {
+    gap: 12px;
+  }
+}
+
+/* Extra-wide screens (1536px+) */
+@media (min-width: 1536px) {
+  .layout {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Mobile modal — full screen */
+@media (max-width: 640px) {
+  .modalOverlay {
+    padding: 0;
+  }
+  .modalContent {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    height: 100vh;
+  }
+}

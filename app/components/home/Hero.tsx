@@ -54,10 +54,11 @@ export default function Hero() {
         </p>
 
         {/* CTA */}
-        <Link
-          href="/home"
-          className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 text-decoration-none"
-        >
+  <Link
+  href="/home"
+  style={{ textDecoration: "none" }}
+  className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-[#2563EB] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#EFF6FF] hover:text-[#1E3A8A]"
+>
           Explore Moulds
           <span aria-hidden>→</span>
         </Link>
