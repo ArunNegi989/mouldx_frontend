@@ -110,7 +110,7 @@
 .totalValue {
   font-size: 16px;
   font-weight: 800;
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Payment method options ---------- */
@@ -130,15 +130,15 @@
 }
 
 .methodOptionActive {
-  border-color: #22d3ee;
-  background: #f0fdff;
+  border-color: #2563eb;
+  background: #eff6ff;
 }
 
 .radio {
   margin-top: 2px;
   width: 16px;
   height: 16px;
-  accent-color: #22d3ee;
+  accent-color: #2563eb;
   flex-shrink: 0;
 }
 
@@ -262,18 +262,26 @@
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.15s ease;
 }
 
-.ctaBtnActive {
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
-  color: #ffffff;
+/* Global .btn-primary (globals.css) ka background/hover color use hoga;
+   :global() zaroori hai warna CSS Modules 'btn-primary' ko locally scope kar deta
+   aur override kabhi match nahi hota */
+.ctaBtn:global(.btn-primary) {
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 .ctaBtnDisabled {
   background: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ---------- Responsive ---------- */

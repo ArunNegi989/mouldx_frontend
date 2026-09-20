@@ -7,7 +7,6 @@ interface ActiveRentalPanelProps {
   bookingId: string;
   mouldName: string;
   mouldCode: string;
-  /** ISO date-time jab mould wapas dena hai, e.g. "2026-09-20T18:00:00" */
   returnDueAt: string;
   lateFeePerDay?: number;
 }
@@ -21,7 +20,6 @@ function formatDue(iso: string) {
   return `${date} · ${time}`;
 }
 
-/** Aaj se due date tak ke poore din. Negative = overdue. */
 function daysLeft(iso: string) {
   const due = new Date(iso);
   const now = new Date();
@@ -82,7 +80,7 @@ export default function ActiveRentalPanel({
         <Link href={`/bookings/${bookingId}/extend`} className={styles.btnGhost}>
           Extend rental
         </Link>
-        <Link href={`/bookings/${bookingId}/return`} className={styles.btnPrimary}>
+        <Link href={`/bookings/${bookingId}/return`} className={`${styles.btnPrimary} btn-primary`}>
           Start return
         </Link>
       </div>

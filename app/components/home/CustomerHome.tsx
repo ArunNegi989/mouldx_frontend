@@ -36,7 +36,7 @@ export default function CustomerHome() {
           </p>
 
           <div className={styles.ctaRow}>
-            <Link href="/explore" className={styles.primaryCta}>
+            <Link href="/explore" className="btn-primary">
               View our moulds <span aria-hidden>→</span>
             </Link>
             <button className={styles.watchBtn}>

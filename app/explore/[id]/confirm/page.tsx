@@ -166,15 +166,15 @@ export default function ConfirmPayPage() {
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
         <button
-          type="button"
-          disabled={!canProceed}
-          onClick={handleProceed}
-          className={`${styles.ctaBtn} ${canProceed ? styles.ctaBtnActive : styles.ctaBtnDisabled}`}
-        >
-          {method === "platform"
-            ? `Pay ₹${total.toLocaleString("en-IN")} →`
-            : "Send for Approval →"}
-        </button>
+  type="button"
+  disabled={!canProceed}
+  onClick={handleProceed}
+  className={`${styles.ctaBtn} ${canProceed ? "btn-primary" : styles.ctaBtnDisabled}`}
+>
+  {method === "platform"
+    ? `Pay ₹${total.toLocaleString("en-IN")} →`
+    : "Send for Approval →"}
+</button>
       </div>
     </div>
   );

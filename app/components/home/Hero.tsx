@@ -57,7 +57,7 @@ export default function Hero() {
   <Link
   href="/home"
   style={{ textDecoration: "none" }}
-  className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-[#2563EB] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#EFF6FF] hover:text-[#1E3A8A]"
+  className="btn-primary mt-6"
 >
           Explore Moulds
           <span aria-hidden>→</span>

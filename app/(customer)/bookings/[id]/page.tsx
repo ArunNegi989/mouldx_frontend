@@ -26,11 +26,11 @@ interface BookingDetailRaw {
   paymentMethod: "Platform" | "Direct to Owner";
   status: string;
   steps: TimelineStep[];
-  returnDueAt?: string; // sirf active rentals ke liye
+  returnDueAt?: string;
 }
 
 interface BookingDetail extends BookingDetailRaw {
-  awaitingReceipt: boolean; // dispatch ho chuka, mould customer tak pahunch gaya, receipt confirm hona baaki
+  awaitingReceipt: boolean;
 }
 
 // TEMP dummy data — real booking API se aayega, id se fetch hoga
@@ -122,7 +122,6 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     days: 5,
     pricePerDay: 1900,
     securityDeposit: 14000,
-    platformFee: 250,
     paymentMethod: "Platform",
     status: "Cancelled",
     steps: [
@@ -130,7 +129,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
       { id: "approval", title: "Owner approval", status: "pending", meta: "Cancelled by owner" },
       { id: "dispatch", title: "Dispatch", status: "upcoming", meta: "—" },
     ],
-  },
+  } as BookingDetailRaw,
 };
 
 export default function BookingDetailPage({
@@ -152,7 +151,6 @@ export default function BookingDetailPage({
     );
   }
 
-  // status "Arrived" ho to hi receipt confirm karne wala CTA dikhega
   const booking: BookingDetail = {
     ...raw,
     awaitingReceipt: raw.status === "Arrived",
@@ -285,7 +283,7 @@ export default function BookingDetailPage({
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Need help?</h2>
           <div className={styles.supportRow}>
-            <Link href="/inbox" className={styles.supportBtn}>
+            <Link href="/inbox" className={`${styles.supportBtn} btn-primary`}>
               Message Owner
             </Link>
             <button type="button" className={styles.supportBtnOutline}>
@@ -298,7 +296,7 @@ export default function BookingDetailPage({
       {/* ---------- Sticky Confirm Receipt CTA ---------- */}
       {booking.awaitingReceipt && (
         <div className={styles.ctaBar}>
-          <Link href={`/bookings/${booking.id}/receive`} className={styles.ctaBtn}>
+          <Link href={`/bookings/${booking.id}/receive`} className={`${styles.ctaBtn} btn-primary`}>
             Confirm Receipt →
           </Link>
         </div>

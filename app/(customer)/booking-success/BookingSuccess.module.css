@@ -1,5 +1,5 @@
 .page {
-  background: linear-gradient(180deg, #f0fdf9 0%, #ffffff 30%);
+  background: #f8fafb;
 }
 
 /* ---------- Hero section ---------- */
@@ -157,8 +157,8 @@
 }
 
 .dotDone {
-  background: #22d3ee;
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
 .dotPending {
@@ -200,18 +200,22 @@
 .ctaBtn {
   width: 100%;
   border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Global .btn-primary (globals.css) ka background/hover color use hoga;
+   :global() zaroori hai warna CSS Modules 'btn-primary' ko locally scope kar deta */
+.ctaBtn:global(.btn-primary) {
+  width: 100%;
   border-radius: 14px;
   padding: 15px;
   font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  cursor: pointer;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
-  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.25);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  justify-content: center;
 }
 
-.ctaBtn:active {
+.ctaBtn:global(.btn-primary):active {
   transform: scale(0.98);
 }
 

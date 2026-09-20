@@ -98,7 +98,7 @@ export default function BookingSuccessPage() {
         <button
           type="button"
           onClick={() => router.push(`/bookings/${BOOKING.id}`)}
-          className={styles.ctaBtn}
+          className={`${styles.ctaBtn} btn-primary`}
         >
           View Booking
         </button>

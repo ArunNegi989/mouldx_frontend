@@ -119,6 +119,11 @@
   white-space: nowrap;
 }
 
+.statusBadgeActive {
+  background: #d1fae5;
+  color: #047857;
+}
+
 /* ---------- Card ---------- */
 .card {
   margin-top: 20px;
@@ -164,7 +169,7 @@
 }
 
 .dotDone {
-  background: #22d3ee;
+  background: #2563eb;
 }
 
 .dotPending {
@@ -236,7 +241,7 @@
 .totalValue {
   font-size: 16px;
   font-weight: 800;
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 .paymentMethodText {
@@ -255,12 +260,19 @@
   flex: 1;
   text-align: center;
   padding: 12px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
-  color: #ffffff;
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
+}
+
+/* Global .btn-primary (globals.css) ka background/hover color use hoga */
+.supportBtn:global(.btn-primary) {
+  flex: 1;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  justify-content: center;
+  width: auto;
 }
 
 .supportBtnOutline {
@@ -337,21 +349,27 @@
   background: #ffffff;
   border-top: 1px solid #f1f1f3;
   padding: 14px 20px;
-  z-index: 60; /* BottomNav (z-index: 50) se upar rahe */
+  z-index: 60;
 }
 
 .ctaBtn {
   display: block;
   width: 100%;
   text-align: center;
-  border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   text-decoration: none;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+/* Global .btn-primary ka color/hover use hoga, sirf shape yahan override */
+.ctaBtn:global(.btn-primary) {
+  display: flex;
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 @media (min-width: 640px) {
@@ -359,20 +377,4 @@
     max-width: 560px;
     margin: 0 auto;
   }
-}
-
-.statusBadge {
-  flex-shrink: 0;
-  background: #fef3c7;
-  color: #d97706;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 5px 10px;
-  border-radius: 9999px;
-  white-space: nowrap;
-}
-
-.statusBadgeActive {
-  background: #d1fae5;
-  color: #047857;
 }

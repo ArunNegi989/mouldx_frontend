@@ -404,7 +404,7 @@ export default function SelectDatesPage({
           type="button"
           disabled={!canContinue}
           onClick={handleContinue}
-          className={`${styles.ctaBtn} ${canContinue ? styles.ctaBtnActive : styles.ctaBtnDisabled}`}
+          className={`${styles.ctaBtn} ${canContinue ? "btn-primary" : styles.ctaBtnDisabled}`}
         >
           {canContinue
             ? `Continue with ${formatRangeLabel(rangeStart as Date, rangeEnd as Date)} →`

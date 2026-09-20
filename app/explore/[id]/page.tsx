@@ -310,7 +310,7 @@ export default function MouldDetailPage({
   ) : (
     <Link
       href={`/explore/${id}/dates`}
-      className={`${styles.ctaBtn} flex items-center justify-center no-underline`}
+      className={`${styles.ctaBtn} flex items-center justify-center no-underline btn-primary`}
     >
       Select Dates →
     </Link>
