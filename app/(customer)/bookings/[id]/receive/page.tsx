@@ -38,7 +38,6 @@ export default function ReceiveMouldPage({
     setMediaFile(file);
     setMediaPreview(URL.createObjectURL(file));
 
-    // photo select hote hi geotag try karo
     if (locationStatus === "idle" && "geolocation" in navigator) {
       setLocationStatus("fetching");
       navigator.geolocation.getCurrentPosition(
@@ -63,8 +62,7 @@ export default function ReceiveMouldPage({
   const handleConfirm = () => {
     if (!canSubmit || isSubmitting) return;
     setIsSubmitting(true);
-    // TEMP: real API yahan call hoga (media upload + checklist + geotag submit)
-    // real integration hone tak seedha mould-details page pe le jaa rahe hain
+
     router.push(`/bookings/${bookingId}/mould-details`);
   };
 
@@ -90,7 +88,7 @@ export default function ReceiveMouldPage({
 
         <label className={styles.uploadBox} htmlFor="receiptMedia">
           {mediaPreview ? (
-            // eslint-disable-next-line @next/next/no-img-element
+
             <img src={mediaPreview} alt="Selected receipt media" className={styles.uploadPreview} />
           ) : (
             <>

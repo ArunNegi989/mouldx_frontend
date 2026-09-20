@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./Profile.module.css";
 
-// TEMP dummy data — real profile/booking API se aayega
 const CUSTOMER = {
   name: "Rohit Sharma",
   phone: "+91 90XXXXXX45",

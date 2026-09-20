@@ -42,8 +42,8 @@ export default function ActiveRentalPanel({
   const headline = isOverdue
     ? `${Math.abs(left)} ${Math.abs(left) === 1 ? "day" : "days"} overdue`
     : isDueToday
-    ? "Due today"
-    : `${left} ${left === 1 ? "day" : "days"} left`;
+      ? "Due today"
+      : `${left} ${left === 1 ? "day" : "days"} left`;
 
   return (
     <div className={styles.wrap}>

@@ -10,7 +10,6 @@ interface TimelineStep {
   meta: string;
 }
 
-// TEMP dummy data — real booking status API se aayega
 const BOOKING = {
   id: "BK-24581",
   steps: [
@@ -71,13 +70,12 @@ export default function BookingSuccessPage() {
             <div key={step.id} className={styles.timelineRow}>
               <div className={styles.timelineDotCol}>
                 <span
-                  className={`${styles.dot} ${
-                    step.status === "done"
+                  className={`${styles.dot} ${step.status === "done"
                       ? styles.dotDone
                       : step.status === "pending"
-                      ? styles.dotPending
-                      : styles.dotUpcoming
-                  }`}
+                        ? styles.dotPending
+                        : styles.dotUpcoming
+                    }`}
                 >
                   {step.status === "done" && <span className={styles.dotCheck}>✓</span>}
                 </span>

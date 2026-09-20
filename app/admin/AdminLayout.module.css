@@ -164,15 +164,18 @@
   .mobileBar {
     display: none;
   }
+
   .backdrop {
     display: none;
   }
+
   .sidebar {
     position: sticky;
     left: 0;
     top: 0;
     height: 100vh;
   }
+
   .main {
     padding: 36px 44px;
     padding-top: 36px;

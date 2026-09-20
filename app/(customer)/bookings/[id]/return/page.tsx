@@ -35,7 +35,6 @@ export default function ReturnPage({
   };
 
   const handleCapture = () => {
-    // TODO: real camera/file picker + geotag integration
     setMediaCaptured(true);
   };
 
@@ -43,7 +42,6 @@ export default function ReturnPage({
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    // TODO: POST return payload (media + checklist) to API
     router.push(`/bookings/${id}`);
   };
 
@@ -95,9 +93,8 @@ export default function ReturnPage({
                 className={styles.checkboxInput}
               />
               <span
-                className={`${styles.checkbox} ${
-                  item.checked ? styles.checkboxChecked : ""
-                }`}
+                className={`${styles.checkbox} ${item.checked ? styles.checkboxChecked : ""
+                  }`}
               >
                 {item.checked && <span className={styles.checkboxTick}>✓</span>}
               </span>

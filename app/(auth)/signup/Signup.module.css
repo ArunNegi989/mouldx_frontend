@@ -49,6 +49,7 @@
   border-radius: 16px;
   padding: 20px;
 }
+
 .logoWrap {
   position: relative;
   height: 28px;
@@ -59,6 +60,7 @@
   object-fit: contain;
   object-position: center;
 }
+
 .label {
   display: block;
   font-size: 11px;
@@ -159,9 +161,11 @@
   .page {
     padding: 20px 16px;
   }
+
   .title {
     font-size: 22px;
   }
+
   .card {
     padding: 16px;
   }
@@ -173,9 +177,11 @@
     margin: 0 auto;
     padding: 40px 32px;
   }
+
   .card {
     max-width: 380px;
   }
+
   .title {
     font-size: 30px;
   }

@@ -16,6 +16,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -51,10 +52,12 @@
     transform: scale(0.7);
     opacity: 0.35;
   }
+
   70% {
     transform: scale(1.4);
     opacity: 0;
   }
+
   100% {
     transform: scale(1.4);
     opacity: 0;
@@ -205,8 +208,6 @@
   cursor: pointer;
 }
 
-/* Global .btn-primary (globals.css) ka background/hover color use hoga;
-   :global() zaroori hai warna CSS Modules 'btn-primary' ko locally scope kar deta */
 .ctaBtn:global(.btn-primary) {
   width: 100%;
   border-radius: 14px;
@@ -226,13 +227,16 @@
     width: 116px;
     height: 116px;
   }
+
   .checkSvg {
     width: 78px;
     height: 78px;
   }
+
   .title {
     font-size: 28px;
   }
+
   .timelineCard {
     padding: 26px 24px;
   }

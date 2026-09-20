@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./Extend.module.css";
 
-// TEMP — real booking API se aayega
 const PRICE_PER_DAY = 2000;
 const CURRENT_DUE = "2026-09-20T18:00:00";
 const MAX_EXTRA_DAYS = 14;

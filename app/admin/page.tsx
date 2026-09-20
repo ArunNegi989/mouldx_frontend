@@ -14,7 +14,6 @@ const PENDING_ACTIONS = [
   { queue: "Damage Claims", pending: 2, oldest: "1 day", action: "URGENT", tone: "red" },
 ] as const;
 
-// TEMP dummy data — real API se aayega
 const TOP_OWNERS = [
   { name: "Sharma Industries", moulds: 12, bookings: 38, revenue: "₹4.2L", initial: "S", gradient: "linear-gradient(135deg, #22d3ee, #2563eb)" },
   { name: "Vector Molds", moulds: 9, bookings: 27, revenue: "₹3.1L", initial: "V", gradient: "linear-gradient(135deg, #818cf8, #7c3aed)" },

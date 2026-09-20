@@ -31,7 +31,6 @@ interface ThreadInfo {
   };
 }
 
-// TEMP dummy data — real chat API/socket se aayega
 const THREAD_INFO: Record<string, ThreadInfo> = {
   "owner-sharma-BK24581": {
     id: "owner-sharma-BK24581",
@@ -131,7 +130,6 @@ export default function ChatThreadPage({
     setDraft("");
     setIsTyping(true);
 
-    // TODO: real API/socket call — send message to owner/admin
     setTimeout(() => {
       setIsTyping(false);
       setMessages((prev) => [
@@ -221,9 +219,8 @@ export default function ChatThreadPage({
             <div className={msg.sender === "me" ? styles.bubbleMe : styles.bubbleOther}>
               <p className="m-0 text-[13px] leading-snug">{msg.text}</p>
               <span
-                className={`mt-1 block text-[10px] ${
-                  msg.sender === "me" ? "text-right text-cyan-50/80" : "text-gray-400"
-                }`}
+                className={`mt-1 block text-[10px] ${msg.sender === "me" ? "text-right text-cyan-50/80" : "text-gray-400"
+                  }`}
               >
                 {msg.time}
               </span>

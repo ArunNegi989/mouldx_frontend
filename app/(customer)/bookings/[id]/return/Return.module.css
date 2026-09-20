@@ -180,7 +180,6 @@
   cursor: pointer;
 }
 
-/* Global .btn-primary (globals.css) ka background/hover color use hoga */
 .ctaBtn:global(.btn-primary) {
   display: flex;
   width: 100%;
@@ -200,7 +199,8 @@
     max-width: 560px;
     margin: 0 auto;
   }
-  .ctaBar > * {
+
+  .ctaBar>* {
     max-width: 560px;
     margin: 0 auto;
   }

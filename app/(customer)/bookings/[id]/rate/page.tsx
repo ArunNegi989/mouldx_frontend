@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./Rate.module.css";
 
-// TEMP — real booking API se aayega
 const OWNER_NAME = "Sharma Industries";
 const OWNER_INITIAL = OWNER_NAME.charAt(0);
 

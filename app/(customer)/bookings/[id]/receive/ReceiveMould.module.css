@@ -223,8 +223,9 @@
   background: #ffffff;
   border-top: 1px solid #f1f1f3;
   padding: 14px 20px;
-  z-index: 50; /* pehle 50 tha — BottomNav ke barabar hone se button dab raha tha */
+  z-index: 50;
 }
+
 .ctaBtn {
   display: block;
   width: 100%;
@@ -257,10 +258,12 @@
     max-width: 560px;
     margin: 0 auto;
   }
-  .ctaBar > * {
+
+  .ctaBar>* {
     max-width: 560px;
     margin: 0 auto;
   }
+
   .uploadBox {
     height: 200px;
   }

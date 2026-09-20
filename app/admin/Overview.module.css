@@ -183,7 +183,7 @@
   gap: 16px;
 }
 
-.twoColGrid > .card {
+.twoColGrid>.card {
   margin-top: 0;
 }
 
@@ -383,6 +383,7 @@
   .statsGrid {
     grid-template-columns: repeat(4, 1fr);
   }
+
   .quickActionsRow {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -392,9 +393,11 @@
   .statValue {
     font-size: 28px;
   }
+
   .headerRow {
     align-items: center;
   }
+
   .twoColGrid {
     grid-template-columns: 1fr 1fr;
   }

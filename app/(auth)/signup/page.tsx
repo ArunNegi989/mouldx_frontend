@@ -23,18 +23,18 @@ export default function SignupPage() {
     fullName: fullName.trim() === ""
       ? "Full name is required"
       : !REGEX.fullName.test(fullName.trim())
-      ? "Enter a valid name (letters only, 2-60 chars)"
-      : "",
+        ? "Enter a valid name (letters only, 2-60 chars)"
+        : "",
     email: email.trim() === ""
       ? ""
       : !REGEX.email.test(email.trim())
-      ? "Enter a valid email address"
-      : "",
+        ? "Enter a valid email address"
+        : "",
     phone: phone.trim() === ""
       ? "Phone number is required"
       : !REGEX.phone.test(phone.trim())
-      ? "Enter a valid 10-digit phone number"
-      : "",
+        ? "Enter a valid 10-digit phone number"
+        : "",
   };
 
   const isValid =

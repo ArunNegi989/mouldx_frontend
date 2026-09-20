@@ -34,8 +34,8 @@ export default function LoginPage() {
   const error = phone.trim() === ""
     ? "Phone number is required"
     : !REGEX.phone.test(phone.trim())
-    ? "Enter a valid 10-digit phone number"
-    : "";
+      ? "Enter a valid 10-digit phone number"
+      : "";
 
   const isValid = REGEX.phone.test(phone.trim());
 

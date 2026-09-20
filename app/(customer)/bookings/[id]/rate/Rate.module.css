@@ -187,7 +187,8 @@
     max-width: 560px;
     margin: 0 auto;
   }
-  .ctaBar > * {
+
+  .ctaBar>* {
     max-width: 560px;
     margin: 0 auto;
   }

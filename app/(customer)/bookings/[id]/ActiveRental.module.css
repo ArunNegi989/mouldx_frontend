@@ -18,7 +18,6 @@
   background: linear-gradient(115deg, #fb7185 0%, #e11d48 60%, #9f1239 100%);
 }
 
-/* soft orb top-right, mockup jaisa */
 .heroOrb {
   position: absolute;
   top: -58px;
@@ -140,7 +139,6 @@
   cursor: pointer;
 }
 
-/* Global .btn-primary (globals.css) ka background/hover color use hoga */
 .btnPrimary:global(.btn-primary) {
   flex: 1;
   border-radius: 12px;

@@ -24,7 +24,6 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "completed", label: "Completed" },
 ];
 
-// TEMP dummy data — real bookings API se aayega
 const BOOKINGS: Booking[] = [
   {
     id: "BK-24581",

@@ -4,7 +4,6 @@ import { use } from "react";
 import Link from "next/link";
 import styles from "./Refund.module.css";
 
-// TEMP — real booking/refund API se aayega
 const DEPOSIT_HELD = 15000;
 const DEDUCTIONS = 0;
 const OWNER_NAME = "Sharma Industries";

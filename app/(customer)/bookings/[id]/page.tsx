@@ -33,7 +33,6 @@ interface BookingDetail extends BookingDetailRaw {
   awaitingReceipt: boolean;
 }
 
-// TEMP dummy data — real booking API se aayega, id se fetch hoga
 const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
   "BK-24581": {
     id: "BK-24581",
@@ -226,13 +225,12 @@ export default function BookingDetailPage({
             <div key={step.id} className={styles.timelineRow}>
               <div className={styles.timelineDotCol}>
                 <span
-                  className={`${styles.dot} ${
-                    step.status === "done"
+                  className={`${styles.dot} ${step.status === "done"
                       ? styles.dotDone
                       : step.status === "pending"
-                      ? styles.dotPending
-                      : styles.dotUpcoming
-                  }`}
+                        ? styles.dotPending
+                        : styles.dotUpcoming
+                    }`}
                 >
                   {step.status === "done" && <span className={styles.dotCheck}>✓</span>}
                 </span>

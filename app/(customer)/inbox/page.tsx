@@ -25,7 +25,6 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "support", label: "Support" },
 ];
 
-// TEMP dummy data — real conversations API se aayega
 const THREADS: Thread[] = [
   {
     id: "owner-sharma-BK24581",

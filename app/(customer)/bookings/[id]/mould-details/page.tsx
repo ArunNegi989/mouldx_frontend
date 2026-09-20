@@ -6,8 +6,6 @@ import Link from "next/link";
 import { getMouldDetail } from "@/app/data/moulds";
 import styles from "./MouldDetailsFull.module.css";
 
-// TEMP mapping — booking ID se mould ID nikalne ke liye
-// real API mein booking record se hi mouldId aa jayega, ye lookup zaroori nahi hoga
 const BOOKING_TO_MOULD_ID: Record<string, string> = {
   "BK-24581": "1",
   "BK-24512": "2",
