@@ -171,7 +171,7 @@ export default function DamageClaimReviewPage({
               type="button"
               onClick={handleApprove}
               disabled={submitting}
-              className={styles.approveBtn}
+              className={`${styles.approveBtn} btn-primary`}
             >
               Approve Deduction &amp; Release
             </button>

@@ -79,7 +79,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 .nav {
@@ -120,7 +120,7 @@
 .navItemActive {
   background: #ffffff;
   border-color: #dbe1ec;
-  color: #0891b2;
+  color: #2563eb;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
@@ -141,7 +141,7 @@
   height: 19px;
   padding: 0 5px;
   border-radius: 9999px;
-  background: #06b6d4;
+  background: #2563eb;
   color: #ffffff;
   font-size: 10px;
   font-weight: 700;

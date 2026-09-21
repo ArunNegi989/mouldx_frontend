@@ -90,7 +90,7 @@
 .notifViewAll {
   font-size: 11px;
   font-weight: 700;
-  color: #0891b2;
+  color: #2563eb;
   text-decoration: none;
 }
 
@@ -115,7 +115,7 @@
 }
 
 .dotCyan {
-  background: #22d3ee;
+  background: #2563eb;
 }
 
 .dotAmber {
@@ -148,7 +148,7 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: #0f172a;
+  background: #2563eb;
   color: #ffffff;
   font-size: 14px;
   font-weight: 800;

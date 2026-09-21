@@ -188,7 +188,12 @@ export default function PaymentDetailPage({
               className={styles.textarea}
             />
 
-            <button type="button" onClick={handleSave} disabled={submitting} className={styles.saveBtn}>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={submitting}
+              className={`${styles.saveBtn} btn-primary`}
+            >
               {submitting ? "Saving…" : "Save Status"}
             </button>
           </div>

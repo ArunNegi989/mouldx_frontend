@@ -72,7 +72,7 @@
 }
 
 .searchInput:focus {
-  border-color: #22d3ee;
+  border-color: #2563eb;
 }
 
 /* ---------- Filter dropdown ---------- */
@@ -142,8 +142,8 @@
 }
 
 .filterOptionActive {
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-weight: 700;
 }
 
@@ -287,6 +287,7 @@
   justify-content: space-between;
   gap: 8px;
 }
+
 .clickableRow {
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -295,14 +296,15 @@
 .clickableRow:hover {
   background: #f9fafb;
 }
+
 .eyeBtn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 6px 12px;
   border-radius: 9999px;
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 12px;
   font-weight: 700;
   border: none;
@@ -312,13 +314,14 @@
 }
 
 .eyeBtn:hover {
-  background: #cffafe;
+  background: #dbeafe;
   transform: translateY(-1px);
 }
 
 .actionCell {
   text-align: right;
 }
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 768px) {

@@ -158,7 +158,7 @@ export default function KycReviewDetailPage({
               type="button"
               onClick={handleApprove}
               disabled={submitting}
-              className={styles.approveBtn}
+              className={`${styles.approveBtn} btn-primary`}
             >
               ✓ Approve KYC
             </button>

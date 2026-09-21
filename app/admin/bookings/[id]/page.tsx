@@ -156,7 +156,7 @@ export default function BookingApprovalDetailPage({
               type="button"
               onClick={handleApprove}
               disabled={submitting}
-              className={styles.approveBtn}
+              className={`${styles.approveBtn} btn-primary`}
             >
               ✓ Approve Booking
             </button>

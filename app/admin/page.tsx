@@ -15,9 +15,9 @@ const PENDING_ACTIONS = [
 ] as const;
 
 const TOP_OWNERS = [
-  { name: "Sharma Industries", moulds: 12, bookings: 38, revenue: "₹4.2L", initial: "S", gradient: "linear-gradient(135deg, #22d3ee, #2563eb)" },
-  { name: "Vector Molds", moulds: 9, bookings: 27, revenue: "₹3.1L", initial: "V", gradient: "linear-gradient(135deg, #818cf8, #7c3aed)" },
-  { name: "Precision Ltd.", moulds: 7, bookings: 21, revenue: "₹2.6L", initial: "P", gradient: "linear-gradient(135deg, #34d399, #059669)" },
+  { name: "Sharma Industries", moulds: 12, bookings: 38, revenue: "₹4.2L", initial: "S", gradient: "#2563eb" },
+  { name: "Vector Molds", moulds: 9, bookings: 27, revenue: "₹3.1L", initial: "V", gradient: "#2563eb" },
+  { name: "Precision Ltd.", moulds: 7, bookings: 21, revenue: "₹2.6L", initial: "P", gradient: "#2563eb" },
 ];
 
 const RECENT_ACTIVITY = [

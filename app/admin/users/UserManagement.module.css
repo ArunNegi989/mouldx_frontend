@@ -19,8 +19,8 @@
 }
 
 .countPill {
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -69,7 +69,7 @@
 }
 
 .searchInput:focus {
-  border-color: #22d3ee;
+  border-color: #2563eb;
 }
 
 .tabs {
@@ -96,8 +96,8 @@
 }
 
 .tabBtnActive {
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 /* ---------- Table (desktop) ---------- */
@@ -216,8 +216,8 @@
   display: inline-block;
   padding: 6px 14px;
   border-radius: 9999px;
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 11px;
   font-weight: 800;
   white-space: nowrap;
@@ -262,14 +262,15 @@
   padding-top: 10px;
   border-top: 1px solid #f5f6f8;
 }
+
 .eyeBtn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   padding: 6px 12px;
   border-radius: 9999px;
-  background: #ecfeff;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 12px;
   font-weight: 700;
   border: none;
@@ -278,7 +279,7 @@
 }
 
 .eyeBtn:hover {
-  background: #cffafe;
+  background: #dbeafe;
   transform: translateY(-1px);
 }
 
@@ -393,6 +394,7 @@
   cursor: pointer;
   background: linear-gradient(90deg, #f87171 0%, #dc2626 100%);
 }
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 640px) {

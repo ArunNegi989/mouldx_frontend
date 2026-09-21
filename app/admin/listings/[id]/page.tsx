@@ -195,7 +195,7 @@ export default function ListingReviewDetailPage({
               type="button"
               onClick={handleApprove}
               disabled={submitting}
-              className={styles.approveBtn}
+              className={`${styles.approveBtn} btn-primary`}
             >
               ✓ Approve Listing
             </button>
