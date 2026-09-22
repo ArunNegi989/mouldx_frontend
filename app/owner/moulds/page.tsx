@@ -16,7 +16,7 @@ interface Mould {
   gradient: string;
 }
 
-// TEMP dummy data — real moulds API se aayega
+// TEMP dummy data — will come from the real moulds API
 const MOULDS: Mould[] = [
   {
     id: "1",
@@ -25,7 +25,7 @@ const MOULDS: Mould[] = [
     rating: 4.8,
     status: "AVAILABLE",
     pricePerDay: 18000,
-    gradient: "linear-gradient(135deg, #22d3ee, #2563eb)",
+    gradient: "#2563eb",
   },
   {
     id: "2",
@@ -34,7 +34,7 @@ const MOULDS: Mould[] = [
     rating: 4.6,
     status: "RENTED",
     pricePerDay: 22000,
-    gradient: "linear-gradient(135deg, #818cf8, #7c3aed)",
+    gradient: "#2563eb",
   },
 ];
 
@@ -122,7 +122,7 @@ export default function MyMouldsPage() {
       </div>
 
       {/* ---------- Add new listing ---------- */}
-      <Link href="/owner/moulds/new" className={styles.addBtn}>
+      <Link href="/owner/moulds/new" className={`${styles.addBtn} btn-primary`}>
         + Add New Listing
       </Link>
     </div>

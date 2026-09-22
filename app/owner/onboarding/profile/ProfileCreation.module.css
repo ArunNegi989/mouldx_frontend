@@ -39,7 +39,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -75,7 +75,7 @@
 }
 
 .progressBarActive {
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 100%);
+  background: #2563eb;
 }
 
 /* ---------- Card ---------- */
@@ -120,7 +120,7 @@
 }
 
 .required {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 .input,
@@ -150,7 +150,7 @@
 
 .input:focus,
 .textarea:focus {
-  border-color: #22d3ee;
+  border-color: #2563eb;
   background: #ffffff;
 }
 
@@ -208,25 +208,30 @@
 /* ---------- Sticky CTA ---------- */
 .ctaBar {
   position: fixed;
-  bottom: 72px; /* apne BottomNav ki actual height match karo — 72px zyada tar theek rehta hai */
+  bottom: 72px; /* match your actual BottomNav height — 72px works for most cases */
   left: 0;
   right: 0;
   background: #ffffff;
   border-top: 1px solid #f1f1f3;
   padding: 14px 20px;
-  z-index: 20; /* BottomNav (z-index 50) se neeche, header se upar */
+  z-index: 20; /* below BottomNav (z-index 50), above header */
 }
 
 .ctaBtn {
   width: 100%;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   cursor: pointer;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.ctaBtn:global(.btn-primary) {
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 /* ---------- Responsive ---------- */

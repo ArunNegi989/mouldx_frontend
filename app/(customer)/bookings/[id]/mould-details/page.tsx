@@ -214,7 +214,7 @@ export default function ReceivedMouldDetailsPage({
 
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
-        <Link href={`/bookings/${bookingId}`} className={styles.ctaBtn}>
+        <Link href={`/bookings/${bookingId}`} className={`${styles.ctaBtn} btn-primary`}>
           Back to Booking
         </Link>
       </div>

@@ -1,8 +1,18 @@
-// app/explore/page.tsx
-import MouldExplore from "@/app/components/home/MouldExplore"; 
-// ⚠️ upar wala path apne actual folder structure ke hisaab se adjust karo —
-// jahan MouldExplore.tsx file rakhi hai wahi ka relative/alias path use karo
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import MouldExplore from "@/app/components/home/MouldExplore";
+import styles from "./ExplorePage.module.css";
 
 export default function ExplorePage() {
-  return <MouldExplore />;
+  return (
+    <>
+      <div className={styles.backBar}>
+        <Link href="/home" className={styles.backBtn} aria-label="Go back">
+          <ArrowLeft size={18} />
+          <span>Back</span>
+        </Link>
+      </div>
+      <MouldExplore />
+    </>
+  );
 }

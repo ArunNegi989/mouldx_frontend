@@ -1,0 +1,35 @@
+.backBar {
+  padding: 14px 20px 0;
+  background: #ffffff;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.backBtn:hover {
+  background: #f3f4f6;
+}
+
+@media (min-width: 640px) {
+  .backBar {
+    padding: 18px 32px 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .backBar {
+    padding: 22px 44px 0;
+  }
+}

@@ -151,12 +151,12 @@ export default function ProfileCreationPage() {
   };
 
   const handleSubmit = () => {
-  const allFields = [...REQUIRED_FIELDS, "gstCertificate", "electricityBill"];
-  setTouched(Object.fromEntries(allFields.map((f) => [f, true])));
-  if (!isValid) return;
-  // TODO: submit to KYC approval API
-  router.push("/owner/onboarding/review");
-};
+    const allFields = [...REQUIRED_FIELDS, "gstCertificate", "electricityBill"];
+    setTouched(Object.fromEntries(allFields.map((f) => [f, true])));
+    if (!isValid) return;
+    // TODO: submit to KYC approval API
+    router.push("/owner/onboarding/review");
+  };
 
   return (
     <div className={styles.page}>
@@ -352,7 +352,7 @@ export default function ProfileCreationPage() {
 
       {/* ---------- Sticky submit ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleSubmit} className={styles.ctaBtn}>
+        <button type="button" onClick={handleSubmit} className={`${styles.ctaBtn} btn-primary`}>
           Submit for Approval
         </button>
       </div>

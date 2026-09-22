@@ -96,15 +96,7 @@ export default function BookingsPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBar}>
-        <span className={styles.spacer} />
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </div>
+     
 
       <h1 className={styles.title}>My Bookings</h1>
 

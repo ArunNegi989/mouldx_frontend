@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./OwnerProfile.module.css";
 
-// TEMP dummy data — real profile/booking API se aayega
 const OWNER = {
   name: "Rohit Sharma",
   phone: "+91 90XXXXXX45",

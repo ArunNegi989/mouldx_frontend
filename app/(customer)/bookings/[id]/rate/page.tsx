@@ -102,7 +102,7 @@ export default function RatePage({
       <div className={styles.ctaBar}>
         <button
           type="button"
-          className={styles.ctaBtn}
+          className={`${styles.ctaBtn} btn-primary`}
           disabled={!canSubmit}
           onClick={handleSubmit}
         >

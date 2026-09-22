@@ -39,7 +39,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -147,13 +147,20 @@
   width: 100%;
   text-align: center;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   text-decoration: none;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+/* Global .btn-primary (globals.css) ka background/hover color use hoga */
+.ctaBtn:global(.btn-primary) {
+  display: flex;
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 @media (min-width: 640px) {

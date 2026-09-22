@@ -26,10 +26,10 @@
   position: relative;
   overflow: hidden;
   margin-top: 18px;
-  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+  background: #2563eb;
   border-radius: 20px;
   padding: 18px;
-  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.25);
 }
 
 .earningsCard::before {
@@ -62,7 +62,7 @@
   margin-top: 10px;
   font-size: 30px;
   font-weight: 800;
-  color: #0b1120;
+  color: #ffffff;
 }
 
 .earningsDelta {
@@ -71,7 +71,7 @@
   margin-top: 2px;
   font-size: 12px;
   font-weight: 700;
-  color: rgba(11, 17, 32, 0.75);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ---------- Card ---------- */
@@ -112,7 +112,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 100%);
+  background: #2563eb;
   border-radius: 9999px;
   transition: width 0.4s ease;
 }
@@ -208,7 +208,7 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background: #2563eb;
   color: #ffffff;
   font-size: 15px;
   font-weight: 800;
@@ -239,6 +239,7 @@
   padding: 4px 9px;
   border-radius: 9999px;
 }
+
 /* ---------- Quick actions ---------- */
 .quickActions {
   margin-top: 16px;
@@ -402,7 +403,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #22d3ee;
+  background: #2563eb;
   margin-top: 5px;
 }
 
@@ -418,6 +419,7 @@
   font-size: 10px;
   color: #9ca3af;
 }
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 640px) {

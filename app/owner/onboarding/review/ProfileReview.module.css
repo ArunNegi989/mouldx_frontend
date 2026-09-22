@@ -38,7 +38,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -62,10 +62,10 @@
 /* ---------- Status card ---------- */
 .statusCard {
   margin-top: 20px;
-  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+  background: #2563eb;
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.28);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
   animation: fadeUp 0.5s ease both;
 }
 
@@ -95,7 +95,7 @@
   margin: 14px 0 0;
   font-size: 27px;
   font-weight: 800;
-  color: #0b1120;
+  color: #ffffff;
   line-height: 1.15;
 }
 
@@ -103,7 +103,7 @@
   margin-top: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: rgba(11, 17, 32, 0.75);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ---------- Timeline card ---------- */
@@ -143,8 +143,8 @@
 }
 
 .dotDone {
-  background: #22d3ee;
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
 .dotPending {

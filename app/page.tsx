@@ -1,5 +1,5 @@
-import Hero from "@/app/components/home/Hero";
+import CustomerHome from "@/app/components/home/CustomerHome";
 
-export default function Home() {
-  return <Hero />;
+export default function RootPage() {
+  return <CustomerHome />;
 }

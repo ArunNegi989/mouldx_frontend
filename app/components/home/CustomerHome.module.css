@@ -57,7 +57,7 @@
 .content {
   position: relative;
   z-index: 2;
-  padding: 48px 24px 0;
+  padding: 90px 24px 0;
 }
 
 .eyebrow {
@@ -103,26 +103,6 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.watchBtn {
- display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: fit-content;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-   background-color: #eff6ff !important;
-  color: #3b82f6 !important;
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.watchBtn:hover{
- color: #ffffff !important;
-  background-color: #2563eb !important;
 }
 
 /* ---------- Product shot ---------- */

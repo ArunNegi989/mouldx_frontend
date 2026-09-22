@@ -19,7 +19,7 @@
   flex: 1;
   height: 5px;
   border-radius: 4px;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 100%);
+  background: #2563eb;
 }
 
 .card {
@@ -68,7 +68,7 @@
 
 .input:focus,
 .select:focus {
-  border-color: #22d3ee;
+  border-color: #2563eb;
   background: #ffffff;
 }
 
@@ -106,13 +106,18 @@
 .ctaBtn {
   width: 100%;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   cursor: pointer;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.ctaBtn:global(.btn-primary) {
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 /* ---------- Responsive ---------- */

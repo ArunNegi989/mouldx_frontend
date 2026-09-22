@@ -112,7 +112,7 @@ export default function VerifyOtpPage() {
           type="button"
           disabled={!isComplete}
           onClick={handleVerify}
-          className={styles.verifyBtn}
+          className={`${styles.verifyBtn} btn-primary`}
         >
           Verify & Continue
         </button>

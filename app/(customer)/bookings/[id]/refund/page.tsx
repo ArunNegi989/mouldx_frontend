@@ -76,7 +76,7 @@ export default function RefundPage({
 
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
-        <Link href={`/bookings/${id}/rate`} className={styles.ctaBtn}>
+        <Link href={`/bookings/${id}/rate`} className={`${styles.ctaBtn} btn-primary`}>
           Rate this Booking →
         </Link>
       </div>

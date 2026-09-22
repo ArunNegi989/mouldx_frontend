@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Bell, User } from "lucide-react";
+import { Menu, X, Bell, User, Repeat } from "lucide-react";
 import Image from "next/image";
 import styles from "./Header.module.css";
 
@@ -14,10 +14,13 @@ export default function Header() {
 
   const homeHref = isOwner ? "/owner" : "/home";
   const profileHref = isOwner ? "/owner/profile" : "/profile";
+  const switchLabel = isOwner ? "Switch to Customer" : "Switch to Owner";
+  const switchHref = isOwner ? "/home" : "/owner";
 
   const menuItems = [
     { label: "Notifications", href: "#", icon: Bell },
     { label: "Profile", href: profileHref, icon: User },
+    { label: switchLabel, href: switchHref, icon: Repeat },
   ];
 
   return (

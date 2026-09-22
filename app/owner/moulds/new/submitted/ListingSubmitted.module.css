@@ -38,7 +38,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -62,10 +62,10 @@
 /* ---------- Status card ---------- */
 .statusCard {
   margin-top: 20px;
-  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+  background: #2563eb;
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.28);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
   animation: fadeUp 0.5s ease both;
 }
 
@@ -95,7 +95,7 @@
   margin: 14px 0 0;
   font-size: 27px;
   font-weight: 800;
-  color: #0b1120;
+  color: #ffffff;
   line-height: 1.15;
 }
 
@@ -103,14 +103,14 @@
   margin-top: 10px;
   font-size: 13px;
   font-weight: 700;
-  color: rgba(11, 17, 32, 0.85);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .listingCode {
   margin-top: 2px;
   font-size: 11px;
   font-weight: 600;
-  color: rgba(11, 17, 32, 0.6);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ---------- Timeline card ---------- */
@@ -158,8 +158,8 @@
 }
 
 .dotDone {
-  background: #22d3ee;
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
 .dotPending {
@@ -215,7 +215,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #60a5fa;
+  background: #2563eb;
   color: #ffffff;
   font-size: 12px;
   font-weight: 700;
@@ -252,12 +252,18 @@
   text-align: center;
   box-sizing: border-box;
   padding: 14px;
-  border-radius: 12px;
-  color: #ffffff;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.dashboardBtn:global(.btn-primary) {
+  display: flex;
+  width: 100%;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 .myMouldsLink {

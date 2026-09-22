@@ -38,7 +38,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -148,7 +148,7 @@
 /* ---------- Sticky actions ---------- */
 .ctaBar {
   position: fixed;
-  bottom: 72px; /* BottomNav ki height jitna upar — apni BottomNav.module.css se match kar lena */
+  bottom: 72px; /* match your BottomNav height — check BottomNav.module.css */
   left: 0;
   right: 0;
   background: #ffffff;
@@ -157,19 +157,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 20; /* BottomNav se upar rahe, dono ek saath dikhein */
+  z-index: 20; /* stay above BottomNav so both remain visible together */
 }
 
 .resubmitBtn {
   width: 100%;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   cursor: pointer;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.resubmitBtn:global(.btn-primary) {
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 .supportBtn {

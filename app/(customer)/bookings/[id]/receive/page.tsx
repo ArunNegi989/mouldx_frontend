@@ -141,12 +141,12 @@ export default function ReceiveMouldPage({
           <div>
             <p className={styles.flagTitle}>Location capture</p>
             <p className={styles.flagMsg}>
-              {locationStatus === "idle" && "Photo select karte hi location capture hogi."}
-              {locationStatus === "fetching" && "Location capture ho rahi hai…"}
+              {locationStatus === "idle" && "Location will be captured as soon as you select a photo."}
+              {locationStatus === "fetching" && "Capturing location…"}
               {locationStatus === "done" && coords &&
                 `Lat/long recorded at ${coords.lat.toFixed(2)}°N, ${coords.lng.toFixed(2)}°E — auto attached to record.`}
               {locationStatus === "denied" &&
-                "Location permission nahi mili — bina geotag ke record submit hoga."}
+                "Location permission was not granted — the record will be submitted without a geotag."}
             </p>
           </div>
         </div>
@@ -157,11 +157,11 @@ export default function ReceiveMouldPage({
           type="button"
           onClick={handleConfirm}
           disabled={!canSubmit || isSubmitting}
-          className={styles.ctaBtn}
+          className={`${styles.ctaBtn} btn-primary`}
         >
           {isSubmitting ? "Confirming…" : "Confirm Received"}
         </button>
-        {!canSubmit && <p className={styles.ctaHint}>Photo/video upload karna zaroori hai</p>}
+        {!canSubmit && <p className={styles.ctaHint}>Uploading a photo/video is required</p>}
       </div>
     </div>
   );

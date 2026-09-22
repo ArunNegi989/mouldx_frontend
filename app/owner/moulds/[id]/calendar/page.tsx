@@ -17,7 +17,7 @@ interface DayCell {
   inCurrentMonth: boolean;
 }
 
-// TEMP dummy data — real bookings API se aayega (customer-confirmed bookings, read-only)
+// TEMP dummy data — will come from the real bookings API (customer-confirmed bookings, read-only)
 const MOULD_CODE: Record<string, string> = {
   "1": "MX-000123",
   "2": "MX-000198",
@@ -200,7 +200,12 @@ export default function AvailabilityCalendarPage({
 
       {/* ---------- Sticky save ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleSave} disabled={submitting} className={styles.ctaBtn}>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={submitting}
+          className={`${styles.ctaBtn} btn-primary`}
+        >
           {submitting ? "Saving…" : "Save Availability"}
         </button>
       </div>

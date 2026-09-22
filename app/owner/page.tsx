@@ -3,7 +3,6 @@
 import Link from "next/link";
 import styles from "./OwnerHome.module.css";
 
-// TEMP dummy data — real dashboard API se aayega
 const OWNER = {
   name: "Rohit",
   earningsMonth: "SEP",

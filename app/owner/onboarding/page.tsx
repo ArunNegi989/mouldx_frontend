@@ -49,7 +49,7 @@ export default function OwnerOnboardingPage() {
             ‹
           </Link>
           <span className="text-[15px] font-extrabold text-gray-900">
-            Mould<span className="text-cyan-500">X</span>
+            Mould<span className="text-blue-600">X</span>
           </span>
           <button
             type="button"
@@ -93,7 +93,7 @@ export default function OwnerOnboardingPage() {
 
       {/* ---------- CTA ---------- */}
       <div className={styles.ctaWrap}>
-        <button type="button" onClick={handleStart} className={styles.ctaBtn}>
+        <button type="button" onClick={handleStart} className={`${styles.ctaBtn} btn-primary`}>
           Start Profile <span aria-hidden>→</span>
         </button>
       </div>

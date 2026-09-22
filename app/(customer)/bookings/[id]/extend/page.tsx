@@ -121,7 +121,7 @@ export default function ExtendPage({
 
       {/* ---------- Sticky confirm ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" className={styles.ctaBtn} onClick={handleConfirm}>
+        <button type="button" className={`${styles.ctaBtn} btn-primary`} onClick={handleConfirm}>
           Confirm &amp; Pay ₹{extraCost.toLocaleString("en-IN")}
         </button>
       </div>

@@ -130,7 +130,7 @@ export default function SignupPage() {
           type="button"
           disabled={!isValid}
           onClick={handleContinue}
-          className={styles.otpBtn}
+          className={`${styles.otpBtn} btn-primary`}
         >
           Continue with OTP <span aria-hidden>→</span>
         </button>

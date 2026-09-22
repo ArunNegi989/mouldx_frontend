@@ -91,9 +91,9 @@
   flex-shrink: 0;
   padding: 6px 12px;
   border-radius: 9999px;
-  border: 1px solid #a5f3fc;
-  background: #ecfeff;
-  color: #0891b2;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -102,7 +102,7 @@
 }
 
 .useCode:hover {
-  background: #cffafe;
+  background: #dbeafe;
 }
 
 /* ---------- Actions ---------- */

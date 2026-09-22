@@ -10,7 +10,7 @@ interface TimelineStep {
   meta: string;
 }
 
-// TEMP dummy data — real listing-submission API se aayega
+// TEMP dummy data — will come from the real listing-submission API
 const LISTING = {
   code: "MX-000231",
   productName: "28mm PET Bottle Cap",
@@ -92,7 +92,7 @@ export default function ListingSubmittedPage() {
 
       {/* ---------- Actions ---------- */}
       <div className={styles.ctaBar}>
-        <Link href="/owner" className={styles.dashboardBtn}>
+        <Link href="/owner" className={`${styles.dashboardBtn} btn-primary`}>
           Go to Dashboard
         </Link>
         <Link href="/owner/moulds" className={styles.myMouldsLink}>

@@ -26,7 +26,6 @@ const PRICE_RANGES = [
 
 const PAGE_SIZE = 10;
 
-
 function parsePrice(price: string) {
   return Number(price.replace(/[^0-9]/g, "")) || 0;
 }
@@ -40,7 +39,7 @@ export default function MouldExplore() {
   const [page, setPage] = useState(1);
 
   const listTopRef = useRef<HTMLDivElement | null>(null);
-  const isFirstRender = useRef(true);
+  const prevPageRef = useRef(page);
 
   const activePriceRange = PRICE_RANGES.find((r) => r.label === activePriceLabel) ?? PRICE_RANGES[0];
 
@@ -60,18 +59,19 @@ export default function MouldExplore() {
     });
   }, [search, activeCategory, activePriceRange, activeAvailability]);
 
-  // search/filters badalte hi page 1 pe reset
+  // Reset to page 1 whenever search or filters change
   useEffect(() => {
     setPage(1);
   }, [search, activeCategory, activePriceLabel, activeAvailability]);
 
-  // page change hote hi list ke top pe smooth scroll (pehli render pe nahi)
+  // Scroll to the top of the list only when the page value actually changes.
+  // Comparing against the previous value (instead of a "first render" flag)
+  // keeps this safe under React Strict Mode's double-invoked effects.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
+    if (prevPageRef.current !== page) {
+      listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    prevPageRef.current = page;
   }, [page]);
 
   const totalPages = Math.max(1, Math.ceil(filteredMoulds.length / PAGE_SIZE));

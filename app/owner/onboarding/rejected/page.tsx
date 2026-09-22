@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ProfileRejected.module.css";
 
-// TEMP dummy data — real admin review API se aayega
+// TEMP dummy data — real admin review API will provide this
 const REJECTION = {
   remarks: "Please upload a clearer GST Certificate and the latest electricity bill.",
   documentsToFix: ["GST Certificate", "Electricity Bill (last month)"],
@@ -58,7 +58,7 @@ export default function ProfileRejectedPage() {
 
       {/* ---------- Sticky actions ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleResubmit} className={styles.resubmitBtn}>
+        <button type="button" onClick={handleResubmit} className={`${styles.resubmitBtn} btn-primary`}>
           Resubmit Profile
         </button>
         <Link href="/inbox/admin-support" className={styles.supportBtn}>

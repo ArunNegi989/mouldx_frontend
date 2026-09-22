@@ -38,7 +38,7 @@ const THREAD_INFO: Record<string, ThreadInfo> = {
     name: "Sharma Industries",
     subtitle: "BK-24581 · 2-Cavity Injection Mould",
     initial: "S",
-    gradient: "linear-gradient(135deg, #22d3ee, #2563eb)",
+    gradient: "#2563eb",
     online: true,
     mould: {
       name: "2-Cavity Injection Mould",
@@ -54,7 +54,7 @@ const THREAD_INFO: Record<string, ThreadInfo> = {
     name: "MouldX Support",
     subtitle: "We usually reply within a few hours",
     initial: "M",
-    gradient: "linear-gradient(135deg, #34d399, #059669)",
+    gradient: "#2563eb",
     online: true,
   },
   "owner-vector-BK24102": {
@@ -63,7 +63,7 @@ const THREAD_INFO: Record<string, ThreadInfo> = {
     name: "Vector Molds",
     subtitle: "BK-24102 · Completed",
     initial: "V",
-    gradient: "linear-gradient(135deg, #818cf8, #7c3aed)",
+    gradient: "#2563eb",
     online: false,
     mould: {
       name: "Blow Mould — 5L Can",
@@ -174,7 +174,7 @@ export default function ChatThreadPage({
             <p className="truncate text-sm font-bold text-gray-900">{info.name}</p>
             <p className="truncate text-[11px] text-gray-400">
               {isTyping ? (
-                <span className="font-semibold text-cyan-500">typing…</span>
+                <span className="font-semibold text-blue-600">typing…</span>
               ) : info.online ? (
                 <span className="text-emerald-500">Online</span>
               ) : (
@@ -219,7 +219,7 @@ export default function ChatThreadPage({
             <div className={msg.sender === "me" ? styles.bubbleMe : styles.bubbleOther}>
               <p className="m-0 text-[13px] leading-snug">{msg.text}</p>
               <span
-                className={`mt-1 block text-[10px] ${msg.sender === "me" ? "text-right text-cyan-50/80" : "text-gray-400"
+                className={`mt-1 block text-[10px] ${msg.sender === "me" ? "text-right text-blue-100" : "text-gray-400"
                   }`}
               >
                 {msg.time}
@@ -249,7 +249,7 @@ export default function ChatThreadPage({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={`Message ${info.type === "admin" ? "Support" : info.name}...`}
-          className="flex-1 rounded-full border border-transparent bg-gray-100 px-4 py-2.5 text-[13px] text-gray-900 outline-none transition-colors focus:border-cyan-400 focus:bg-white"
+          className="flex-1 rounded-full border border-transparent bg-gray-100 px-4 py-2.5 text-[13px] text-gray-900 outline-none transition-colors focus:border-blue-500 focus:bg-white"
         />
         <button
           type="button"

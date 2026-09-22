@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./ProfileApproved.module.css";
 
-// TEMP dummy data — real admin approval API se aayega
+// TEMP dummy data — real admin approval API will provide this
 const APPROVAL = {
   approvedAt: "15 Sep · 9:10 AM",
   firmName: "Sharma Industries",
@@ -95,7 +95,7 @@ export default function ProfileApprovedPage() {
 
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
-        <Link href="/owner/moulds/new" className={styles.ctaBtn}>
+        <Link href="/owner/moulds/new" className={`${styles.ctaBtn} btn-primary`}>
           + List a Mould
         </Link>
         <Link href="/owner" className={styles.skipLink}>

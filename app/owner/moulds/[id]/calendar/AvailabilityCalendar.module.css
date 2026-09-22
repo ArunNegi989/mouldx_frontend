@@ -86,8 +86,8 @@
 }
 
 .codePill {
-  background: #cffafe;
-  color: #0891b2;
+  background: #eff6ff;
+  color: #2563eb;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -154,7 +154,7 @@
 }
 
 .daySelected {
-  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  background: #2563eb;
   color: #ffffff;
 }
 
@@ -206,14 +206,18 @@
 .ctaBtn {
   width: 100%;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   cursor: pointer;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
-  transition: opacity 0.15s ease;
+}
+
+.ctaBtn:global(.btn-primary) {
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 .ctaBtn:disabled {

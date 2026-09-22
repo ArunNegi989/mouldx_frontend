@@ -92,14 +92,14 @@ export default function LoginPage() {
         />
         {touched && error && <p className={styles.errorText}>{error}</p>}
 
-        <button
-          type="button"
-          disabled={!isValid}
-          onClick={handleContinue}
-          className={styles.loginBtn}
-        >
-          Continue with OTP <span aria-hidden>→</span>
-        </button>
+       <button
+  type="button"
+  disabled={!isValid}
+  onClick={handleContinue}
+  className={`${styles.loginBtn} btn-primary`}
+>
+  Continue with OTP <span aria-hidden>→</span>
+</button>
       </div>
 
       <p className={styles.signupText}>

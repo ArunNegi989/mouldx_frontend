@@ -50,7 +50,7 @@
 }
 
 .searchInput:focus {
-  border-color: #22d3ee;
+  border-color: #2563eb;
   background: #ffffff;
 }
 
@@ -162,7 +162,7 @@
 .priceValue {
   font-size: 14px;
   font-weight: 800;
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Actions row ---------- */
@@ -203,12 +203,18 @@
   text-align: center;
   box-sizing: border-box;
   padding: 15px;
-  border-radius: 14px;
-  color: #ffffff;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.addBtn:global(.btn-primary) {
+  display: flex;
+  margin-top: 18px;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 /* ---------- Responsive ---------- */

@@ -1,15 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import StatsBar from "./StatsBar";
 import MouldExplore from "./MouldExplore";
+import GetStartedModal from "./GetStartedModal";
 import styles from "./CustomerHome.module.css";
-import mouldchair from "@/public/images/mould-and-chair.png"
+import mouldchair from "@/public/images/mould-and-chair.png";
 
 export default function CustomerHome() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <div className={styles.page}>
-      {/* Header hata diya — ab layout.tsx se aa raha hai */}
-
       {/* Hero section with background image */}
       <section className={styles.heroSection}>
         <Image
@@ -36,11 +40,8 @@ export default function CustomerHome() {
           </p>
 
           <div className={styles.ctaRow}>
-            <Link href="/explore" className="btn-primary">
-              View our moulds <span aria-hidden>→</span>
-            </Link>
-            <button className={styles.watchBtn}>
-              <span aria-hidden>▶</span> Watch video
+            <button type="button" onClick={() => setModalOpen(true)} className="btn-primary">
+              Get Started <span aria-hidden>→</span>
             </button>
           </div>
         </div>
@@ -48,6 +49,8 @@ export default function CustomerHome() {
 
       <StatsBar />
       <MouldExplore />
+
+      <GetStartedModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

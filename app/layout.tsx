@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SplashLoader from "@/app/components/shared/SplashLoader";
+import ScrollToTop from "@/app/components/shared/ScrollToTop";
+import Header from "@/app/components/layout/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +35,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <SplashLoader>{children}</SplashLoader>
+        <ScrollToTop />
+        <SplashLoader>
+          <Header />
+          {children}
+        </SplashLoader>
         <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

@@ -35,7 +35,7 @@ const THREADS: Thread[] = [
     lastMessage: "Mould dispatched, arriving tomorrow.",
     unreadCount: 1,
     initial: "S",
-    gradient: "linear-gradient(135deg, #22d3ee, #2563eb)",
+    gradient: "#2563eb",
   },
   {
     id: "admin-support",
@@ -44,7 +44,7 @@ const THREADS: Thread[] = [
     lastMessage: "Your payment of ₹27,850 was successful.",
     unreadCount: 0,
     initial: "M",
-    gradient: "linear-gradient(135deg, #34d399, #059669)",
+    gradient: "#2563eb",
   },
   {
     id: "owner-vector-BK24102",
@@ -55,7 +55,7 @@ const THREADS: Thread[] = [
     lastMessage: "Thanks for renting with us again!",
     unreadCount: 0,
     initial: "V",
-    gradient: "linear-gradient(135deg, #818cf8, #7c3aed)",
+    gradient: "#2563eb",
   },
 ];
 
@@ -70,16 +70,6 @@ export default function InboxPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBar}>
-        <span className={styles.spacer} />
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </div>
-
       <h1 className={styles.title}>Inbox</h1>
 
       <div className={styles.tabs}>
