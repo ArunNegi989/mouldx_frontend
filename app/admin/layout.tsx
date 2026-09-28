@@ -21,13 +21,13 @@ const NAV_SECTIONS = [
       { label: "KYC", href: "/admin/kyc", icon: "🪪", badge: 4 },
       { label: "Listings", href: "/admin/listings", icon: "▦", badge: 7 },
       { label: "Bookings", href: "/admin/bookings", icon: "☰", badge: 3 },
+      { label: "Damage Claims", href: "/admin/damage-claims", icon: "⚠" },
     ],
   },
   {
     label: "Operations",
     items: [
       { label: "Owners", href: "/admin/owners", icon: "🏭" },
-      { label: "Damage Claims", href: "/admin/damage-claims", icon: "⚠" },
       { label: "Payments", href: "/admin/payments", icon: "₹" },
       { label: "Users", href: "/admin/users", icon: "◎" },
     ],

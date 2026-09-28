@@ -5,12 +5,14 @@ import Link from "next/link";
 import styles from "./KycApprovals.module.css";
 
 type KycStatus = "PENDING" | "RESUBMITTED" | "APPROVED" | "REJECTED";
+type StatusFilter = KycStatus | "ALL";
 
 interface KycRequest {
   id: string;
   ownerName: string;
   firmName: string;
   submittedDate: string;
+  submittedDateISO: string; // yyyy-mm-dd — used for date-range filtering
   submittedTime: string;
   docs: string[];
   status: KycStatus;
@@ -25,6 +27,7 @@ const KYC_REQUESTS: KycRequest[] = [
     ownerName: "Rohit Sharma",
     firmName: "Sharma Industries",
     submittedDate: "14 Sep",
+    submittedDateISO: "2026-09-14",
     submittedTime: "10:22 AM",
     docs: ["PAN", "GST", "EB"],
     status: "PENDING",
@@ -36,6 +39,7 @@ const KYC_REQUESTS: KycRequest[] = [
     ownerName: "Neha Kapoor",
     firmName: "Nova Plastics",
     submittedDate: "13 Sep",
+    submittedDateISO: "2026-09-13",
     submittedTime: "4:10 PM",
     docs: ["PAN", "GST", "MSME"],
     status: "PENDING",
@@ -47,6 +51,7 @@ const KYC_REQUESTS: KycRequest[] = [
     ownerName: "Vikram Rao",
     firmName: "Vector Molds",
     submittedDate: "12 Sep",
+    submittedDateISO: "2026-09-12",
     submittedTime: "9:05 AM",
     docs: ["PAN", "GST"],
     status: "RESUBMITTED",
@@ -58,6 +63,7 @@ const KYC_REQUESTS: KycRequest[] = [
     ownerName: "Anjali Deshpande",
     firmName: "Apex Poly",
     submittedDate: "11 Sep",
+    submittedDateISO: "2026-09-11",
     submittedTime: "1:40 PM",
     docs: ["PAN", "GST", "EB"],
     status: "PENDING",
@@ -73,23 +79,98 @@ const STATUS_CLASS: Record<KycStatus, string> = {
   REJECTED: "statusRejected",
 };
 
+const STATUS_FILTER_OPTIONS: { key: StatusFilter; label: string }[] = [
+  { key: "ALL", label: "All Statuses" },
+  { key: "PENDING", label: "Pending" },
+  { key: "RESUBMITTED", label: "Resubmitted" },
+  { key: "APPROVED", label: "Approved" },
+  { key: "REJECTED", label: "Rejected" },
+];
+
+function csvEscape(v: string | number) {
+  const str = String(v);
+  return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
+function downloadCsv(filename: string, rows: (string | number)[][]) {
+  // BOM so Excel reads UTF-8 correctly
+  const csv = "\uFEFF" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export default function KycApprovalsPage() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
   const filtered = useMemo(() => {
-    if (search.trim() === "") return KYC_REQUESTS;
-    const q = search.toLowerCase();
-    return KYC_REQUESTS.filter(
-      (r) =>
+    return KYC_REQUESTS.filter((r) => {
+      const q = search.trim().toLowerCase();
+      const matchesSearch =
+        q === "" ||
         r.ownerName.toLowerCase().includes(q) ||
         r.firmName.toLowerCase().includes(q) ||
-        r.docs.some((d) => d.toLowerCase().includes(q))
-    );
-  }, [search]);
+        r.docs.some((d) => d.toLowerCase().includes(q));
+
+      const matchesStatus = statusFilter === "ALL" || r.status === statusFilter;
+
+      const matchesDate =
+        (!dateRange.start || r.submittedDateISO >= dateRange.start) &&
+        (!dateRange.end || r.submittedDateISO <= dateRange.end);
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }, [search, statusFilter, dateRange]);
 
   const pendingCount = KYC_REQUESTS.filter(
     (r) => r.status === "PENDING" || r.status === "RESUBMITTED"
   ).length;
+
+  const isFilterActive = statusFilter !== "ALL";
+
+  const handleStatusSelect = (key: StatusFilter) => {
+    setStatusFilter(key);
+    setIsFilterOpen(false);
+  };
+
+  const handleDateChange = (field: "start" | "end", value: string) => {
+    setDateRange((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleDownloadCsv = () => {
+    if (filtered.length === 0) return;
+
+    const rows: (string | number)[][] = [
+      ["Owner Name", "Firm Name", "Submitted Date", "Submitted Time", "Documents", "Status"],
+      ...filtered.map((r) => [
+        r.ownerName,
+        r.firmName,
+        r.submittedDateISO,
+        r.submittedTime,
+        r.docs.join(" | "),
+        r.status,
+      ]),
+    ];
+
+    const parts = ["kyc-requests"];
+    if (statusFilter !== "ALL") parts.push(statusFilter.toLowerCase());
+    if (dateRange.start || dateRange.end) {
+      parts.push(`${dateRange.start || "start"}_to_${dateRange.end || "today"}`);
+    } else {
+      parts.push(new Date().toISOString().slice(0, 10));
+    }
+
+    downloadCsv(`${parts.join("_")}.csv`, rows);
+  };
 
   return (
     <div className={styles.page}>
@@ -113,8 +194,60 @@ export default function KycApprovalsPage() {
             className={styles.searchInput}
           />
         </div>
-        <button type="button" className={styles.filterBtn}>
-          <span aria-hidden>⚙</span> Filter
+
+        <div className={styles.dateRangeGroup}>
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={dateRange.start}
+            onChange={(e) => handleDateChange("start", e.target.value)}
+          />
+          <span className={styles.dateSep}>→</span>
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={dateRange.end}
+            onChange={(e) => handleDateChange("end", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.filterWrap}>
+          <button
+            type="button"
+            className={`${styles.filterBtn} ${isFilterActive ? styles.filterBtnActive : ""}`}
+            onClick={() => setIsFilterOpen((v) => !v)}
+          >
+            <span aria-hidden>⚙</span>
+            {isFilterActive && <span className={styles.filterDot} aria-hidden />}
+          </button>
+
+          {isFilterOpen && (
+            <div className={styles.filterDropdown}>
+              {STATUS_FILTER_OPTIONS.map((opt) => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  className={`${styles.filterOption} ${
+                    statusFilter === opt.key ? styles.filterOptionActive : ""
+                  }`}
+                  onClick={() => handleStatusSelect(opt.key)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className={styles.downloadBtn}
+          onClick={handleDownloadCsv}
+          disabled={filtered.length === 0}
+          title="Download filtered records as CSV"
+        >
+          <span aria-hidden>⬇</span> Download CSV
+          <span className={styles.downloadCount}>{filtered.length}</span>
         </button>
       </div>
 

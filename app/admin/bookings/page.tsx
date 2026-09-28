@@ -6,6 +6,7 @@ import styles from "./BookingApprovals.module.css";
 
 type PaymentStatus = "CAPTURED" | "PROCESSING" | "FAILED";
 type BookingStatus = "PENDING" | "APPROVED" | "REJECTED";
+type StatusFilter = BookingStatus | "ALL";
 
 interface BookingRequest {
   id: string;
@@ -14,6 +15,7 @@ interface BookingRequest {
   owner: string;
   amount: number;
   payment: PaymentStatus;
+  bookingDateISO: string; // yyyy-mm-dd — used for date-range filtering + CSV
   status: BookingStatus;
 }
 
@@ -26,6 +28,7 @@ const BOOKINGS: BookingRequest[] = [
     owner: "Sharma Industries",
     amount: 27850,
     payment: "CAPTURED",
+    bookingDateISO: "2026-09-14",
     status: "PENDING",
   },
   {
@@ -35,6 +38,7 @@ const BOOKINGS: BookingRequest[] = [
     owner: "Nova Plastics",
     amount: 19400,
     payment: "CAPTURED",
+    bookingDateISO: "2026-09-13",
     status: "PENDING",
   },
   {
@@ -44,6 +48,7 @@ const BOOKINGS: BookingRequest[] = [
     owner: "Vector Molds",
     amount: 31200,
     payment: "PROCESSING",
+    bookingDateISO: "2026-09-12",
     status: "PENDING",
   },
 ];
@@ -60,21 +65,96 @@ const STATUS_CLASS: Record<BookingStatus, string> = {
   REJECTED: "statusRejected",
 };
 
+const STATUS_FILTER_OPTIONS: { key: StatusFilter; label: string }[] = [
+  { key: "ALL", label: "All Statuses" },
+  { key: "PENDING", label: "Pending" },
+  { key: "APPROVED", label: "Approved" },
+  { key: "REJECTED", label: "Rejected" },
+];
+
+function csvEscape(v: string | number) {
+  const str = String(v);
+  return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
+function downloadCsv(filename: string, rows: (string | number)[][]) {
+  // BOM so Excel reads UTF-8 correctly
+  const csv = "\uFEFF" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export default function BookingApprovalsPage() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
   const filtered = useMemo(() => {
-    if (search.trim() === "") return BOOKINGS;
-    const q = search.toLowerCase();
-    return BOOKINGS.filter(
-      (b) =>
+    return BOOKINGS.filter((b) => {
+      const q = search.trim().toLowerCase();
+      const matchesSearch =
+        q === "" ||
         b.bookingId.toLowerCase().includes(q) ||
         b.customer.toLowerCase().includes(q) ||
-        b.owner.toLowerCase().includes(q)
-    );
-  }, [search]);
+        b.owner.toLowerCase().includes(q);
+
+      const matchesStatus = statusFilter === "ALL" || b.status === statusFilter;
+
+      const matchesDate =
+        (!dateRange.start || b.bookingDateISO >= dateRange.start) &&
+        (!dateRange.end || b.bookingDateISO <= dateRange.end);
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }, [search, statusFilter, dateRange]);
 
   const pendingCount = BOOKINGS.filter((b) => b.status === "PENDING").length;
+
+  const isFilterActive = statusFilter !== "ALL";
+
+  const handleStatusSelect = (key: StatusFilter) => {
+    setStatusFilter(key);
+    setIsFilterOpen(false);
+  };
+
+  const handleDateChange = (field: "start" | "end", value: string) => {
+    setDateRange((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleDownloadCsv = () => {
+    if (filtered.length === 0) return;
+
+    const rows: (string | number)[][] = [
+      ["Booking ID", "Customer", "Owner", "Amount (INR)", "Payment", "Booking Date", "Status"],
+      ...filtered.map((b) => [
+        b.bookingId,
+        b.customer,
+        b.owner,
+        b.amount,
+        b.payment,
+        b.bookingDateISO,
+        b.status,
+      ]),
+    ];
+
+    const parts = ["booking-requests"];
+    if (statusFilter !== "ALL") parts.push(statusFilter.toLowerCase());
+    if (dateRange.start || dateRange.end) {
+      parts.push(`${dateRange.start || "start"}_to_${dateRange.end || "today"}`);
+    } else {
+      parts.push(new Date().toISOString().slice(0, 10));
+    }
+
+    downloadCsv(`${parts.join("_")}.csv`, rows);
+  };
 
   return (
     <div className={styles.page}>
@@ -98,8 +178,60 @@ export default function BookingApprovalsPage() {
             className={styles.searchInput}
           />
         </div>
-        <button type="button" className={styles.filterBtn}>
-          <span aria-hidden>⚙</span> Filter
+
+        <div className={styles.dateRangeGroup}>
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={dateRange.start}
+            onChange={(e) => handleDateChange("start", e.target.value)}
+          />
+          <span className={styles.dateSep}>→</span>
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={dateRange.end}
+            onChange={(e) => handleDateChange("end", e.target.value)}
+          />
+        </div>
+
+        <div className={styles.filterWrap}>
+          <button
+            type="button"
+            className={`${styles.filterBtn} ${isFilterActive ? styles.filterBtnActive : ""}`}
+            onClick={() => setIsFilterOpen((v) => !v)}
+          >
+            <span aria-hidden>⚙</span>
+            {isFilterActive && <span className={styles.filterDot} aria-hidden />}
+          </button>
+
+          {isFilterOpen && (
+            <div className={styles.filterDropdown}>
+              {STATUS_FILTER_OPTIONS.map((opt) => (
+                <button
+                  key={opt.key}
+                  type="button"
+                  className={`${styles.filterOption} ${
+                    statusFilter === opt.key ? styles.filterOptionActive : ""
+                  }`}
+                  onClick={() => handleStatusSelect(opt.key)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          className={styles.downloadBtn}
+          onClick={handleDownloadCsv}
+          disabled={filtered.length === 0}
+          title="Download filtered records as CSV"
+        >
+          <span aria-hidden>⬇</span> Download CSV
+          <span className={styles.downloadCount}>{filtered.length}</span>
         </button>
       </div>
 
