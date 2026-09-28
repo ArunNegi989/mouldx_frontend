@@ -6,7 +6,7 @@ export default function SplashLoader({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fallback = setTimeout(() => setLoading(false), 4000);
+    const fallback = setTimeout(() => setLoading(false), 6000);
     return () => clearTimeout(fallback);
   }, []);
 
