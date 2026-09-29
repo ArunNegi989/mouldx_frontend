@@ -64,6 +64,25 @@ const KYC_CLASS: Record<KycStatus, string> = {
   "N/A": "kycNa",
 };
 
+function csvEscape(v: string | number) {
+  const str = String(v);
+  return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
+function downloadCsv(filename: string, rows: (string | number)[][]) {
+  // BOM so Excel reads UTF-8 correctly
+  const csv = "\uFEFF" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export default function UserManagementPage() {
   const router = useRouter();
   const [users, setUsers] = useState<UserRow[]>(INITIAL_USERS);
@@ -93,6 +112,21 @@ export default function UserManagementPage() {
   };
 
   const userToDelete = users.find((u) => u.id === confirmDeleteId);
+
+  const handleDownloadCsv = () => {
+    if (filtered.length === 0) return;
+
+    const rows: (string | number)[][] = [
+      ["Name", "Role", "Joined", "Activity Count", "Activity Type", "KYC Status"],
+      ...filtered.map((u) => [u.name, u.role, u.joined, u.activityCount, u.activityLabel, u.kyc]),
+    ];
+
+    const parts = ["users"];
+    if (activeTab !== "All") parts.push(activeTab.toLowerCase());
+    parts.push(new Date().toISOString().slice(0, 10));
+
+    downloadCsv(`${parts.join("_")}.csv`, rows);
+  };
 
   return (
     <div className={styles.page}>
@@ -129,6 +163,17 @@ export default function UserManagementPage() {
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          className={styles.downloadBtn}
+          onClick={handleDownloadCsv}
+          disabled={filtered.length === 0}
+          title="Download filtered users as CSV"
+        >
+          <span aria-hidden>⬇</span> Download CSV
+          <span className={styles.downloadCount}>{filtered.length}</span>
+        </button>
       </div>
 
       {/* ---------- Table (desktop) ---------- */}

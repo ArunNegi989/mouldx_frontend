@@ -250,7 +250,8 @@ export default function SelectDatesPage({
   return (
     <div className={styles.page}>
       {/* ---------- Sticky header ---------- */}
-      <header className={styles.header}>
+
+      {/* <header className={styles.header}>
         <Link href={`/explore/${id}`} className={styles.iconBtn} aria-label="Go back">
           ←
         </Link>
@@ -260,7 +261,7 @@ export default function SelectDatesPage({
         <button type="button" className={styles.iconBtn} aria-label="Help">
           ?
         </button>
-      </header>
+      </header> */}
 
       <div className={styles.content}>
         <h1 className={styles.pageTitle}>Select rental dates</h1>

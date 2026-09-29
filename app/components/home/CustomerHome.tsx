@@ -29,15 +29,15 @@ export default function CustomerHome() {
           <p className={styles.eyebrow}>Precision Engineered</p>
 
           <h1 className={styles.heading}>
-            <span className={styles.headingAccent}>chair moulds</span>
+            <span className={styles.headingAccent}>Turning Moulds</span>
             <br />
-            <span className={styles.headingUnderline}>for Global Manufacturers</span>
+            <span className={styles.headingUnderline}>into Opportunities </span>
           </h1>
 
-          <p className={styles.description}>
+          {/* <p className={styles.description}>
             We design and manufacture high-quality plastic chair moulds that
             deliver precision, durability and consistency performance
-          </p>
+          </p> */}
 
           <div className={styles.ctaRow}>
             <button type="button" onClick={() => setModalOpen(true)} className="btn-primary">

@@ -15,6 +15,7 @@ interface Transaction {
   amount: number;
   status: TxnStatus;
   date: string;
+  dateISO: string; // yyyy-mm-dd — used for date-range filtering + CSV
 }
 
 // TEMP dummy data — real Razorpay/ledger API se aayega
@@ -27,6 +28,7 @@ const TRANSACTIONS: Transaction[] = [
     amount: 27850,
     status: "CAPTURED",
     date: "14 Sep",
+    dateISO: "2026-09-14",
   },
   {
     id: "2",
@@ -36,6 +38,7 @@ const TRANSACTIONS: Transaction[] = [
     amount: 13500,
     status: "PROCESSED",
     date: "13 Sep",
+    dateISO: "2026-09-13",
   },
   {
     id: "3",
@@ -45,6 +48,7 @@ const TRANSACTIONS: Transaction[] = [
     amount: 31200,
     status: "PROCESSING",
     date: "12 Sep",
+    dateISO: "2026-09-12",
   },
   {
     id: "4",
@@ -54,6 +58,7 @@ const TRANSACTIONS: Transaction[] = [
     amount: 4200,
     status: "DISPUTED",
     date: "11 Sep",
+    dateISO: "2026-09-11",
   },
 ];
 
@@ -65,21 +70,54 @@ const STATUS_CLASS: Record<TxnStatus, string> = {
   FAILED: "statusFailed",
 };
 
-const DATE_FILTERS = ["All time", "Today", "Last 7 days", "Last 30 days"];
-const STATUS_FILTERS = ["All statuses", "Captured", "Processed", "Processing", "Disputed", "Failed"];
+const DATE_FILTERS = ["All time", "Today", "Last 7 days", "Last 30 days"] as const;
+const STATUS_FILTERS = ["All statuses", "Captured", "Processed", "Processing", "Disputed", "Failed"] as const;
+
+function csvEscape(v: string | number) {
+  const str = String(v);
+  return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
+function downloadCsv(filename: string, rows: (string | number)[][]) {
+  // BOM so Excel reads UTF-8 correctly (₹ etc.)
+  const csv = "\uFEFF" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function isoDaysAgo(days: number) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString().slice(0, 10);
+}
 
 export default function PaymentsPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [dateFilter, setDateFilter] = useState(DATE_FILTERS[0]);
-  const [statusFilter, setStatusFilter] = useState(STATUS_FILTERS[0]);
+  const [dateFilter, setDateFilter] = useState<(typeof DATE_FILTERS)[number]>(DATE_FILTERS[0]);
+  const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>(STATUS_FILTERS[0]);
   const [filterOpen, setFilterOpen] = useState(false);
 
   const filtered = useMemo(() => {
     let list = TRANSACTIONS;
+
     if (statusFilter !== "All statuses") {
       list = list.filter((t) => t.status.toLowerCase() === statusFilter.toLowerCase());
     }
+
+    if (dateFilter !== "All time") {
+      const cutoff =
+        dateFilter === "Today" ? isoDaysAgo(0) : dateFilter === "Last 7 days" ? isoDaysAgo(7) : isoDaysAgo(30);
+      list = list.filter((t) => t.dateISO >= cutoff);
+    }
+
     if (search.trim() !== "") {
       const q = search.toLowerCase();
       list = list.filter(
@@ -89,22 +127,26 @@ export default function PaymentsPage() {
           t.type.toLowerCase().includes(q)
       );
     }
+
     return list;
-  }, [search, statusFilter]);
+  }, [search, statusFilter, dateFilter]);
+
+  const isFilterActive = dateFilter !== "All time" || statusFilter !== "All statuses";
 
   const handleExportCsv = () => {
-    // TODO: generate and download CSV from filtered transactions
-    const header = "Txn ID,Booking,Type,Amount,Status,Date\n";
-    const rows = filtered
-      .map((t) => `${t.txnId},${t.bookingId},${t.type},${t.amount},${t.status},${t.date}`)
-      .join("\n");
-    const blob = new Blob([header + rows], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "mouldx-payments.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+    if (filtered.length === 0) return;
+
+    const rows: (string | number)[][] = [
+      ["Txn ID", "Booking", "Type", "Amount (INR)", "Status", "Date"],
+      ...filtered.map((t) => [t.txnId, t.bookingId, t.type, t.amount, t.status, t.dateISO]),
+    ];
+
+    const parts = ["mouldx-payments"];
+    if (statusFilter !== "All statuses") parts.push(statusFilter.toLowerCase());
+    if (dateFilter !== "All time") parts.push(dateFilter.toLowerCase().replace(/\s+/g, "-"));
+    if (parts.length === 1) parts.push(new Date().toISOString().slice(0, 10));
+
+    downloadCsv(`${parts.join("_")}.csv`, rows);
   };
 
   const handleView = (id: string) => {
@@ -116,8 +158,15 @@ export default function PaymentsPage() {
       {/* ---------- Header ---------- */}
       <div className={styles.headerRow}>
         <h1 className={styles.title}>Payments &amp; Refunds</h1>
-        <button type="button" onClick={handleExportCsv} className={styles.exportBtn}>
-          ⬇ Export CSV
+        <button
+          type="button"
+          onClick={handleExportCsv}
+          className={styles.exportBtn}
+          disabled={filtered.length === 0}
+          title="Export filtered transactions as CSV"
+        >
+          <span aria-hidden>⬇</span> Export CSV
+          <span className={styles.exportCount}>{filtered.length}</span>
         </button>
       </div>
 
@@ -137,7 +186,11 @@ export default function PaymentsPage() {
         </div>
 
         <div className={styles.filterWrap}>
-          <button type="button" onClick={() => setFilterOpen((p) => !p)} className={styles.filterBtn}>
+          <button
+            type="button"
+            onClick={() => setFilterOpen((p) => !p)}
+            className={`${styles.filterBtn} ${isFilterActive ? styles.filterBtnActive : ""}`}
+          >
             {dateFilter === "All time" && statusFilter === "All statuses"
               ? "Date · Status"
               : `${dateFilter !== "All time" ? dateFilter : "Date"} · ${

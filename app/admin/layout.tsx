@@ -27,9 +27,11 @@ const NAV_SECTIONS = [
   {
     label: "Operations",
     items: [
-      { label: "Owners", href: "/admin/owners", icon: "🏭" },
+      // { label: "Owners", href: "/admin/owners", icon: "🏭" },
+       { label: "Active Listings", href: "/admin/active-listings", icon: "🏭" },
       { label: "Payments", href: "/admin/payments", icon: "₹" },
       { label: "Users", href: "/admin/users", icon: "◎" },
+      
     ],
   },
 ];
@@ -50,9 +52,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
-        <span className={styles.mobileBrand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/logo.png" alt="MouldX" className={styles.logoImg} />
         <span className={styles.mobileSpacer} />
       </div>
 
@@ -61,9 +62,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ---------- Sidebar ---------- */}
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.brandRow}>
-          <span className={styles.brand}>
-            Mould<span className={styles.brandAccent}>X</span>
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo.png" alt="MouldX" className={styles.logoImg} />
         </div>
 
         <nav className={styles.nav}>

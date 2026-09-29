@@ -32,12 +32,6 @@
   cursor: pointer;
 }
 
-.mobileBrand {
-  font-size: 15px;
-  font-weight: 800;
-  color: #111827;
-}
-
 .mobileSpacer {
   width: 34px;
 }
@@ -69,17 +63,18 @@
 }
 
 .brandRow {
+  display: flex;
+  align-items: center;
   padding: 0 8px 22px;
 }
 
-.brand {
-  font-size: 17px;
-  font-weight: 800;
-  color: #111827;
-}
-
-.brandAccent {
-  color: #2563eb;
+/* ---------- Logo (shared by mobile bar + sidebar) ---------- */
+.logoImg {
+  height: 28px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  display: block;
 }
 
 .nav {
@@ -180,5 +175,10 @@
     padding: 36px 44px;
     padding-top: 36px;
     background: #f6f7fb;
+  }
+
+  .logoImg {
+    height: 32px;
+    max-width: 160px;
   }
 }

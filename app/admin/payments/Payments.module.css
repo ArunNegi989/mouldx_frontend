@@ -21,7 +21,7 @@
 .exportBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 9px 16px;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
@@ -31,17 +31,45 @@
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.exportBtn:hover:not(:disabled) {
+  background: #f6f7fb;
+}
+
+.exportBtn:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.exportCount {
+  min-width: 18px;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.exportBtn:disabled .exportCount {
+  background: #f3f4f6;
+  color: #9ca3af;
 }
 
 /* ---------- Toolbar ---------- */
 .toolbar {
   margin-top: 18px;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .searchWrap {
   flex: 1;
+  min-width: 200px;
   position: relative;
   display: flex;
   align-items: center;
@@ -94,6 +122,15 @@
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filterBtnActive {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
 }
 
 .filterBackdrop {
@@ -108,6 +145,7 @@
   right: 0;
   z-index: 50;
   width: 200px;
+  max-width: calc(100vw - 32px);
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -286,6 +324,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .clickableRow {
@@ -324,6 +363,38 @@
 
 /* ---------- Responsive ---------- */
 
+@media (max-width: 480px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .exportBtn {
+    justify-content: center;
+  }
+
+  .filterWrap {
+    flex: 1 1 100%;
+  }
+
+  .filterBtn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filterDropdown {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+@media (min-width: 640px) {
+  .searchWrap {
+    flex: 1 1 auto;
+  }
+}
+
 @media (min-width: 768px) {
   .card {
     display: block;
@@ -336,5 +407,11 @@
 @media (min-width: 1024px) {
   .title {
     font-size: 24px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page {
+    padding-bottom: 8px;
   }
 }

@@ -6,9 +6,8 @@ import { Home, Calendar, Box, Inbox, User } from "lucide-react";
 import styles from "./BottomNav.module.css";
 
 const NAV_ITEMS = [
-  { label: "Home", href: "/home", icon: Home },
+  { label: "Explore", href: "/home", icon: Home },
   { label: "Booking", href: "/bookings", icon: Calendar },
-  { label: "My Moulds", href: "/explore", icon: Box },
   { label: "Inbox", href: "/inbox", icon: Inbox },
   { label: "Profile", href: "/profile", icon: User },
 ];
