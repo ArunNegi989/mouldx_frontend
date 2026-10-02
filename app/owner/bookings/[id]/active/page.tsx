@@ -12,7 +12,6 @@ interface TimelineStep {
   status: "done" | "current";
 }
 
-// TEMP dummy data — real booking API se aayega
 const ACTIVE_BOOKINGS: Record<string,
   {
     code: string;
@@ -65,7 +64,6 @@ export default function ActiveBookingPage({
   const handleMarkReturned = () => {
     if (submitting) return;
     setSubmitting(true);
-    // TODO: call mark-returned API with { bookingId: id }
     router.push(`/owner/bookings/${id}/return`);
   };
 

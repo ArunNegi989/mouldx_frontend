@@ -12,17 +12,7 @@ const APPROVAL = {
 export default function ProfileApprovedPage() {
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
-      <header className={styles.header}>
-        <Link href="/owner" className={styles.iconBtn} aria-label="Go back">
-          ‹
-        </Link>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <span className={styles.headerSpacer} aria-hidden />
-      </header>
-
+     
       <div className={styles.content}>
         {/* ---------- Success icon ---------- */}
         <div className={styles.heroSection}>

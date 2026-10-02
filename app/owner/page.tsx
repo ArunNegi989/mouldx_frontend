@@ -50,18 +50,7 @@ export default function OwnerHomePage() {
             <span className={styles.quickActionIcon} aria-hidden>➕</span>
             <span className={styles.quickActionLabel}>List a Mould</span>
           </Link>
-          <Link href="/owner/bookings" className={styles.quickAction}>
-            <span className={styles.quickActionIcon} aria-hidden>📋</span>
-            <span className={styles.quickActionLabel}>Bookings</span>
-          </Link>
-          <Link href="/owner/earnings" className={styles.quickAction}>
-            <span className={styles.quickActionIcon} aria-hidden>💸</span>
-            <span className={styles.quickActionLabel}>Withdraw</span>
-          </Link>
-          <Link href="/owner/moulds" className={styles.quickAction}>
-            <span className={styles.quickActionIcon} aria-hidden>🗂️</span>
-            <span className={styles.quickActionLabel}>My Moulds</span>
-          </Link>
+          
         </div>
 
         {/* ---------- Mould utilization ---------- */}

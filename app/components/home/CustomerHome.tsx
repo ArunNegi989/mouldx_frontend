@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import StatsBar from "./StatsBar";
 import MouldExplore from "./MouldExplore";
 import GetStartedModal from "./GetStartedModal";
+import SearchBar from "../shared/SearchBar";
+import SearchOverlay from "../shared/SearchOverlay";
 import styles from "./CustomerHome.module.css";
 import mouldchair from "@/public/images/mould-and-chair.png";
 
 export default function CustomerHome() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   return (
     <div className={styles.page}>
-      {/* Hero section with background image */}
       <section className={styles.heroSection}>
         <Image
           src={mouldchair}
@@ -26,6 +28,14 @@ export default function CustomerHome() {
         <div className={styles.heroOverlay} />
 
         <div className={styles.content}>
+          <div className={styles.searchRow}>
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              onOpen={() => setSearchOpen(true)}
+            />
+          </div>
+
           <p className={styles.eyebrow}>Precision Engineered</p>
 
           <h1 className={styles.heading}>
@@ -33,11 +43,6 @@ export default function CustomerHome() {
             <br />
             <span className={styles.headingUnderline}>into Opportunities </span>
           </h1>
-
-          {/* <p className={styles.description}>
-            We design and manufacture high-quality plastic chair moulds that
-            deliver precision, durability and consistency performance
-          </p> */}
 
           <div className={styles.ctaRow}>
             <button type="button" onClick={() => setModalOpen(true)} className="btn-primary">
@@ -51,6 +56,14 @@ export default function CustomerHome() {
       <MouldExplore />
 
       <GetStartedModal open={modalOpen} onClose={() => setModalOpen(false)} />
+
+      {/* Zomato/Blinkit style full-screen search */}
+      <SearchOverlay
+        open={searchOpen}
+        query={search}
+        onQueryChange={setSearch}
+        onClose={() => setSearchOpen(false)}
+      />
     </div>
   );
 }

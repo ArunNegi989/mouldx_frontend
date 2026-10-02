@@ -14,18 +14,7 @@ const LISTING = {
 export default function ListingLivePage() {
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
-      <header className={styles.header}>
-        <Link href="/owner" className={styles.iconBtn} aria-label="Go back">
-          ‹
-        </Link>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </header>
+    
 
       <div className={styles.content}>
         <h1 className={styles.title}>Listing Approval</h1>

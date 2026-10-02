@@ -31,7 +31,6 @@ interface ThreadInfo {
   };
 }
 
-// TEMP dummy data — real chat API/socket se aayega
 const THREAD_INFO: Record<string, ThreadInfo> = {
   "customer-nova-MX000123": {
     id: "customer-nova-MX000123",
@@ -94,18 +93,43 @@ const THREAD_INFO: Record<string, ThreadInfo> = {
 
 const DUMMY_MESSAGES: Record<string, Message[]> = {
   "customer-nova-MX000123": [
-    { id: "m1", sender: "other", text: "Please confirm dispatch timing.", time: "10:02 AM" },
-    { id: "m2", sender: "me", text: "Dispatching today, 11 AM sharp.", time: "10:15 AM" },
+    {
+      id: "m1",
+      sender: "other",
+      text: "Please confirm dispatch timing.",
+      time: "10:02 AM",
+    },
+    {
+      id: "m2",
+      sender: "me",
+      text: "Dispatching today, 11 AM sharp.",
+      time: "10:15 AM",
+    },
   ],
   "admin-support": [
-    { id: "m1", sender: "other", text: "Your mould listing has been approved.", time: "Yesterday" },
+    {
+      id: "m1",
+      sender: "other",
+      text: "Your mould listing has been approved.",
+      time: "Yesterday",
+    },
     { id: "m2", sender: "me", text: "Great, thank you!", time: "Yesterday" },
   ],
   "customer-vector-MX000198": [
-    { id: "m1", sender: "other", text: "Return scheduled for tomorrow.", time: "3 days ago" },
+    {
+      id: "m1",
+      sender: "other",
+      text: "Return scheduled for tomorrow.",
+      time: "3 days ago",
+    },
   ],
   "customer-apex-MX000077": [
-    { id: "m1", sender: "other", text: "Thanks for the smooth transaction!", time: "1 week ago" },
+    {
+      id: "m1",
+      sender: "other",
+      text: "Thanks for the smooth transaction!",
+      time: "1 week ago",
+    },
   ],
 };
 
@@ -129,7 +153,10 @@ export default function OwnerChatThreadPage({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3">
         <p className="text-sm text-gray-500">Conversation not found.</p>
-        <Link href="/owner/inbox" className="text-sm font-bold text-blue-600 no-underline">
+        <Link
+          href="/owner/inbox"
+          className="text-sm font-bold text-blue-600 no-underline"
+        >
           ← Back to Inbox
         </Link>
       </div>
@@ -148,7 +175,6 @@ export default function OwnerChatThreadPage({
     setDraft("");
     setIsTyping(true);
 
-    // TODO: real API/socket call — send message to customer/admin
     setTimeout(() => {
       setIsTyping(false);
       setMessages((prev) => [
@@ -184,13 +210,18 @@ export default function OwnerChatThreadPage({
 
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className={styles.avatarWrap}>
-            <div className={styles.headerAvatar} style={{ background: info.gradient }}>
+            <div
+              className={styles.headerAvatar}
+              style={{ background: info.gradient }}
+            >
               {info.type === "admin" ? "🛡" : info.initial}
             </div>
             {info.online && <span className={styles.onlineDot} />}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-gray-900">{info.name}</p>
+            <p className="truncate text-sm font-bold text-gray-900">
+              {info.name}
+            </p>
             <p className="truncate text-[11px] text-gray-400">
               {isTyping ? (
                 <span className="font-semibold text-cyan-500">typing…</span>
@@ -208,13 +239,25 @@ export default function OwnerChatThreadPage({
 
       {/* ---------- Mould / booking context card ---------- */}
       {info.mould && (
-        <Link href={`/owner/bookings/${info.mould.bookingId}`} className={styles.mouldCard}>
+        <Link
+          href={`/owner/bookings/${info.mould.bookingId}`}
+          className={styles.mouldCard}
+        >
           <div className={styles.mouldThumbWrap}>
-            <Image src={info.mould.image} alt={info.mould.name} fill className={styles.mouldThumb} />
+            <Image
+              src={info.mould.image}
+              alt={info.mould.name}
+              fill
+              className={styles.mouldThumb}
+            />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-bold text-gray-900">{info.mould.name}</p>
-            <p className="truncate text-[11px] text-gray-400">{info.mould.code}</p>
+            <p className="truncate text-[13px] font-bold text-gray-900">
+              {info.mould.name}
+            </p>
+            <p className="truncate text-[11px] text-gray-400">
+              {info.mould.code}
+            </p>
           </div>
           <span className={styles.mouldStatusPill}>{info.mould.status}</span>
         </Link>
@@ -233,11 +276,17 @@ export default function OwnerChatThreadPage({
             key={msg.id}
             className={`flex ${msg.sender === "me" ? "justify-end" : "justify-start"}`}
           >
-            <div className={msg.sender === "me" ? styles.bubbleMe : styles.bubbleOther}>
+            <div
+              className={
+                msg.sender === "me" ? styles.bubbleMe : styles.bubbleOther
+              }
+            >
               <p className="m-0 text-[13px] leading-snug">{msg.text}</p>
               <span
                 className={`mt-1 block text-[10px] ${
-                  msg.sender === "me" ? "text-right text-cyan-50/80" : "text-gray-400"
+                  msg.sender === "me"
+                    ? "text-right text-cyan-50/80"
+                    : "text-gray-400"
                 }`}
               >
                 {msg.time}

@@ -163,17 +163,6 @@ export default function BookingDetailPage({
   return (
     <div className={`${styles.page} ${booking.awaitingReceipt ? styles.pageWithCta : ""}`}>
       {/* ---------- Header ---------- */}
-      <header className={styles.header}>
-        <Link href="/bookings" className={styles.iconBtn} aria-label="Go back">
-          ←
-        </Link>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </header>
 
       <div className={styles.content}>
         {/* ---------- Active rental panel ---------- */}

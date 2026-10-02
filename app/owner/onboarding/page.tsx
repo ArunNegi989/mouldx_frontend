@@ -39,26 +39,7 @@ export default function OwnerOnboardingPage() {
   return (
     <div className={`${styles.page} flex h-screen flex-col justify-between overflow-hidden bg-white px-6 pt-12 pb-6`}>
       <div>
-        {/* ---------- Header ---------- */}
-        <header className="mb-6 flex items-center justify-between">
-          <Link
-            href="/login"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-gray-900 no-underline"
-            aria-label="Go back"
-          >
-            ‹
-          </Link>
-          <span className="text-[15px] font-extrabold text-gray-900">
-            Mould<span className="text-blue-600">X</span>
-          </span>
-          <button
-            type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500"
-            aria-label="Help"
-          >
-            ?
-          </button>
-        </header>
+       
 
         {/* ---------- Title ---------- */}
         <div className={styles.titleBlock}>

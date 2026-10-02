@@ -60,15 +60,6 @@ export default function ReceivedMouldDetailsPage({
   return (
     <div className={styles.page}>
       {/* ---------- Header ---------- */}
-      <header className={styles.header}>
-        <Link href={`/bookings/${bookingId}`} className={styles.iconBtn} aria-label="Go back">
-          ←
-        </Link>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <span className={styles.headerSpacer} aria-hidden />
-      </header>
 
       <div className={styles.content}>
         {/* ---------- Received banner ---------- */}

@@ -77,27 +77,6 @@ export default function MouldDetailPage({
   return (
     <div className={styles.page}>
      
-     {/* ---------- Sticky header ---------- */}
-
-{/* <header className={styles.header}>
-  <Link href="/explore" className={styles.iconBtn} aria-label="Go back">
-    ←
-  </Link>
-
-  <div className="relative w-[90px] h-[26px] shrink-0">
-    <Image
-      src={logo}
-      alt="MouldX"
-      fill
-      sizes="90px"
-      className="object-contain"
-      priority
-    />
-  </div>
-
-  <span className={styles.headerSpacer} aria-hidden />
-</header> */}
-
       <div className={styles.content}>
         {/* ---------- Media gallery ---------- */}
         <div className={styles.gallery}>

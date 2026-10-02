@@ -77,15 +77,16 @@ export default function ProfileCreationPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const markTouched = (key: string) => setTouched((prev) => ({ ...prev, [key]: true }));
+  const markTouched = (key: string) =>
+    setTouched((prev) => ({ ...prev, [key]: true }));
 
   const errors: Partial<Record<keyof FormState, string>> = {
     name:
       form.name.trim() === ""
         ? "Name is required"
         : !REGEX.name.test(form.name.trim())
-        ? "Enter a valid name"
-        : "",
+          ? "Enter a valid name"
+          : "",
     emailPoc:
       form.emailPoc.trim() !== "" && !REGEX.email.test(form.emailPoc.trim())
         ? "Enter a valid email"
@@ -94,39 +95,45 @@ export default function ProfileCreationPage() {
       form.pan.trim() === ""
         ? "PAN is required"
         : !REGEX.pan.test(form.pan.trim().toUpperCase())
-        ? "Format: ABCDE1234F"
-        : "",
+          ? "Format: ABCDE1234F"
+          : "",
     firmEmail:
       form.firmEmail.trim() === ""
         ? "Email is required"
         : !REGEX.email.test(form.firmEmail.trim())
-        ? "Enter a valid email"
-        : "",
+          ? "Enter a valid email"
+          : "",
     firmName: form.firmName.trim() === "" ? "Firm name is required" : "",
     address: form.address.trim() === "" ? "Address is required" : "",
     gstNo:
       form.gstNo.trim() === ""
         ? "GST number is required"
         : !REGEX.gst.test(form.gstNo.trim().toUpperCase())
-        ? "Format: 22ABCDE1234F1Z5"
-        : "",
+          ? "Format: 22ABCDE1234F1Z5"
+          : "",
     gstCertificate: !form.gstCertificate ? "GST certificate is required" : "",
-    electricityBill: !form.electricityBill ? "Last month's electricity bill is required" : "",
+    electricityBill: !form.electricityBill
+      ? "Last month's electricity bill is required"
+      : "",
     bankAccount:
       form.bankAccount.trim() === ""
         ? "Bank A/C No. is required"
         : !REGEX.bankAccount.test(form.bankAccount.trim())
-        ? "Enter a valid account number"
-        : "",
+          ? "Enter a valid account number"
+          : "",
     ifsc:
       form.ifsc.trim() === ""
         ? "IFSC code is required"
         : !REGEX.ifsc.test(form.ifsc.trim().toUpperCase())
-        ? "Format: SBIN0001234"
-        : "",
-    accountHolder: form.accountHolder.trim() === "" ? "Account holder name is required" : "",
+          ? "Format: SBIN0001234"
+          : "",
+    accountHolder:
+      form.accountHolder.trim() === "" ? "Account holder name is required" : "",
     bankName: form.bankName.trim() === "" ? "Bank name is required" : "",
-    upiId: form.upiId.trim() !== "" && !REGEX.upi.test(form.upiId.trim()) ? "Enter a valid UPI ID" : "",
+    upiId:
+      form.upiId.trim() !== "" && !REGEX.upi.test(form.upiId.trim())
+        ? "Enter a valid UPI ID"
+        : "",
   };
 
   const isValid =
@@ -145,7 +152,10 @@ export default function ProfileCreationPage() {
     !errors.bankName &&
     !errors.upiId;
 
-  const handleFile = (key: "gstCertificate" | "msmeCertificate" | "electricityBill", file: File | null) => {
+  const handleFile = (
+    key: "gstCertificate" | "msmeCertificate" | "electricityBill",
+    file: File | null,
+  ) => {
     update(key, file);
     markTouched(key);
   };
@@ -162,7 +172,11 @@ export default function ProfileCreationPage() {
     <div className={styles.page}>
       {/* ---------- Header ---------- */}
       <header className={styles.header}>
-        <Link href="/owner/onboarding" className={styles.iconBtn} aria-label="Go back">
+        <Link
+          href="/owner/onboarding"
+          className={styles.iconBtn}
+          aria-label="Go back"
+        >
           ‹
         </Link>
         <span className={styles.brand}>
@@ -179,7 +193,9 @@ export default function ProfileCreationPage() {
 
         {/* ---------- Progress bar ---------- */}
         <div className={styles.progressRow}>
-          <span className={`${styles.progressBar} ${styles.progressBarActive}`} />
+          <span
+            className={`${styles.progressBar} ${styles.progressBarActive}`}
+          />
           <span className={styles.progressBar} />
           <span className={styles.progressBar} />
           <span className={styles.progressBar} />
@@ -303,7 +319,9 @@ export default function ProfileCreationPage() {
             label="Bank A/C No."
             required
             value={form.bankAccount}
-            onChange={(v) => update("bankAccount", v.replace(/\D/g, "").slice(0, 18))}
+            onChange={(v) =>
+              update("bankAccount", v.replace(/\D/g, "").slice(0, 18))
+            }
             onBlur={() => markTouched("bankAccount")}
             error={touched.bankAccount ? errors.bankAccount : ""}
             placeholder="XXXXXXXXXXXX"
@@ -352,7 +370,11 @@ export default function ProfileCreationPage() {
 
       {/* ---------- Sticky submit ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleSubmit} className={`${styles.ctaBtn} btn-primary`}>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className={`${styles.ctaBtn} btn-primary`}
+        >
           Submit for Approval
         </button>
       </div>
@@ -456,11 +478,15 @@ function FileField({
       <label className={styles.fieldLabel}>
         {label} {required && <span className={styles.required}>*</span>}
       </label>
-      <label className={`${styles.uploadBox} ${error ? styles.uploadBoxError : ""}`}>
+      <label
+        className={`${styles.uploadBox} ${error ? styles.uploadBoxError : ""}`}
+      >
         {file ? (
           <span className={styles.uploadFileName}>📎 {file.name}</span>
         ) : (
-          <span className={styles.uploadPlaceholder}>+ Upload {label} · PDF/Image</span>
+          <span className={styles.uploadPlaceholder}>
+            + Upload {label} · PDF/Image
+          </span>
         )}
         <input
           type="file"

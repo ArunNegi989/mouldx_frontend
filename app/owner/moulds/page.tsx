@@ -16,7 +16,6 @@ interface Mould {
   gradient: string;
 }
 
-// TEMP dummy data — will come from the real moulds API
 const MOULDS: Mould[] = [
   {
     id: "1",

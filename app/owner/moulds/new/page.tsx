@@ -62,27 +62,43 @@ export default function MouldTechnicalPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const markTouched = (key: string) => setTouched((prev) => ({ ...prev, [key]: true }));
+  const markTouched = (key: string) =>
+    setTouched((prev) => ({ ...prev, [key]: true }));
 
   // Whole-number-only fields (no decimals make sense here)
-  const wholeNumberFields: (keyof FormState)[] = ["cavities", "cycleTime", "coolingTemp"];
+  const wholeNumberFields: (keyof FormState)[] = [
+    "cavities",
+    "cycleTime",
+    "coolingTemp",
+  ];
 
   const validateField = (key: keyof FormState, value: string): string => {
     if (value.trim() === "") return "Required";
-    const regex = wholeNumberFields.includes(key) ? REGEX.positiveInt : REGEX.positiveDecimal;
+    const regex = wholeNumberFields.includes(key)
+      ? REGEX.positiveInt
+      : REGEX.positiveDecimal;
     if (!regex.test(value.trim())) return "Numeric value only";
     return "";
   };
 
   const errors: Partial<Record<keyof FormState, string>> = Object.fromEntries(
-    REQUIRED_NUMERIC_FIELDS.map((key) => [key, validateField(key, form[key] as string)])
+    REQUIRED_NUMERIC_FIELDS.map((key) => [
+      key,
+      validateField(key, form[key] as string),
+    ]),
   );
 
   const isValid = REQUIRED_NUMERIC_FIELDS.every((key) => !errors[key]);
 
-  const handleNumericChange = (key: keyof FormState, raw: string, allowDecimal: boolean) => {
+  const handleNumericChange = (
+    key: keyof FormState,
+    raw: string,
+    allowDecimal: boolean,
+  ) => {
     // strip anything that isn't a digit (and a single dot, if decimals allowed)
-    let cleaned = allowDecimal ? raw.replace(/[^0-9.]/g, "") : raw.replace(/\D/g, "");
+    let cleaned = allowDecimal
+      ? raw.replace(/[^0-9.]/g, "")
+      : raw.replace(/\D/g, "");
     if (allowDecimal) {
       const parts = cleaned.split(".");
       if (parts.length > 2) cleaned = parts[0] + "." + parts.slice(1).join("");
@@ -91,7 +107,9 @@ export default function MouldTechnicalPage() {
   };
 
   const handleNext = () => {
-    setTouched(Object.fromEntries(REQUIRED_NUMERIC_FIELDS.map((f) => [f, true])));
+    setTouched(
+      Object.fromEntries(REQUIRED_NUMERIC_FIELDS.map((f) => [f, true])),
+    );
     if (!isValid) return;
     // TODO: persist technical details, then continue
     router.push("/owner/moulds/new/general");
@@ -100,23 +118,14 @@ export default function MouldTechnicalPage() {
   return (
     <div className={styles.page}>
       {/* ---------- Header ---------- */}
-      <header className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-        <Link
-          href="/owner/onboarding/approved"
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-gray-900 no-underline"
-          aria-label="Go back"
-        >
-          ‹
-        </Link>
-        <span className="text-[15px] font-extrabold text-gray-900">
-          Mould<span className="text-blue-600">X</span>
-        </span>
-        <span className="w-9" />
-      </header>
 
       <div className={styles.content}>
-        <h1 className="text-[26px] font-extrabold text-gray-900">Mould Details</h1>
-        <p className="mt-1 text-sm text-gray-400">Step 2 · Technical specifications.</p>
+        <h1 className="text-[26px] font-extrabold text-gray-900">
+          Mould Details
+        </h1>
+        <p className="mt-1 text-sm text-gray-400">
+          Step 2 · Technical specifications.
+        </p>
 
         {/* ---------- Progress bar (2 of 4) ---------- */}
         <div className="mt-4 flex gap-1.5">
@@ -203,18 +212,26 @@ export default function MouldTechnicalPage() {
             <NumField
               label="Max. Injection Volume (cm³)"
               value={form.maxInjectionVolume}
-              onChange={(v) => handleNumericChange("maxInjectionVolume", v, true)}
+              onChange={(v) =>
+                handleNumericChange("maxInjectionVolume", v, true)
+              }
               onBlur={() => markTouched("maxInjectionVolume")}
-              error={touched.maxInjectionVolume ? errors.maxInjectionVolume : ""}
+              error={
+                touched.maxInjectionVolume ? errors.maxInjectionVolume : ""
+              }
               placeholder="650"
             />
           </div>
 
           <div className="mt-3">
-            <label className={styles.fieldLabel}>Hot Runner / Cold Runner</label>
+            <label className={styles.fieldLabel}>
+              Hot Runner / Cold Runner
+            </label>
             <select
               value={form.runnerType}
-              onChange={(e) => update("runnerType", e.target.value as FormState["runnerType"])}
+              onChange={(e) =>
+                update("runnerType", e.target.value as FormState["runnerType"])
+              }
               className={styles.select}
             >
               <option value="Hot Runner">Hot Runner</option>
@@ -237,7 +254,12 @@ export default function MouldTechnicalPage() {
             <label className={styles.fieldLabel}>Changeable Brand Logo</label>
             <select
               value={form.changeableLogo}
-              onChange={(e) => update("changeableLogo", e.target.value as FormState["changeableLogo"])}
+              onChange={(e) =>
+                update(
+                  "changeableLogo",
+                  e.target.value as FormState["changeableLogo"],
+                )
+              }
               className={styles.select}
             >
               <option value="No">No</option>
@@ -249,7 +271,11 @@ export default function MouldTechnicalPage() {
 
       {/* ---------- Sticky Next ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleNext} className={`${styles.ctaBtn} btn-primary`}>
+        <button
+          type="button"
+          onClick={handleNext}
+          className={`${styles.ctaBtn} btn-primary`}
+        >
           Next: General Details <span aria-hidden>→</span>
         </button>
       </div>

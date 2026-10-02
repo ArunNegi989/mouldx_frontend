@@ -13,7 +13,6 @@ interface EvidenceFile {
   coords: { lat: number; lng: number } | null;
 }
 
-// TEMP dummy data — real booking API se aayega
 const BOOKING_REF: Record<string, { code: string; deposit: number }> = {
   "1": { code: "MX-000123", deposit: 50000 },
   "2": { code: "MX-000198", deposit: 18000 },
@@ -105,8 +104,7 @@ export default function DamageClaimPage({
     setTouched({ description: true, files: true, claimAmount: true });
     if (!isValid || submitting) return;
     setSubmitting(true);
-    // TODO: call raise-claim API with { bookingId: id, description, claimAmount,
-    //   evidence: evidence.map(e => ({ file: e.file, geoLocation: e.coords })) }
+   
     router.push(`/owner/bookings/${id}?status=claim-submitted`);
   };
 

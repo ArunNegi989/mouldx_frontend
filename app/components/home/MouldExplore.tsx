@@ -3,17 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./MouldExplore.module.css";
 import MouldListCard from "@/app/components/explore/MouldListCard";
-import { DUMMY_MOULDS, type Category as MouldCategory } from "@/app/data/moulds";
-interface Mould {
-  id: string;
-  code: string;
-  name: string;
-  city: string;
-  price: string;
-  category: "Injection" | "Blow" | "Die-Cast";
-  availability: "FREE" | "2 LEFT" | "BOOKED";
-  image: string;
-}
+import { DUMMY_MOULDS } from "@/app/data/moulds";
 
 const CATEGORIES = ["All", "Injection", "Blow", "Die-Cast", "Nearby"] as const;
 const AVAILABILITY_OPTIONS = ["All", "FREE", "2 LEFT", "BOOKED"] as const;
@@ -30,8 +20,22 @@ function parsePrice(price: string) {
   return Number(price.replace(/[^0-9]/g, "")) || 0;
 }
 
-export default function MouldExplore() {
-  const [search, setSearch] = useState("");
+// "tables" -> "table", taaki plural likhne par bhi match ho
+function normalizeToken(t: string) {
+  return t.length > 3 ? t.replace(/s$/, "") : t;
+}
+
+interface MouldExploreProps {
+  search?: string;
+  onSearchChange?: (value: string) => void;
+}
+
+export default function MouldExplore({ search: searchProp, onSearchChange }: MouldExploreProps) {
+  // Parent se search aaye to wahi use hoga, warna local state
+  const [localSearch, setLocalSearch] = useState("");
+  const search = searchProp ?? localSearch;
+  const setSearch = onSearchChange ?? setLocalSearch;
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
   const [activePriceLabel, setActivePriceLabel] = useState<(typeof PRICE_RANGES)[number]["label"]>("Any price");
@@ -44,14 +48,22 @@ export default function MouldExplore() {
   const activePriceRange = PRICE_RANGES.find((r) => r.label === activePriceLabel) ?? PRICE_RANGES[0];
 
   const filteredMoulds = useMemo(() => {
+    const tokens = search
+      .toLowerCase()
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(normalizeToken);
+
     return DUMMY_MOULDS.filter((m) => {
       const matchesCategory =
         activeCategory === "All" || activeCategory === "Nearby" || m.category === activeCategory;
-      const matchesSearch =
-        search.trim() === "" ||
-        m.name.toLowerCase().includes(search.toLowerCase()) ||
-        m.code.toLowerCase().includes(search.toLowerCase()) ||
-        m.city.toLowerCase().includes(search.toLowerCase());
+
+      // name + code + city + category, sab mein dhundhega
+      // "table" likhne par jinke naam/type mein table hai wo sab aayenge
+      const haystack = `${m.name} ${m.code} ${m.city} ${m.category}`.toLowerCase();
+      const matchesSearch = tokens.every((t) => haystack.includes(t));
+
       const priceValue = parsePrice(m.price);
       const matchesPrice = priceValue >= activePriceRange.min && priceValue <= activePriceRange.max;
       const matchesAvailability = activeAvailability === "All" || m.availability === activeAvailability;
@@ -59,14 +71,11 @@ export default function MouldExplore() {
     });
   }, [search, activeCategory, activePriceRange, activeAvailability]);
 
-  // Reset to page 1 whenever search or filters change
+  // Search ya filter badle to page 1 par wapas
   useEffect(() => {
     setPage(1);
   }, [search, activeCategory, activePriceLabel, activeAvailability]);
 
-  // Scroll to the top of the list only when the page value actually changes.
-  // Comparing against the previous value (instead of a "first render" flag)
-  // keeps this safe under React Strict Mode's double-invoked effects.
   useEffect(() => {
     if (prevPageRef.current !== page) {
       listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -94,9 +103,13 @@ export default function MouldExplore() {
   };
 
   return (
-    <section className={styles.section}>
+    <section id="mould-explore" className={styles.section}>
       <h2 className={styles.title}>Find a mould</h2>
-      <p className={styles.subtitle}>1,240+ verified listings across India</p>
+      <p className={styles.subtitle}>
+        {search.trim()
+          ? `${filteredMoulds.length} result${filteredMoulds.length === 1 ? "" : "s"} for “${search.trim()}”`
+          : "1,240+ verified listings across India"}
+      </p>
 
       <div className={styles.searchRow}>
         <div className={styles.searchWrap}>

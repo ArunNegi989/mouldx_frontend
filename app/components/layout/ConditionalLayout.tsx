@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/app/components/layout/Header";
 import SplashLoader from "@/app/components/shared/SplashLoader";
+import Footer from "./Footer";
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -25,6 +26,7 @@ export default function ConditionalLayout({
     <SplashLoader>
       <Header />
       {children}
+      <Footer />
     </SplashLoader>
   );
 }

@@ -33,8 +33,8 @@ const RECENT_ACTIVITY = [
 const QUICK_ACTIONS = [
   { label: "Review KYC", icon: "🪪", href: "/admin/kyc" },
   { label: "Review Listings", icon: "▦", href: "/admin/listings" },
-  { label: "Payouts", icon: "₹", href: "/admin/payments" },
-  { label: "Broadcast", icon: "📣", href: "/admin/broadcast" },
+  { label: "Review Bookings", icon: "▦", href: "/admin/bookings" },
+  { label: "Review Damage Claims", icon: "📣", href: "/admin/damage-claims" },
 ];
 
 const GRANULARITY_OPTIONS = [

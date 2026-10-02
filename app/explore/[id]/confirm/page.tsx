@@ -44,18 +44,7 @@ export default function ConfirmPayPage() {
 
   return (
     <div className={styles.page}>
-      {/* <header className={styles.header}>
-        <button type="button" onClick={() => router.back()} className={styles.iconBtn} aria-label="Go back">
-          ←
-        </button>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </header> */}
-
+    
       <div className={styles.content}>
         <h1 className={styles.title}>Confirm &amp; pay</h1>
         <p className={styles.subtitle}>

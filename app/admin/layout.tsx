@@ -31,6 +31,7 @@ const NAV_SECTIONS = [
        { label: "Active Listings", href: "/admin/active-listings", icon: "🏭" },
       { label: "Payments", href: "/admin/payments", icon: "₹" },
       { label: "Users", href: "/admin/users", icon: "◎" },
+       { label: "Reviews", href: "/admin/reviews", icon: "▦" },
       
     ],
   },
