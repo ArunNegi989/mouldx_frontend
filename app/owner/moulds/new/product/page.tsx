@@ -170,7 +170,7 @@ export default function ProductDetailsPage() {
           ‹
         </Link>
         <span className="text-[15px] font-extrabold text-gray-900">
-          Mould<span className="text-cyan-500">X</span>
+          Mould<span className="text-blue-600">X</span>
         </span>
         <span className="w-9" />
       </header>
@@ -378,7 +378,7 @@ export default function ProductDetailsPage() {
 
       {/* ---------- Sticky Submit ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleSubmit} className={styles.ctaBtn}>
+        <button type="button" onClick={handleSubmit} className={`${styles.ctaBtn} btn-primary`}>
           Submit Listing for Approval
         </button>
       </div>

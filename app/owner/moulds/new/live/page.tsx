@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./ListingLive.module.css";
 
-// TEMP dummy data — real listing API se aayega
+// TEMP dummy data — will come from the real listing API
 const LISTING = {
   code: "MX-000123",
   views: 0,
@@ -62,7 +62,7 @@ export default function ListingLivePage() {
 
       {/* ---------- CTA ---------- */}
       <div className={styles.ctaBar}>
-        <Link href="/owner" className={styles.ctaBtn}>
+        <Link href="/owner" className={`${styles.ctaBtn} btn-primary`}>
           Go to Owner Home <span aria-hidden>→</span>
         </Link>
       </div>

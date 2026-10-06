@@ -8,7 +8,7 @@ interface Issue {
   flagged: boolean;
 }
 
-// TEMP dummy data — real admin review API se aayega
+// TEMP dummy data — will come from the real admin review API
 const REJECTION = {
   remarks: "Photos are too dim. Please reshoot the product with better lighting and upload the mould invoice.",
   issues: [
@@ -53,7 +53,7 @@ export default function ListingRejectedPage() {
 
       {/* ---------- Sticky action ---------- */}
       <div className={styles.ctaBar}>
-        <Link href="/owner/moulds/new" className={styles.editBtn}>
+        <Link href="/owner/moulds/new" className={`${styles.editBtn} btn-primary`}>
           Edit Listing
         </Link>
       </div>

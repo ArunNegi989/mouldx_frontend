@@ -38,7 +38,7 @@
 }
 
 .brandAccent {
-  color: #22d3ee;
+  color: #2563eb;
 }
 
 /* ---------- Content ---------- */
@@ -64,10 +64,10 @@
   position: relative;
   overflow: hidden;
   margin-top: 20px;
-  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #8b5cf6 100%);
+  background: #2563eb;
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.28);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.28);
   animation: fadeUp 0.5s ease both;
 }
 
@@ -114,7 +114,7 @@
   margin: 14px 0 0;
   font-size: 30px;
   font-weight: 800;
-  color: #0b1120;
+  color: #ffffff;
   line-height: 1.1;
 }
 
@@ -124,7 +124,7 @@
   margin-top: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: rgba(11, 17, 32, 0.75);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ---------- Listing status card ---------- */
@@ -232,13 +232,19 @@
   text-align: center;
   box-sizing: border-box;
   border: none;
-  border-radius: 12px;
   padding: 15px;
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
   text-decoration: none;
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 50%, #8b5cf6 100%);
+}
+
+.ctaBtn:global(.btn-primary) {
+  display: flex;
+  width: 100%;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  justify-content: center;
 }
 
 /* ---------- Responsive ---------- */

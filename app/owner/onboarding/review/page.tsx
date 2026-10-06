@@ -10,7 +10,7 @@ interface TimelineStep {
   meta: string;
 }
 
-// TEMP dummy data — real profile-submission API se aayega
+// TEMP dummy data — will come from the real profile-submission API
 const REVIEW = {
   submittedAt: "14 Sep · 10:22 AM",
   etaHours: 24,

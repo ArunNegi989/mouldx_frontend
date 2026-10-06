@@ -82,7 +82,7 @@ export default function VerifyOtpPage() {
 
       <h1 className={styles.title}>Verify OTP</h1>
       <p className={styles.subtitle}>
-        Enter the 6-digit code sent to your registered phone/email.
+        Enter the 6-digit code sent to your registered phone.
       </p>
 
       <div className={styles.card}>

@@ -29,12 +29,12 @@ export default function GetStartedModal({ open, onClose }: GetStartedModalProps)
 
   const goAsCustomer = () => {
     onClose();
-    router.push("/home");
+    router.push("/signup");
   };
 
   const goAsHost = () => {
     onClose();
-    router.push("/owner");
+    router.push("/owner/onboarding/profile");
   };
 
   return (

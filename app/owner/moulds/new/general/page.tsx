@@ -130,7 +130,7 @@ export default function MouldGeneralPage() {
           ‹
         </Link>
         <span className="text-[15px] font-extrabold text-gray-900">
-          Mould<span className="text-cyan-500">X</span>
+          Mould<span className="text-blue-600">X</span>
         </span>
         <span className="w-9" />
       </header>
@@ -320,7 +320,7 @@ export default function MouldGeneralPage() {
 
       {/* ---------- Sticky Next ---------- */}
       <div className={styles.ctaBar}>
-        <button type="button" onClick={handleNext} className={styles.ctaBtn}>
+        <button type="button" onClick={handleNext} className={`${styles.ctaBtn} btn-primary`}>
           Next: Product Details <span aria-hidden>→</span>
         </button>
       </div>
