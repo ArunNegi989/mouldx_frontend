@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ProductDetails.module.css";
+import Stepper from "@/app/components/Stepper/Stepper";
 
 const REGEX = {
   productName: /^[a-zA-Z0-9\s.,'\-()]{2,80}$/,
@@ -163,16 +164,12 @@ export default function ProductDetailsPage() {
      
 
       <div className={styles.content}>
-        <h1 className="text-[26px] font-extrabold text-gray-900">Product Details</h1>
-        <p className="mt-1 text-sm text-gray-400">Step 3 · Add the product this mould makes.</p>
+       <h1 className="text-[26px] font-extrabold text-gray-900">Product Details</h1>
+<p className="mt-1 text-sm text-gray-400">Add the product this mould makes.</p>
 
-        {/* ---------- Progress bar (Step 4 of 4) ---------- */}
-        <div className="mt-4 flex gap-1.5">
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-        </div>
+<Stepper current={4} />
+
+       
 
         {/* ---------- Card ---------- */}
         <div className={styles.card}>

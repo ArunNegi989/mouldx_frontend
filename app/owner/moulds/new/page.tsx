@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./MouldTechnical.module.css";
+import Stepper from "@/app/components/Stepper/Stepper";
 
 const REGEX = {
   positiveInt: /^[1-9]\d*$/, // whole numbers, no decimals — cavities, cycle time, cooling temp
@@ -120,20 +121,12 @@ export default function MouldTechnicalPage() {
       {/* ---------- Header ---------- */}
 
       <div className={styles.content}>
-        <h1 className="text-[26px] font-extrabold text-gray-900">
-          Mould Details
-        </h1>
-        <p className="mt-1 text-sm text-gray-400">
-          Step 2 · Technical specifications.
-        </p>
+        <h1 className="text-[26px] font-extrabold text-gray-900">Mould Details</h1>
+<p className="mt-1 text-sm text-gray-400">Technical specifications.</p>
 
-        {/* ---------- Progress bar (2 of 4) ---------- */}
-        <div className="mt-4 flex gap-1.5">
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBar} />
-          <span className={styles.progressBar} />
-        </div>
+<Stepper current={2} />
+
+       
 
         {/* ---------- Dimensions ---------- */}
         <div className={styles.card}>

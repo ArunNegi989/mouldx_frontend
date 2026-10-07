@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./MouldGeneral.module.css";
+import Stepper from "@/app/components/Stepper/Stepper";
 
 const REGEX = {
   mouldNameOrId: /^[a-zA-Z0-9\s.,'\-·]{3,80}$/,
@@ -122,16 +123,12 @@ export default function MouldGeneralPage() {
     <div className={styles.page}>
       
       <div className={styles.content}>
-        <h1 className="text-[26px] font-extrabold text-gray-900">Mould Details</h1>
-        <p className="mt-1 text-sm text-gray-400">General, commercial &amp; eligibility.</p>
+       <h1 className="text-[26px] font-extrabold text-gray-900">Mould Details</h1>
+<p className="mt-1 text-sm text-gray-400">General, commercial &amp; eligibility.</p>
 
-        {/* ---------- Progress bar (Step 3 of 4) ---------- */}
-        <div className="mt-4 flex gap-1.5">
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBarActive} />
-          <span className={styles.progressBar} />
-        </div>
+<Stepper current={3} />
+
+       
 
         {/* ---------- Card ---------- */}
         <div className={styles.card}>
