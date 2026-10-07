@@ -60,11 +60,11 @@ export default function VerifyOtpPage() {
 
   const isComplete = otp.every((d) => d !== "");
 
-  const handleVerify = () => {
-    if (!isComplete) return;
-    // TODO: call verify OTP API with otp.join("")
-    router.push("/home");
-  };
+const handleVerify = () => {
+  if (!isComplete) return;
+  // TODO: call verify OTP API with otp.join("")
+  router.push("/onboarding/profile");
+};
 
   return (
     <div className={styles.page}>

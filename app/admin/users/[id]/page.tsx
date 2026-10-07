@@ -17,6 +17,12 @@ interface OwnerExtra {
   listings: { code: string; name: string; status: string }[];
 }
 
+interface UserReview {
+  id: string;
+  rating: number; // 1-5
+  text: string;
+}
+
 interface UserDetail {
   id: string;
   name: string;
@@ -31,6 +37,7 @@ interface UserDetail {
   activityCount: number;
   activityLabel: string;
   recentActivity: { text: string; date: string }[];
+  reviews: UserReview[];
   ownerExtra?: OwnerExtra;
 }
 
@@ -53,6 +60,18 @@ const USER_DETAILS: Record<string, UserDetail> = {
       { text: "Listed new mould MX-000231", date: "2 days ago" },
       { text: "Dispatched booking BK-24581", date: "5 days ago" },
       { text: "Payout of ₹12,600 released", date: "6 days ago" },
+    ],
+    reviews: [
+      {
+        id: "r1",
+        rating: 5,
+        text: "Mould was exactly as described — clean, well-maintained and the owner helped with setup over a call. Cycle time matched what was listed.",
+      },
+      {
+        id: "r2",
+        rating: 4,
+        text: "Dispatch was on time and packaging was solid. Minor cleaning needed on the cooling channels.",
+      },
     ],
     ownerExtra: {
       firmName: "Sharma Industries",
@@ -85,6 +104,13 @@ const USER_DETAILS: Record<string, UserDetail> = {
       { text: "Rated owner Apex Poly — 5 stars", date: "3 days ago" },
       { text: "New booking request for MX-000198", date: "1 week ago" },
     ],
+    reviews: [
+      {
+        id: "r1",
+        rating: 5,
+        text: "Smooth rental, mould came back on time and in the same condition it was sent. Clear communication throughout.",
+      },
+    ],
   },
   "3": {
     id: "3",
@@ -103,6 +129,7 @@ const USER_DETAILS: Record<string, UserDetail> = {
       { text: "Listed new mould MX-000212", date: "4 days ago" },
       { text: "Booking BK-24611 marked active", date: "1 week ago" },
     ],
+    reviews: [],
     ownerExtra: {
       firmName: "Vector Molds",
       pan: "PQRSX5678K",
@@ -224,7 +251,7 @@ export default function UserDetailPage({
           )}
         </div>
 
-        {/* Right: activity + stats */}
+        {/* Right: activity + stats + reviews */}
         <div className={styles.rightCol}>
           <div className={styles.statCard}>
             <span className={styles.statValue}>{user.activityCount}</span>
@@ -247,6 +274,26 @@ export default function UserDetailPage({
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Reviews: rating + text only */}
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Reviews ({user.reviews.length})</h2>
+            {user.reviews.length === 0 ? (
+              <p className={styles.reviewEmpty}>No reviews yet.</p>
+            ) : (
+              user.reviews.map((r, i) => (
+                <div
+                  key={r.id}
+                  className={`${styles.reviewRow} ${
+                    i < user.reviews.length - 1 ? styles.reviewRowBorder : ""
+                  }`}
+                >
+                  <StarRating value={r.rating} />
+                  <p className={styles.reviewText}>{r.text}</p>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -286,5 +333,18 @@ function Row({ label, value, isLast = false }: { label: string; value: string; i
       <span className={styles.detailLabel}>{label}</span>
       <span className={styles.detailValue}>{value}</span>
     </div>
+  );
+}
+
+function StarRating({ value }: { value: number }) {
+  return (
+    <span className={styles.stars} aria-label={`${value} out of 5 stars`}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} aria-hidden className={i < value ? styles.starFilled : styles.starEmpty}>
+          ★
+        </span>
+      ))}
+      <span className={styles.starValue}>{value.toFixed(1)}</span>
+    </span>
   );
 }

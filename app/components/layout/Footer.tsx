@@ -12,6 +12,7 @@ const QUICK_LINKS = [
   { label: "FAQs", href: "/faqs" },
   { label: "About Us", href: "/about" },
   { label: "Agreement", href: "/agreement" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const SOCIAL_LINKS = [
@@ -85,7 +86,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div className={styles.col}>
-            <h3 className={styles.colTitle}>Contact Us</h3>
+            
             <p className={styles.contactName}>MouldX Private Limited</p>
             <address className={styles.address}>
               Nadehi Road, KDK Complex,

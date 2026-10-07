@@ -160,20 +160,7 @@ export default function ProductDetailsPage() {
 
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
-      <header className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-        <Link
-          href="/owner/moulds/new/general"
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-gray-900 no-underline"
-          aria-label="Go back"
-        >
-          ‹
-        </Link>
-        <span className="text-[15px] font-extrabold text-gray-900">
-          Mould<span className="text-blue-600">X</span>
-        </span>
-        <span className="w-9" />
-      </header>
+     
 
       <div className={styles.content}>
         <h1 className="text-[26px] font-extrabold text-gray-900">Product Details</h1>

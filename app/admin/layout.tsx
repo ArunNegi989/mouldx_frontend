@@ -28,6 +28,7 @@ const NAV_SECTIONS = [
     label: "Operations",
     items: [
       // { label: "Owners", href: "/admin/owners", icon: "🏭" },
+      { label: "Support", href: "/admin/support", icon: "💬", badge: 2 },
        { label: "Active Listings", href: "/admin/active-listings", icon: "🏭" },
       { label: "Payments", href: "/admin/payments", icon: "₹" },
       { label: "Users", href: "/admin/users", icon: "◎" },
