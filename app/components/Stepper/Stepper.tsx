@@ -1,11 +1,17 @@
 import styles from "./Stepper.module.css";
 
-const STEPS = ["Basic", "Technical", "General", "Product"];
+const DEFAULT_STEPS = ["Basic", "Technical", "General", "Product"];
 
-export default function Stepper({ current }: { current: number }) {
+export default function Stepper({
+  current,
+  steps = DEFAULT_STEPS,
+}: {
+  current: number;
+  steps?: string[];
+}) {
   return (
-    <ol className={styles.stepper} aria-label="Listing progress">
-      {STEPS.map((label, i) => {
+    <ol className={styles.stepper} aria-label="Progress">
+      {steps.map((label, i) => {
         const step = i + 1;
         const state =
           step < current ? "done" : step === current ? "active" : "upcoming";

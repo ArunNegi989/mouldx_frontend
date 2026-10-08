@@ -3,37 +3,71 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Stepper from "@/app/components/Stepper/Stepper";
 import styles from "./ProfileCreation.module.css";
 
 const REGEX = {
   name: /^[a-zA-Z\s.'-]{2,60}$/,
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-  idNumber: /^[a-zA-Z0-9\s-]{4,20}$/,
+  pan: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+  gst: /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}Z[A-Z\d]{1}$/,
+  bankAccount: /^\d{9,18}$/,
+  ifsc: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+  upi: /^[\w.-]{2,256}@[a-zA-Z]{2,64}$/,
 };
 
-const ID_TYPES = ["Aadhar Card", "PAN Card", "Driving License", "Voter ID"];
+const CUSTOMER_STEPS = ["Profile", "KYC"];
 
 interface FormState {
   name: string;
   phone: string;
-  email: string;
+  emailPoc: string;
+  pan: string;
+  firmEmail: string;
+  firmName: string;
   address: string;
-  idType: string;
-  idNumber: string;
-  idDocument: File | null;
+  gstNo: string;
+  gstCertificate: File | null;
+  msmeCertificate: File | null;
+  electricityBill: File | null;
+  bankAccount: string;
+  ifsc: string;
+  accountHolder: string;
+  bankName: string;
+  upiId: string;
 }
 
 const INITIAL_STATE: FormState = {
   name: "",
   phone: "",
-  email: "",
+  emailPoc: "",
+  pan: "",
+  firmEmail: "",
+  firmName: "",
   address: "",
-  idType: ID_TYPES[0],
-  idNumber: "",
-  idDocument: null,
+  gstNo: "",
+  gstCertificate: null,
+  msmeCertificate: null,
+  electricityBill: null,
+  bankAccount: "",
+  ifsc: "",
+  accountHolder: "",
+  bankName: "",
+  upiId: "",
 };
 
-const REQUIRED_FIELDS: (keyof FormState)[] = ["name", "email", "address", "idNumber"];
+const REQUIRED_FIELDS: (keyof FormState)[] = [
+  "name",
+  "pan",
+  "firmEmail",
+  "firmName",
+  "address",
+  "gstNo",
+  "bankAccount",
+  "ifsc",
+  "accountHolder",
+  "bankName",
+];
 
 export default function CustomerProfileCreationPage() {
   const router = useRouter();
@@ -54,63 +88,95 @@ export default function CustomerProfileCreationPage() {
         : !REGEX.name.test(form.name.trim())
           ? "Enter a valid name"
           : "",
-    email:
-      form.email.trim() === ""
+    emailPoc:
+      form.emailPoc.trim() !== "" && !REGEX.email.test(form.emailPoc.trim())
+        ? "Enter a valid email"
+        : "",
+    pan:
+      form.pan.trim() === ""
+        ? "PAN is required"
+        : !REGEX.pan.test(form.pan.trim().toUpperCase())
+          ? "Format: ABCDE1234F"
+          : "",
+    firmEmail:
+      form.firmEmail.trim() === ""
         ? "Email is required"
-        : !REGEX.email.test(form.email.trim())
+        : !REGEX.email.test(form.firmEmail.trim())
           ? "Enter a valid email"
           : "",
+    firmName: form.firmName.trim() === "" ? "Firm name is required" : "",
     address: form.address.trim() === "" ? "Address is required" : "",
-    idNumber:
-      form.idNumber.trim() === ""
-        ? "ID number is required"
-        : !REGEX.idNumber.test(form.idNumber.trim())
-          ? "Enter a valid ID number"
+    gstNo:
+      form.gstNo.trim() === ""
+        ? "GST number is required"
+        : !REGEX.gst.test(form.gstNo.trim().toUpperCase())
+          ? "Format: 22ABCDE1234F1Z5"
           : "",
-    idDocument: !form.idDocument ? "ID document upload is required" : "",
+    gstCertificate: !form.gstCertificate ? "GST certificate is required" : "",
+    electricityBill: !form.electricityBill
+      ? "Last month's electricity bill is required"
+      : "",
+    bankAccount:
+      form.bankAccount.trim() === ""
+        ? "Bank A/C No. is required"
+        : !REGEX.bankAccount.test(form.bankAccount.trim())
+          ? "Enter a valid account number"
+          : "",
+    ifsc:
+      form.ifsc.trim() === ""
+        ? "IFSC code is required"
+        : !REGEX.ifsc.test(form.ifsc.trim().toUpperCase())
+          ? "Format: SBIN0001234"
+          : "",
+    accountHolder:
+      form.accountHolder.trim() === "" ? "Account holder name is required" : "",
+    bankName: form.bankName.trim() === "" ? "Bank name is required" : "",
+    upiId:
+      form.upiId.trim() !== "" && !REGEX.upi.test(form.upiId.trim())
+        ? "Enter a valid UPI ID"
+        : "",
   };
 
   const isValid =
     !errors.name &&
-    !errors.email &&
+    !errors.emailPoc &&
+    !errors.pan &&
+    !errors.firmEmail &&
+    !errors.firmName &&
     !errors.address &&
-    !errors.idNumber &&
-    !errors.idDocument;
+    !errors.gstNo &&
+    !errors.gstCertificate &&
+    !errors.electricityBill &&
+    !errors.bankAccount &&
+    !errors.ifsc &&
+    !errors.accountHolder &&
+    !errors.bankName &&
+    !errors.upiId;
+
+  const handleFile = (
+    key: "gstCertificate" | "msmeCertificate" | "electricityBill",
+    file: File | null,
+  ) => {
+    update(key, file);
+    markTouched(key);
+  };
 
   const handleSubmit = () => {
-    const allFields = [...REQUIRED_FIELDS, "idDocument"];
+    const allFields = [...REQUIRED_FIELDS, "gstCertificate", "electricityBill"];
     setTouched(Object.fromEntries(allFields.map((f) => [f, true])));
     if (!isValid) return;
-    // TODO: submit to KYC approval API
     router.push("/onboarding/review");
   };
 
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
-      <header className={styles.header}>
-        <Link href="/login" className={styles.iconBtn} aria-label="Go back">
-          ‹
-        </Link>
-        <span className={styles.brand}>
-          Mould<span className={styles.brandAccent}>X</span>
-        </span>
-        <button type="button" className={styles.iconBtn} aria-label="Help">
-          ?
-        </button>
-      </header>
-
+      
       <div className={styles.content}>
         <h1 className={styles.title}>Profile Creation</h1>
         <p className={styles.subtitle}>Step 1 of 2 — KYC details.</p>
 
-        {/* ---------- Progress bar ---------- */}
-        <div className={styles.progressRow}>
-          <span className={`${styles.progressBar} ${styles.progressBarActive}`} />
-          <span className={styles.progressBar} />
-        </div>
+        <Stepper current={1} steps={CUSTOMER_STEPS} />
 
-        {/* ---------- Personal Details ---------- */}
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Personal Details</h2>
 
@@ -133,70 +199,148 @@ export default function CustomerProfileCreationPage() {
           />
 
           <Field
+            label="Email ID – POC"
+            value={form.emailPoc}
+            onChange={(v) => update("emailPoc", v)}
+            onBlur={() => markTouched("emailPoc")}
+            error={touched.emailPoc ? errors.emailPoc : ""}
+            placeholder="poc@company.com"
+          />
+        </div>
+
+        <div className={styles.card}>
+          <h2 className={styles.cardTitle}>Firm Details</h2>
+
+          <Field
+            label="PAN Card"
+            required
+            value={form.pan}
+            onChange={(v) => update("pan", v.toUpperCase().slice(0, 10))}
+            onBlur={() => markTouched("pan")}
+            error={touched.pan ? errors.pan : ""}
+            placeholder="ABCDE1234F"
+          />
+
+          <Field
             label="Email ID"
             required
-            value={form.email}
-            onChange={(v) => update("email", v)}
-            onBlur={() => markTouched("email")}
-            error={touched.email ? errors.email : ""}
-            placeholder="you@example.com"
+            value={form.firmEmail}
+            onChange={(v) => update("firmEmail", v)}
+            onBlur={() => markTouched("firmEmail")}
+            error={touched.firmEmail ? errors.firmEmail : ""}
+            placeholder="firm@company.com"
+          />
+
+          <Field
+            label="Firm Name"
+            required
+            value={form.firmName}
+            onChange={(v) => update("firmName", v)}
+            onBlur={() => markTouched("firmName")}
+            error={touched.firmName ? errors.firmName : ""}
+            placeholder="Sharma Industries"
           />
 
           <TextAreaField
             label="Address"
             required
-            hint="Used for delivery of rented moulds."
+            hint="Address will remain same for mould pickup/drop."
             value={form.address}
             onChange={(v) => update("address", v)}
             onBlur={() => markTouched("address")}
             error={touched.address ? errors.address : ""}
             placeholder="Plot no., street, city, state, pincode"
           />
-        </div>
-
-        {/* ---------- Identity Verification ---------- */}
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Identity Verification</h2>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel}>ID Type</label>
-            <select
-              value={form.idType}
-              onChange={(e) => update("idType", e.target.value)}
-              className={styles.select}
-            >
-              {ID_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
 
           <Field
-            label="ID Number"
+            label="GST No."
             required
-            value={form.idNumber}
-            onChange={(v) => update("idNumber", v)}
-            onBlur={() => markTouched("idNumber")}
-            error={touched.idNumber ? errors.idNumber : ""}
-            placeholder="XXXX XXXX XXXX"
+            value={form.gstNo}
+            onChange={(v) => update("gstNo", v.toUpperCase().slice(0, 15))}
+            onBlur={() => markTouched("gstNo")}
+            error={touched.gstNo ? errors.gstNo : ""}
+            placeholder="27ABCDE1234F1Z5"
           />
 
           <FileField
-            label={`${form.idType} Upload`}
+            label="GST Certificate"
             required
-            file={form.idDocument}
-            onChange={(f) => {
-              update("idDocument", f);
-              markTouched("idDocument");
-            }}
-            error={touched.idDocument ? errors.idDocument : ""}
+            file={form.gstCertificate}
+            onChange={(f) => handleFile("gstCertificate", f)}
+            error={touched.gstCertificate ? errors.gstCertificate : ""}
+          />
+
+          <FileField
+            label="MSME Certificate"
+            file={form.msmeCertificate}
+            onChange={(f) => handleFile("msmeCertificate", f)}
+          />
+
+          <FileField
+            label="Electricity Bill – last month"
+            required
+            file={form.electricityBill}
+            onChange={(f) => handleFile("electricityBill", f)}
+            error={touched.electricityBill ? errors.electricityBill : ""}
+          />
+        </div>
+
+        <div className={styles.card}>
+          <h2 className={styles.cardTitle}>Payout Details</h2>
+
+          <Field
+            label="Bank A/C No."
+            required
+            value={form.bankAccount}
+            onChange={(v) =>
+              update("bankAccount", v.replace(/\D/g, "").slice(0, 18))
+            }
+            onBlur={() => markTouched("bankAccount")}
+            error={touched.bankAccount ? errors.bankAccount : ""}
+            placeholder="XXXXXXXXXXXX"
+          />
+
+          <Field
+            label="IFSC Code"
+            required
+            value={form.ifsc}
+            onChange={(v) => update("ifsc", v.toUpperCase().slice(0, 11))}
+            onBlur={() => markTouched("ifsc")}
+            error={touched.ifsc ? errors.ifsc : ""}
+            placeholder="SBIN0001234"
+          />
+
+          <Field
+            label="Account Holder Name"
+            required
+            value={form.accountHolder}
+            onChange={(v) => update("accountHolder", v)}
+            onBlur={() => markTouched("accountHolder")}
+            error={touched.accountHolder ? errors.accountHolder : ""}
+            placeholder="As per bank records"
+          />
+
+          <Field
+            label="Bank Name"
+            required
+            value={form.bankName}
+            onChange={(v) => update("bankName", v)}
+            onBlur={() => markTouched("bankName")}
+            error={touched.bankName ? errors.bankName : ""}
+            placeholder="State Bank of India"
+          />
+
+          <Field
+            label="UPI ID"
+            value={form.upiId}
+            onChange={(v) => update("upiId", v)}
+            onBlur={() => markTouched("upiId")}
+            error={touched.upiId ? errors.upiId : ""}
+            placeholder="name@upi (optional)"
           />
         </div>
       </div>
 
-      {/* ---------- Sticky submit ---------- */}
       <div className={styles.ctaBar}>
         <button
           type="button"
@@ -209,8 +353,6 @@ export default function CustomerProfileCreationPage() {
     </div>
   );
 }
-
-/* ---------- Reusable field components ---------- */
 
 function Field({
   label,
@@ -306,11 +448,15 @@ function FileField({
       <label className={styles.fieldLabel}>
         {label} {required && <span className={styles.required}>*</span>}
       </label>
-      <label className={`${styles.uploadBox} ${error ? styles.uploadBoxError : ""}`}>
+      <label
+        className={`${styles.uploadBox} ${error ? styles.uploadBoxError : ""}`}
+      >
         {file ? (
           <span className={styles.uploadFileName}>📎 {file.name}</span>
         ) : (
-          <span className={styles.uploadPlaceholder}>+ Upload {label} · PDF/Image</span>
+          <span className={styles.uploadPlaceholder}>
+            + Upload {label} · PDF/Image
+          </span>
         )}
         <input
           type="file"

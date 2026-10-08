@@ -68,3 +68,17 @@
 .active .label {
   color: #111827;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover .circle {
+  opacity: 0.85;
+}
+
+.clickable:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+  border-radius: 8px;
+}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ProfileCreation.module.css";
+import Stepper from "@/app/components/Stepper/Stepper";
 
 const REGEX = {
   name: /^[a-zA-Z\s.'-]{2,60}$/,
@@ -188,8 +189,9 @@ export default function ProfileCreationPage() {
       </header>
 
       <div className={styles.content}>
-        <h1 className={styles.title}>Profile Creation</h1>
-        <p className={styles.subtitle}>Step 1 of 4 — KYC details.</p>
+        <h1 className="text-[26px] font-extrabold text-gray-900">Profile Creation</h1>
+        <p className="mt-1 text-sm text-gray-400">Step 1 of 4 — KYC details.</p>
+        <Stepper current={1} />
 
         {/* ---------- Progress bar ---------- */}
         <div className={styles.progressRow}>

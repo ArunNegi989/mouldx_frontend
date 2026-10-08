@@ -118,7 +118,6 @@ export default function MouldTechnicalPage() {
 
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
 
       <div className={styles.content}>
         <h1 className="text-[26px] font-extrabold text-gray-900">Mould Details</h1>
