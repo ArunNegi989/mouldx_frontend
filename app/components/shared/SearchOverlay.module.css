@@ -71,7 +71,6 @@
   border: none;
   outline: none;
   color: #111827;
-  /* 16px se kam hua to iPhone Safari focus par zoom karta hai */
   font-size: 16px;
 }
 
@@ -176,13 +175,15 @@
   color: #ffffff;
 }
 
+/* ---------- Results grid ---------- */
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 12px;
 }
 
 .empty {
+  grid-column: 1 / -1;
   text-align: center;
   padding: 48px 0;
 }
@@ -200,6 +201,113 @@
   color: #9ca3af;
 }
 
+/* ---------- Card ---------- */
+.card {
+  position: relative; /* anchors the heart button */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Link wrapper that makes the whole card clickable */
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f1f2f4;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  color: #9ca3af;
+  background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+}
+
+.heart {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.name {
+  margin: 8px 2px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  margin: 2px 2px 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.sub {
+  margin: 2px 2px 0;
+  font-size: 11px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================= Responsive breakpoints ================= */
+
+/* Very small phones (up to 359px) */
+@media (max-width: 359px) {
+  .body {
+    padding: 14px 12px 32px;
+  }
+
+  .list {
+    gap: 16px 8px;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+
+  .meta {
+    font-size: 12px;
+  }
+}
+
+/* Tablets (640px and up) */
 @media (min-width: 640px) {
   .topBar {
     justify-content: center;
@@ -209,5 +317,41 @@
   .field {
     max-width: 600px;
     height: 48px;
+  }
+
+  .list {
+    gap: 24px 16px;
+  }
+
+  .imageWrap {
+    border-radius: 22px;
+  }
+
+  .name {
+    font-size: 15px;
+  }
+
+  .meta {
+    font-size: 14px;
+  }
+
+  .sub {
+    font-size: 12px;
+  }
+}
+
+/* Small laptops / desktops (1024px and up) */
+@media (min-width: 1024px) {
+  .body {
+    max-width: 900px;
+  }
+
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+
+  .name {
+    font-size: 16px;
   }
 }

@@ -1,10 +1,5 @@
-// data/moulds.ts
-// Single source of truth — MouldExplore list aur detail page dono yahi se data lenge.
-// Jab real API aayega, sirf yeh file replace karni hogi, components untouched rahenge.
-
 export type Category = "Injection" | "Blow" | "Die-Cast";
 export type Availability = "FREE" | "2 LEFT" | "BOOKED";
-export type MouldStatus = "LIVE" | "PAUSED" | "PENDING_APPROVAL";
 export type RunnerType = "Hot Runner" | "Cold Runner";
 export type ProductCategory =
   | "Chair"
@@ -26,15 +21,12 @@ export interface MouldBase {
 }
 
 export interface Dimensions {
-  length: string; // mm
-  breadth: string; // mm
-  height: string; // mm
+  length: string;
+  breadth: string;
+  height: string;
 }
 
 export interface MouldDetail extends MouldBase {
-  status: MouldStatus;
-  owner: string;
-  verified: boolean;
   deposit: string;
   photos: string[];
   videos: string[];
@@ -76,9 +68,6 @@ export interface MouldDetail extends MouldBase {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Base list — same 24 dummy moulds as before (MouldExplore ab yahi import karega)
-// ---------------------------------------------------------------------------
 export const DUMMY_MOULDS: MouldBase[] = [
   { id: "1", code: "MX-000123", name: "2-Cavity Injection Mould", city: "Pune", price: "₹1,800/day", category: "Injection", availability: "FREE", image: "https://picsum.photos/seed/mould1/400/400" },
   { id: "2", code: "MX-000198", name: "Blow Mould — 5L Can", city: "Nashik", price: "₹2,400/day", category: "Blow", availability: "FREE", image: "https://picsum.photos/seed/mould2/400/400" },
@@ -106,17 +95,8 @@ export const DUMMY_MOULDS: MouldBase[] = [
   { id: "24", code: "MX-002370", name: "Crate Mould — Stackable", city: "Meerut", price: "₹2,650/day", category: "Injection", availability: "BOOKED", image: "https://picsum.photos/seed/mould24/400/400" },
 ];
 
-// ---------------------------------------------------------------------------
-// Ek fully hand-crafted example (id "1") — screenshot ke exact values ke saath.
-// Baaki sab ids ke liye buildMouldDetail() consistent dummy detail generate karta hai
-// taaki koi bhi card click karo, detail page break na ho. Real API aane pe
-// yeh poora override object hata dena, sirf fetch call rakhna.
-// ---------------------------------------------------------------------------
 const HAND_CRAFTED: Record<string, Partial<MouldDetail>> = {
   "1": {
-    status: "LIVE",
-    owner: "Sharma Industries",
-    verified: true,
     deposit: "₹15,000 DEPOSIT",
     photos: [
       "https://picsum.photos/seed/mould1-a/900/700",
@@ -165,7 +145,6 @@ const HAND_CRAFTED: Record<string, Partial<MouldDetail>> = {
   },
 };
 
-// Deterministic-but-varied dummy generator for every other mould.
 function buildMouldDetail(base: MouldBase): MouldDetail {
   const seed = Number(base.id);
   const tonnage = [80, 120, 150, 200, 250][seed % 5];
@@ -180,9 +159,6 @@ function buildMouldDetail(base: MouldBase): MouldDetail {
 
   return {
     ...base,
-    status: base.availability === "BOOKED" ? "LIVE" : "LIVE",
-    owner: `${base.city} Moulders Pvt. Ltd.`,
-    verified: seed % 3 !== 0,
     deposit: `₹${(tonnage * 100).toLocaleString("en-IN")} DEPOSIT`,
     photos: [
       `https://picsum.photos/seed/mould${base.id}-a/900/700`,
@@ -257,11 +233,10 @@ export function getMouldDetail(id: string): MouldDetail | null {
   return buildMouldDetail(base);
 }
 
-
 export function getBookedDaysForMonth(
   mouldId: string,
   year: number,
-  month: number // 0-indexed (Jan = 0)
+  month: number
 ): Set<number> {
   const seed = Number(mouldId) + year + month;
   const daysInMonth = new Date(year, month + 1, 0).getDate();

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./ContactUs.module.css";
 
-const FALLBACK = "/images/mould-and-chair.png";
+const FALLBACK = "/images/mould-and-chair.webp";
 const IMG = {
   hero: FALLBACK,
   cta: FALLBACK,

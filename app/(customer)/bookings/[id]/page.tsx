@@ -44,7 +44,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     days: 7,
     pricePerDay: 1800,
     securityDeposit: 15000,
-    platformFee: 250,
+    platformFee: 0,
     paymentMethod: "Platform",
     status: "Approval Pending",
     steps: [
@@ -63,7 +63,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     days: 6,
     pricePerDay: 2400,
     securityDeposit: 18000,
-    platformFee: 250,
+    platformFee: 0,
     paymentMethod: "Platform",
     status: "Arrived",
     steps: [
@@ -82,7 +82,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     days: 7,
     pricePerDay: 2000,
     securityDeposit: 20000,
-    platformFee: 250,
+    platformFee: 0,
     paymentMethod: "Platform",
     status: "In Progress",
     returnDueAt: "2026-09-20T18:00:00",
@@ -102,7 +102,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     days: 5,
     pricePerDay: 1500,
     securityDeposit: 12000,
-    platformFee: 250,
+    platformFee: 0,
     paymentMethod: "Platform",
     status: "Completed",
     steps: [

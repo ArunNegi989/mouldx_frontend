@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Search, Mic, X } from "lucide-react";
-import MouldListCard from "@/app/components/explore/MouldListCard";
 import { DUMMY_MOULDS } from "@/app/data/moulds";
 import styles from "./SearchOverlay.module.css";
 
@@ -19,9 +19,74 @@ type SpeechRecognitionLike = {
   start: () => void;
 };
 
-// "tables" -> "table", plural likhne par bhi match ho
+// Strip a trailing "s" so plural search terms still match (e.g. "tables" -> "table")
 function normalizeToken(t: string) {
   return t.length > 3 ? t.replace(/s$/, "") : t;
+}
+
+interface BigCardProps {
+  id: string | number;
+  name: string;
+  code: string;
+  city: string;
+  category: string;
+  price: string;
+  image?: string;
+  rating?: number;
+  onNavigate?: () => void;
+}
+
+function BigCard({ id, name, code, city, category, price, image, rating, onNavigate }: BigCardProps) {
+  const [liked, setLiked] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <article className={styles.card}>
+      {/* The whole card (image + text) opens the detail page */}
+      <Link href={`/explore/${id}`} className={styles.cardLink} onClick={onNavigate}>
+        <div className={styles.imageWrap}>
+          {image && !imgError ? (
+            <img
+              src={image}
+              alt={name}
+              className={styles.image}
+              loading="lazy"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className={styles.placeholder} aria-hidden>⚙</div>
+          )}
+        </div>
+
+        <h3 className={styles.name}>{name}</h3>
+        <p className={styles.meta}>
+          {price}
+          {rating ? <span> · ★ {rating.toFixed(2)}</span> : null}
+        </p>
+        <p className={styles.sub}>
+          {category} · {city} · {code}
+        </p>
+      </Link>
+
+      {/* Kept outside the Link so toggling the wishlist does not navigate */}
+      <button
+        type="button"
+        className={styles.heart}
+        aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
+        onClick={() => setLiked((v) => !v)}
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <path
+            d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"
+            fill={liked ? "#ff385c" : "rgba(0,0,0,0.45)"}
+            stroke="#ffffff"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+    </article>
+  );
 }
 
 interface Props {
@@ -35,7 +100,6 @@ export default function SearchOverlay({ open, query, onQueryChange, onClose }: P
   const inputRef = useRef<HTMLInputElement>(null);
   const [listening, setListening] = useState(false);
 
-  // Open hone par input focus, background scroll lock, Esc se close
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
@@ -103,7 +167,6 @@ export default function SearchOverlay({ open, query, onQueryChange, onClose }: P
           aria-modal="true"
           aria-label="Search moulds"
         >
-          {/* Top bar */}
           <div className={styles.topBar}>
             <button type="button" onClick={onClose} className={styles.backBtn} aria-label="Back">
               <ArrowLeft size={22} />
@@ -114,7 +177,7 @@ export default function SearchOverlay({ open, query, onQueryChange, onClose }: P
               role="search"
               onSubmit={(e) => {
                 e.preventDefault();
-                inputRef.current?.blur(); // keyboard band
+                inputRef.current?.blur();
               }}
             >
               <Search size={18} className={styles.fieldIcon} aria-hidden />
@@ -153,7 +216,6 @@ export default function SearchOverlay({ open, query, onQueryChange, onClose }: P
             </form>
           </div>
 
-          {/* Body */}
           <div className={styles.body}>
             {!hasQuery && (
               <div className={styles.popular}>
@@ -181,7 +243,7 @@ export default function SearchOverlay({ open, query, onQueryChange, onClose }: P
 
             <div className={styles.list}>
               {results.slice(0, MAX_RESULTS).map((m) => (
-                <MouldListCard key={m.id} {...m} />
+                <BigCard key={m.id} {...m} onNavigate={onClose} />
               ))}
 
               {results.length === 0 && (

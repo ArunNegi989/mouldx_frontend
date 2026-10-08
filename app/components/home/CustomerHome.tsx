@@ -8,7 +8,7 @@ import GetStartedModal from "./GetStartedModal";
 import SearchBar from "../shared/SearchBar";
 import SearchOverlay from "../shared/SearchOverlay";
 import styles from "./CustomerHome.module.css";
-import mouldchair from "@/public/images/mould-and-chair.png";
+import mouldchair from "@/public/images/mould-and-chair.webp";
 
 export default function CustomerHome() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -52,7 +52,7 @@ export default function CustomerHome() {
         </div>
       </section>
 
-      <StatsBar />
+      
       <MouldExplore />
 
       <GetStartedModal open={modalOpen} onClose={() => setModalOpen(false)} />

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import styles from "./MouldExplore.module.css";
-import MouldListCard from "@/app/components/explore/MouldListCard";
 import { DUMMY_MOULDS } from "@/app/data/moulds";
 
 const CATEGORIES = ["All", "Injection", "Blow", "Die-Cast", "Nearby"] as const;
+const ROW_CATEGORIES = ["Injection", "Blow", "Die-Cast"] as const;
 const AVAILABILITY_OPTIONS = ["All", "FREE", "2 LEFT", "BOOKED"] as const;
 const PRICE_RANGES = [
   { label: "Any price", min: 0, max: Infinity },
@@ -20,9 +21,74 @@ function parsePrice(price: string) {
   return Number(price.replace(/[^0-9]/g, "")) || 0;
 }
 
-// "tables" -> "table", taaki plural likhne par bhi match ho
+// Strip a trailing "s" so plural search terms still match (e.g. "tables" -> "table")
 function normalizeToken(t: string) {
   return t.length > 3 ? t.replace(/s$/, "") : t;
+}
+
+interface BigCardProps {
+  id: string | number;
+  name: string;
+  code: string;
+  city: string;
+  category: string;
+  price: string;
+  image?: string;
+  rating?: number;
+  variant: "row" | "grid";
+}
+
+function BigCard({ id, name, code, city, category, price, image, rating, variant }: BigCardProps) {
+  const [liked, setLiked] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <article className={`${styles.card} ${variant === "grid" ? styles.cardGrid : styles.cardRow}`}>
+      {/* The whole card (image + text) opens the detail page */}
+      <Link href={`/explore/${id}`} className={styles.cardLink}>
+        <div className={styles.imageWrap}>
+          {image && !imgError ? (
+            <img
+              src={image}
+              alt={name}
+              className={styles.image}
+              loading="lazy"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className={styles.placeholder} aria-hidden>⚙</div>
+          )}
+        </div>
+
+        <h3 className={styles.name}>{name}</h3>
+        <p className={styles.meta}>
+          {price}
+          {rating ? <span> · ★ {rating.toFixed(2)}</span> : null}
+        </p>
+        <p className={styles.sub}>
+          {category} · {city} · {code}
+        </p>
+      </Link>
+
+      {/* Kept outside the Link so toggling the wishlist does not navigate */}
+      <button
+        type="button"
+        className={styles.heart}
+        aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
+        onClick={() => setLiked((v) => !v)}
+      >
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
+          <path
+            d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"
+            fill={liked ? "#ff385c" : "rgba(0,0,0,0.45)"}
+            stroke="#ffffff"
+            strokeWidth="2"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+    </article>
+  );
 }
 
 interface MouldExploreProps {
@@ -31,7 +97,7 @@ interface MouldExploreProps {
 }
 
 export default function MouldExplore({ search: searchProp, onSearchChange }: MouldExploreProps) {
-  // Parent se search aaye to wahi use hoga, warna local state
+  // Use the parent's search value if provided, otherwise fall back to local state
   const [localSearch, setLocalSearch] = useState("");
   const search = searchProp ?? localSearch;
   const setSearch = onSearchChange ?? setLocalSearch;
@@ -59,8 +125,7 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
       const matchesCategory =
         activeCategory === "All" || activeCategory === "Nearby" || m.category === activeCategory;
 
-      // name + code + city + category, sab mein dhundhega
-      // "table" likhne par jinke naam/type mein table hai wo sab aayenge
+      // Search across name, code, city and category
       const haystack = `${m.name} ${m.code} ${m.city} ${m.category}`.toLowerCase();
       const matchesSearch = tokens.every((t) => haystack.includes(t));
 
@@ -71,7 +136,7 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
     });
   }, [search, activeCategory, activePriceRange, activeAvailability]);
 
-  // Search ya filter badle to page 1 par wapas
+  // Reset to page 1 whenever the search or any filter changes
   useEffect(() => {
     setPage(1);
   }, [search, activeCategory, activePriceLabel, activeAvailability]);
@@ -102,13 +167,16 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
     setActiveAvailability("All");
   };
 
+  // Browsing mode = no search and no filters, shows horizontal rows per category
+  const isBrowsing = !search.trim() && activeFilterCount === 0;
+
   return (
     <section id="mould-explore" className={styles.section}>
       <h2 className={styles.title}>Find a mould</h2>
       <p className={styles.subtitle}>
         {search.trim()
           ? `${filteredMoulds.length} result${filteredMoulds.length === 1 ? "" : "s"} for “${search.trim()}”`
-          : "1,240+ verified listings across India"}
+          : "1,240+ verified listings"}
       </p>
 
       <div className={styles.searchRow}>
@@ -127,7 +195,7 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
           onClick={() => setIsFilterOpen((v) => !v)}
           className={`${styles.filterToggle} ${isFilterOpen ? styles.filterToggleActive : ""}`}
         >
-          <span aria-hidden>⚙</span> Filters
+          <span aria-hidden>⚙</span>
           {activeFilterCount > 0 && <span className={styles.filterCount}>{activeFilterCount}</span>}
         </button>
       </div>
@@ -187,17 +255,44 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
         </div>
       )}
 
-      <div ref={listTopRef} className={styles.list}>
-        {paginatedMoulds.map((m) => (
-          <MouldListCard key={m.id} {...m} />
-        ))}
-
-        {filteredMoulds.length === 0 && (
-          <p className={styles.emptyText}>No moulds match your search.</p>
+      <div ref={listTopRef}>
+        {isBrowsing ? (
+          ROW_CATEGORIES.map((cat) => {
+            const items = DUMMY_MOULDS.filter((m) => m.category === cat);
+            if (items.length === 0) return null;
+            return (
+              <div key={cat} className={styles.rowSection}>
+                <div className={styles.rowHeader}>
+                  <h3 className={styles.rowTitle}>{cat} moulds</h3>
+                  <button
+                    className={styles.rowArrow}
+                    onClick={() => setActiveCategory(cat)}
+                    aria-label={`See all ${cat} moulds`}
+                  >
+                    →
+                  </button>
+                </div>
+                <div className={styles.row}>
+                  {items.map((m) => (
+                    <BigCard key={m.id} {...m} variant="row" />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className={styles.grid}>
+            {paginatedMoulds.map((m) => (
+              <BigCard key={m.id} {...m} variant="grid" />
+            ))}
+            {filteredMoulds.length === 0 && (
+              <p className={styles.emptyText}>No moulds match your search.</p>
+            )}
+          </div>
         )}
       </div>
 
-      {filteredMoulds.length > 0 && totalPages > 1 && (
+      {!isBrowsing && filteredMoulds.length > 0 && totalPages > 1 && (
         <div className={styles.pagination}>
           <button onClick={() => goToPage(page - 1)} disabled={page === 1} className={styles.pageBtn}>
             ← Prev

@@ -13,7 +13,7 @@ const BOOKING_SUMMARY = {
   days: 7,
   pricePerDay: 1800,
   securityDeposit: 15000,
-  platformFee: 250,
+  platformFee: 0,
 };
 
 export default function ConfirmPayPage() {

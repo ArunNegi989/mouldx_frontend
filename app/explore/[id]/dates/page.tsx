@@ -43,9 +43,17 @@ function formatShort(d: Date) {
 }
 
 function formatRangeLabel(start: Date, end: Date) {
+  if (sameDay(start, end)) return formatShort(start);
   return start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()
     ? `${start.getDate()}–${formatShort(end)}`
     : `${formatShort(start)} – ${formatShort(end)}`;
+}
+
+function toISODate(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 export default function SelectDatesPage({
@@ -124,32 +132,34 @@ export default function SelectDatesPage({
     return list;
   }, [viewYear, viewMonth, bookedDaysThisView, today]);
 
+  const rejectRange = () => setError("Some dates in this range are already booked.");
+
   const handleDayClick = (cell: DayCell) => {
     if (!cell.inCurrentMonth || cell.isPast || cell.isBooked) return;
     setError(null);
     const clicked = cell.date;
 
-    const startFresh = () => {
+    if (!rangeStart) {
       setRangeStart(clicked);
       setRangeEnd(null);
-    };
-
-    if (!rangeStart || (rangeStart && rangeEnd && clicked >= rangeStart && clicked <= rangeEnd)) {
-      startFresh();
       return;
     }
 
-    if (rangeStart && !rangeEnd) {
+    if (!rangeEnd) {
+      if (sameDay(clicked, rangeStart)) {
+        setRangeEnd(clicked);
+        return;
+      }
       if (clicked.getTime() < rangeStart.getTime()) {
         if (!isRangeClean(clicked, rangeStart)) {
-          setError("Some dates in this range are already booked.");
+          rejectRange();
           return;
         }
         setRangeEnd(rangeStart);
         setRangeStart(clicked);
       } else {
         if (!isRangeClean(rangeStart, clicked)) {
-          setError("Some dates in this range are already booked.");
+          rejectRange();
           return;
         }
         setRangeEnd(clicked);
@@ -157,21 +167,46 @@ export default function SelectDatesPage({
       return;
     }
 
-    if (rangeStart && rangeEnd) {
-      if (clicked.getTime() > rangeEnd.getTime()) {
-        if (!isRangeClean(rangeStart, clicked)) {
-          setError("Some dates in this range are already booked.");
-          return;
-        }
-        setRangeEnd(clicked);
-      } else if (clicked.getTime() < rangeStart.getTime()) {
-        if (!isRangeClean(clicked, rangeEnd)) {
-          setError("Some dates in this range are already booked.");
-          return;
-        }
-        setRangeStart(clicked);
-      }
+    const isStart = sameDay(clicked, rangeStart);
+    const isEnd = sameDay(clicked, rangeEnd);
+
+    if (isStart && isEnd) {
+      setRangeStart(null);
+      setRangeEnd(null);
+      return;
     }
+
+    if (isEnd) {
+      setRangeEnd(null);
+      return;
+    }
+
+    if (isStart) {
+      setRangeStart(rangeEnd);
+      setRangeEnd(null);
+      return;
+    }
+
+    if (clicked.getTime() > rangeStart.getTime() && clicked.getTime() < rangeEnd.getTime()) {
+      setRangeStart(clicked);
+      setRangeEnd(null);
+      return;
+    }
+
+    if (clicked.getTime() > rangeEnd.getTime()) {
+      if (!isRangeClean(rangeStart, clicked)) {
+        rejectRange();
+        return;
+      }
+      setRangeEnd(clicked);
+      return;
+    }
+
+    if (!isRangeClean(clicked, rangeEnd)) {
+      rejectRange();
+      return;
+    }
+    setRangeStart(clicked);
   };
 
   const getCellStatus = (cell: DayCell): CellStatus => {
@@ -217,8 +252,8 @@ export default function SelectDatesPage({
   const handleContinue = () => {
     if (!rangeStart || !rangeEnd) return;
 
-    const checkIn = rangeStart.toISOString().split("T")[0];
-    const checkOut = rangeEnd.toISOString().split("T")[0];
+    const checkIn = toISODate(rangeStart);
+    const checkOut = toISODate(rangeEnd);
 
     router.push(`/explore/${id}/confirm?checkIn=${checkIn}&checkOut=${checkOut}`);
   };
@@ -249,15 +284,12 @@ export default function SelectDatesPage({
 
   return (
     <div className={styles.page}>
-    
-
       <div className={styles.content}>
         <h1 className={styles.pageTitle}>Select rental dates</h1>
         <p className={styles.pageSubtitle}>
           {mould.code} · {mould.name}
         </p>
 
-        {/* ---------- Trip summary strip (appears once a range is picked) ---------- */}
         {canContinue && (
           <div className={styles.summaryCard}>
             <div className={styles.summaryDates}>
@@ -279,7 +311,6 @@ export default function SelectDatesPage({
           </div>
         )}
 
-        {/* ---------- Calendar card ---------- */}
         <div className={styles.calendarCard}>
           <div className={styles.calendarHeader}>
             <div className={styles.monthNav}>
@@ -363,7 +394,6 @@ export default function SelectDatesPage({
 
         {error && <p className={styles.errorBanner}>{error}</p>}
 
-        {/* ---------- Legend ---------- */}
         <div className={styles.legendCard}>
           <span className={`${styles.legendPill} ${styles.legendFree}`}>
             <span className={styles.legendDot} /> FREE
@@ -377,7 +407,6 @@ export default function SelectDatesPage({
         </div>
       </div>
 
-      {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
         {canContinue && (
           <div className={styles.ctaPriceRow}>

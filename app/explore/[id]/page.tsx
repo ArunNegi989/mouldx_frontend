@@ -1,4 +1,3 @@
-// app/explore/[id]/page.tsx
 "use client";
 
 import { useMemo, useState, useRef, use } from "react";
@@ -26,7 +25,6 @@ export default function MouldDetailPage({
   const [activeTab, setActiveTab] = useState<TabKey>("technical");
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
-  // Touch-swipe support for the gallery
   const touchStartX = useRef<number | null>(null);
 
   if (!mould) {
@@ -40,18 +38,15 @@ export default function MouldDetailPage({
     );
   }
 
-  // Combine photos + videos into one gallery, videos tagged so we can show a play icon
   const media = [
     ...mould.photos.map((src) => ({ type: "image" as const, src })),
     ...mould.videos.map((src) => ({ type: "video" as const, src })),
   ];
 
   const badgeClass =
-    mould.availability === "FREE"
-      ? styles.badgeFree
-      : mould.availability === "2 LEFT"
-      ? styles.badgeLow
-      : styles.badgeBooked;
+    mould.availability === "2 LEFT" ? styles.badgeLow : styles.badgeBooked;
+
+  const showAvailabilityBadge = mould.availability !== "FREE";
 
   const goToMedia = (index: number) => {
     if (index < 0 || index >= media.length) return;
@@ -76,9 +71,7 @@ export default function MouldDetailPage({
 
   return (
     <div className={styles.page}>
-     
       <div className={styles.content}>
-        {/* ---------- Media gallery ---------- */}
         <div className={styles.gallery}>
           <div
             className={styles.galleryMain}
@@ -156,18 +149,12 @@ export default function MouldDetailPage({
           )}
         </div>
 
-        {/* ---------- Title + status ---------- */}
         <div className={styles.titleRow}>
           <h1 className={styles.title}>{mould.name}</h1>
-          <span className={styles.statusBadge}>{mould.status}</span>
         </div>
 
-        <p className={styles.metaRow}>
-          {mould.code} · Owned by {mould.owner}
-          {mould.verified && <span className={styles.verifiedTag}> ✓ Verified</span>}
-        </p>
+        <p className={styles.metaRow}>{mould.code}</p>
 
-        {/* ---------- Quick specs ---------- */}
         <div className={styles.quickSpecs}>
           {mould.quickSpecs.map((spec) => (
             <div key={spec.label} className={styles.quickSpecCard}>
@@ -177,21 +164,21 @@ export default function MouldDetailPage({
           ))}
         </div>
 
-        {/* ---------- Price row ---------- */}
         <div className={styles.priceRow}>
           <p className={styles.priceValue}>
             {mould.price.split("/")[0]}
             <span className={styles.pricePeriod}> / day</span>
           </p>
-          <span className={`${styles.availabilityBadge} ${badgeClass}`}>
-            {mould.availability}
-          </span>
+          {showAvailabilityBadge && (
+            <span className={`${styles.availabilityBadge} ${badgeClass}`}>
+              {mould.availability}
+            </span>
+          )}
         </div>
         <div className={styles.depositRow}>
           <span className={styles.depositBadge}>{mould.deposit}</span>
         </div>
 
-        {/* ---------- Tabs ---------- */}
         <div className={styles.tabsRow}>
           {TABS.map((tab) => (
             <button
@@ -205,7 +192,6 @@ export default function MouldDetailPage({
           ))}
         </div>
 
-        {/* ---------- Tab content ---------- */}
         <div className={styles.detailsCard}>
           {activeTab === "general" && (
             <>
@@ -279,22 +265,20 @@ export default function MouldDetailPage({
         </div>
       </div>
 
-      {/* ---------- Sticky bottom CTA ---------- */}
-      {/* ---------- Sticky bottom CTA ---------- */}
-<div className={styles.ctaBar}>
-  {isCTADisabled ? (
-    <button type="button" disabled className={styles.ctaBtn}>
-      Currently Booked
-    </button>
-  ) : (
-    <Link
-      href={`/explore/${id}/dates`}
-      className={`${styles.ctaBtn} flex items-center justify-center no-underline btn-primary`}
-    >
-      Select Dates →
-    </Link>
-  )}
-</div>
+      <div className={styles.ctaBar}>
+        {isCTADisabled ? (
+          <button type="button" disabled className={styles.ctaBtn}>
+            Currently Booked
+          </button>
+        ) : (
+          <Link
+            href={`/explore/${id}/dates`}
+            className={`${styles.ctaBtn} flex items-center justify-center no-underline btn-primary`}
+          >
+            Select Dates →
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

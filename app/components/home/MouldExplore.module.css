@@ -48,7 +48,7 @@
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 12px 12px 12px 38px;
-  /* 16px is a hard floor — anything smaller triggers Safari's auto-zoom-on-focus on iPhone */
+  /* 16px is a hard floor: smaller sizes trigger Safari's auto-zoom on focus */
   font-size: 16px;
   color: #111827;
   outline: none;
@@ -146,7 +146,7 @@
   padding: 6px 14px 0 0;
 }
 
-/* ---------- Filter chips — horizontal scroll, never clip ---------- */
+/* ---------- Filter chips: horizontal scroll, never clip ---------- */
 .chipsRow {
   display: flex;
   flex-wrap: nowrap;
@@ -184,12 +184,59 @@
   color: #ffffff;
 }
 
-/* ---------- List ---------- */
-.list {
-  margin-top: 18px;
+/* ---------- Category rows (browsing mode) ---------- */
+.rowSection {
+  margin-top: 24px;
+}
+
+.rowHeader {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.rowTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.rowArrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: none;
+  background: #f1f2f4;
+  color: #111827;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.row {
+  --cols: 2;
+  --gap: 12px;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Grid (search / filter mode) ---------- */
+.grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
 }
 
 .emptyText {
@@ -197,6 +244,135 @@
   font-size: 13px;
   color: #9ca3af;
   padding: 24px 0;
+  grid-column: 1 / -1;
+}
+
+/* ---------- Card ---------- */
+.card {
+  position: relative; /* anchors the heart button */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Link wrapper that makes the whole card clickable */
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardRow {
+  flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+  width: auto;
+  max-width: none;
+  scroll-snap-align: start;
+}
+
+.cardGrid {
+  width: 100%;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #f1f2f4;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #9ca3af;
+  background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+}
+
+.heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.name {
+  margin: 10px 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  margin: 2px 4px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.sub {
+  margin: 2px 4px 0;
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Compact variant used inside horizontal rows */
+.cardRow .imageWrap {
+  border-radius: 18px;
+}
+
+.cardRow .heart {
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+}
+
+.cardRow .heart svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cardRow .name {
+  margin: 8px 2px 0;
+  font-size: 14px;
+}
+
+.cardRow .meta {
+  margin: 2px 2px 0;
+  font-size: 13px;
+}
+
+.cardRow .sub {
+  margin: 2px 2px 0;
+  font-size: 11px;
 }
 
 /* ---------- Pagination ---------- */
@@ -238,85 +414,60 @@
 
 /* Very small phones (up to 359px) */
 @media (max-width: 359px) {
-  .section {
-    padding: 24px 12px;
-  }
-  .title {
-    font-size: 19px;
-  }
-  .filterToggle {
-    padding: 0 10px;
-    font-size: 12px;
-  }
-  .chip {
-    padding: 7px 12px;
-    font-size: 12px;
-  }
-  .pageBtn {
-    min-width: 34px;
-    height: 34px;
-    font-size: 12px;
-  }
+  .section { padding: 24px 12px; }
+  .title { font-size: 19px; }
+  .filterToggle { padding: 0 10px; font-size: 12px; }
+  .chip { padding: 7px 12px; font-size: 12px; }
+  .pageBtn { min-width: 34px; height: 34px; font-size: 12px; }
+
+  .row { --gap: 8px; }
+  .cardRow .name { font-size: 13px; }
+  .cardRow .meta { font-size: 12px; }
 }
 
-/* Modern iPhones — SE-large through Pro Max (360px – 430px) */
+/* Modern iPhones (360px - 430px) */
 @media (min-width: 360px) and (max-width: 430px) {
-  .section {
-    padding: 28px 16px;
-  }
-  .title {
-    font-size: 21px;
-  }
+  .section { padding: 28px 16px; }
+  .title { font-size: 21px; }
 }
 
-/* Small-to-mid Android / phablets (431px – 639px) */
+/* Small-to-mid Android / phablets (431px - 639px) */
 @media (min-width: 431px) and (max-width: 639px) {
-  .title {
-    font-size: 23px;
-  }
+  .title { font-size: 23px; }
 }
 
-/* Tablets (640px – 1023px) */
+/* Tablets (640px and up) */
 @media (min-width: 640px) {
   .section {
     max-width: 640px;
     margin: 0 auto;
     padding: 44px 32px;
   }
-  .title {
-    font-size: 28px;
-  }
-  .subtitle {
-    font-size: 14px;
-  }
-  .searchInput {
-    padding: 14px 14px 14px 42px;
-  }
-  .filterToggle {
-    padding: 0 16px;
-    height: 48px;
-    font-size: 14px;
-  }
-  .chip {
-    padding: 10px 18px;
-    font-size: 14px;
-  }
+  .title { font-size: 28px; }
+  .subtitle { font-size: 14px; }
+  .searchInput { padding: 14px 14px 14px 42px; }
+  .filterToggle { padding: 0 16px; height: 48px; font-size: 14px; }
+  .chip { padding: 10px 18px; font-size: 14px; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+  .row { --gap: 16px; }
+  .cardRow .imageWrap { border-radius: 22px; }
+  .cardRow .name { font-size: 15px; }
+  .cardRow .meta { font-size: 14px; }
+  .cardRow .sub { font-size: 12px; }
 }
 
-/* Small laptops / desktops (1024px – 1279px) */
+/* Small laptops / desktops (1024px and up) */
 @media (min-width: 1024px) {
   .section {
     max-width: 780px;
     padding: 52px 40px;
   }
-  .list {
-    gap: 14px;
-  }
+  .row { --gap: 20px; }
+  .cardRow .name { font-size: 16px; }
 }
 
 /* Large desktops (1280px and up) */
 @media (min-width: 1280px) {
-  .section {
-    max-width: 860px;
-  }
+  .section { max-width: 860px; }
 }

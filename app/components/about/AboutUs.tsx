@@ -2,14 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./AboutUs.module.css";
 
-// Abhi sab images same hain taaki page turant chale.
-// Apni images /public/images/about/ mein daal ke yahan path badal do.
-const FALLBACK = "/images/mould-and-chair.png";
+const FALLBACK = "/images/mould-and-chair.webp";
 const IMG = {
-  hero: FALLBACK, // /images/about/hero.jpg
-  story: FALLBACK, // /images/about/story.jpg
-  why: FALLBACK, // /images/about/why-us.jpg
-  cta: FALLBACK, // /images/about/cta.jpg
+  hero: FALLBACK, 
+  story: FALLBACK,
+  why: FALLBACK, 
+  cta: FALLBACK, 
 };
 
 const STATS = [

@@ -69,7 +69,7 @@
 
 .eyebrow {
   font-size: 14px;
-  color: #d1d5db;
+  color: #ffffff;
   margin: 0;
 }
 
@@ -81,19 +81,19 @@
 }
 
 .headingAccent {
-  background: linear-gradient(90deg, #0c95b0 0%, #cfcfcf 100%);
+  /* background: linear-gradient(90deg, #0c95b0 0%, #cfcfcf 100%); */
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+  /* -webkit-text-fill-color: transparent; */
 }
 
 .headingUnderline {
-  background: linear-gradient(90deg, #0c95b0 0%, #cfcfcf 100%);
+  /* background: linear-gradient(90deg, #0c95b0 0%, #cfcfcf 100%); */
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+  /* -webkit-text-fill-color: transparent; */
 }
 
 .description {
