@@ -52,26 +52,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.logoRow}>
-        <div className={styles.logoWrap}>
-          <Image src="/images/logo.png" alt="MouldX" fill priority className={styles.logo} />
-        </div>
-
-        <div className={styles.taglineWrap}>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={taglineIndex}
-              className={styles.tagline}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              {TAGLINES[taglineIndex]}
-            </motion.span>
-          </AnimatePresence>
-        </div>
-      </div>
+    
 
       <h1 className={styles.title}>Welcome Back</h1>
       <p className={styles.subtitle}>Login with your registered phone number</p>

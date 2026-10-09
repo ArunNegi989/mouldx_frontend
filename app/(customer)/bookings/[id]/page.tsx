@@ -38,7 +38,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     id: "BK-24581",
     code: "MX-000123",
     name: "2-Cavity Injection Mould",
-    image: "https://picsum.photos/seed/mould1/300/300",
+    image: "https://picsum.photos/seed/mould1/800/600",
     city: "Pune",
     dateRange: "14 – 20 Sep",
     days: 7,
@@ -57,7 +57,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     id: "BK-24512",
     code: "MX-000198",
     name: "Blow Mould — 5L Can",
-    image: "https://picsum.photos/seed/mould2/300/300",
+    image: "https://picsum.photos/seed/mould2/800/600",
     city: "Nashik",
     dateRange: "22 – 28 Sep",
     days: 6,
@@ -76,7 +76,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     id: "BK-24390",
     code: "MX-000077",
     name: "Die-Cast Housing Mould",
-    image: "https://picsum.photos/seed/mould3/300/300",
+    image: "https://picsum.photos/seed/mould3/800/600",
     city: "Aurangabad",
     dateRange: "5 – 12 Sep",
     days: 7,
@@ -96,7 +96,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     id: "BK-23988",
     code: "MX-000045",
     name: "Single Cavity Chair Mould",
-    image: "https://picsum.photos/seed/mould4/300/300",
+    image: "https://picsum.photos/seed/mould4/800/600",
     city: "Pune",
     dateRange: "10 – 15 Aug",
     days: 5,
@@ -115,12 +115,13 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
     id: "BK-23850",
     code: "MX-000210",
     name: "Blow Mould — Bottle 1L",
-    image: "https://picsum.photos/seed/mould5/300/300",
+    image: "https://picsum.photos/seed/mould5/800/600",
     city: "Nashik",
     dateRange: "1 – 6 Aug",
     days: 5,
     pricePerDay: 1900,
     securityDeposit: 14000,
+    platformFee: 0,
     paymentMethod: "Platform",
     status: "Cancelled",
     steps: [
@@ -128,7 +129,7 @@ const DUMMY_BOOKINGS: Record<string, BookingDetailRaw> = {
       { id: "approval", title: "Owner approval", status: "pending", meta: "Cancelled by owner" },
       { id: "dispatch", title: "Dispatch", status: "upcoming", meta: "—" },
     ],
-  } as BookingDetailRaw,
+  },
 };
 
 export default function BookingDetailPage({
@@ -162,10 +163,7 @@ export default function BookingDetailPage({
 
   return (
     <div className={`${styles.page} ${booking.awaitingReceipt ? styles.pageWithCta : ""}`}>
-      {/* ---------- Header ---------- */}
-
       <div className={styles.content}>
-        {/* ---------- Active rental panel ---------- */}
         {isActiveRental && raw.returnDueAt && (
           <ActiveRentalPanel
             bookingId={booking.id}
@@ -175,7 +173,6 @@ export default function BookingDetailPage({
           />
         )}
 
-        {/* ---------- Awaiting receipt banner ---------- */}
         {booking.awaitingReceipt && (
           <div className={styles.receiptBanner}>
             <span className={styles.receiptIcon} aria-hidden>📦</span>
@@ -188,12 +185,19 @@ export default function BookingDetailPage({
           </div>
         )}
 
-        {/* ---------- Mould summary ---------- */}
-        <div className={styles.summaryRow}>
-          <div className={styles.thumbWrap}>
-            <img src={booking.image} alt={booking.name} className={styles.thumb} />
+        <div className={styles.mouldCard}>
+          <div className={styles.mouldImageWrap}>
+            <img src={booking.image} alt={booking.name} className={styles.mouldImage} />
+            <span
+              className={`${styles.statusBadge} ${styles.statusOnImage} ${
+                isActiveRental ? styles.statusBadgeActive : ""
+              }`}
+            >
+              {booking.status}
+            </span>
           </div>
-          <div className={styles.summaryInfo}>
+
+          <div className={styles.mouldBody}>
             <p className={styles.mouldName}>{booking.name}</p>
             <p className={styles.mouldMeta}>
               {booking.code} · {booking.city}
@@ -202,24 +206,21 @@ export default function BookingDetailPage({
               {booking.dateRange} · {booking.days} days
             </p>
           </div>
-          <span className={`${styles.statusBadge} ${isActiveRental ? styles.statusBadgeActive : ""}`}>
-            {booking.status}
-          </span>
         </div>
 
-        {/* ---------- Timeline ---------- */}
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Booking Status</h2>
           {booking.steps.map((step, i) => (
             <div key={step.id} className={styles.timelineRow}>
               <div className={styles.timelineDotCol}>
                 <span
-                  className={`${styles.dot} ${step.status === "done"
+                  className={`${styles.dot} ${
+                    step.status === "done"
                       ? styles.dotDone
                       : step.status === "pending"
                         ? styles.dotPending
                         : styles.dotUpcoming
-                    }`}
+                  }`}
                 >
                   {step.status === "done" && <span className={styles.dotCheck}>✓</span>}
                 </span>
@@ -233,7 +234,6 @@ export default function BookingDetailPage({
           ))}
         </div>
 
-        {/* ---------- Fare breakdown ---------- */}
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Fare Breakdown</h2>
 
@@ -266,7 +266,6 @@ export default function BookingDetailPage({
           <p className={styles.paymentMethodText}>Paid via {booking.paymentMethod}</p>
         </div>
 
-        {/* ---------- Support ---------- */}
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Need help?</h2>
           <div className={styles.supportRow}>
@@ -280,7 +279,6 @@ export default function BookingDetailPage({
         </div>
       </div>
 
-      {/* ---------- Sticky Confirm Receipt CTA ---------- */}
       {booking.awaitingReceipt && (
         <div className={styles.ctaBar}>
           <Link href={`/bookings/${booking.id}/receive`} className={`${styles.ctaBtn} btn-primary`}>

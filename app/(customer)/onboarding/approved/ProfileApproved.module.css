@@ -223,6 +223,17 @@
   justify-content: center;
 }
 
+.ctaBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-top: 1px solid #f1f1f3;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+}
+
 /* ---------- Responsive ---------- */
 
 @media (min-width: 640px) {

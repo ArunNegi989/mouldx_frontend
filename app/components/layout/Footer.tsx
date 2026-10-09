@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaXTwitter, FaLinkedinIn } from "react-icons/fa6";
 import styles from "./Footer.module.css";
+
+// Footer sirf in routes pe dikhega
+const SHOW_FOOTER_ON = ["/", "/home", "/owner"];
 
 const SERVICEABLE_AREAS = ["Delhi", "Haryana", "Uttar Pradesh", "Punjab", "Chandigarh", "Uttarakhand"];
 
@@ -23,7 +27,13 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname(); // hook hamesha return se pehle
   const year = new Date().getFullYear();
+
+  // trailing slash hata do (e.g. "/owner/" -> "/owner"), "/" ko as-is rakho
+  const cleanPath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+
+  if (!SHOW_FOOTER_ON.includes(cleanPath)) return null;
 
   return (
     <footer className={styles.footer}>
@@ -86,7 +96,6 @@ export default function Footer() {
 
           {/* Contact */}
           <div className={styles.col}>
-            
             <p className={styles.contactName}>MouldX Private Limited</p>
             <address className={styles.address}>
               Nadehi Road, KDK Complex,

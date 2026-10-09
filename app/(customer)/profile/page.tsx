@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./Profile.module.css";
+import { useRouter } from "next/router";
 
 const CUSTOMER = {
   name: "Rohit Sharma",
@@ -29,6 +30,10 @@ const MORE_LINKS = [
 export default function CustomerProfilePage() {
   const [moreOpen, setMoreOpen] = useState(false);
 
+  const handleLogout = () => {
+    const router = useRouter();
+    router.replace("/login");
+  };
   return (
     <div className={styles.page}>
       <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">Profile</h1>
@@ -132,7 +137,7 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* ---------- Logout + Switch Profile — always visible ---------- */}
-      <button type="button" className={styles.logoutRow}>
+      <button type="button" className={styles.logoutRow} onClick={handleLogout}>
         Logout
       </button>
 
