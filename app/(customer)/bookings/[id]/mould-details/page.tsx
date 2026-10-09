@@ -150,11 +150,7 @@ export default function ReceivedMouldDetailsPage({
         <div className={styles.titleRow}>
           <h1 className={styles.title}>{mould.name}</h1>
         </div>
-        <p className={styles.metaRow}>
-          {mould.code} · Owned by {mould.owner}
-          {mould.verified && <span className={styles.verifiedTag}> ✓ Verified</span>}
-        </p>
-
+       
         {/* ---------- General details ---------- */}
         <h2 className={styles.sectionHeading}>Mould Details (General)</h2>
         <div className={styles.detailsCard}>
