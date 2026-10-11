@@ -54,23 +54,12 @@ export default function SignupPage() {
   const handleContinue = () => {
     setTouched({ fullName: true, email: true, phone: true });
     if (!isValid) return;
-    // TODO: call send-OTP API with { fullName, email, phone }
     router.push("/verify-otp");
   };
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBar}>
-        <div className={styles.logoWrap}>
-          <Image
-            src="/images/logo.png"
-            alt="MouldX"
-            fill
-            priority
-            className={styles.logo}
-          />
-        </div>
-      </div>
+     
 
 
       <h1 className={styles.title}>Create Account</h1>

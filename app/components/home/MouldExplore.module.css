@@ -302,21 +302,6 @@
   background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
 }
 
-.heart {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
 
 .name {
   margin: 10px 4px 0;
@@ -348,17 +333,7 @@
   border-radius: 18px;
 }
 
-.cardRow .heart {
-  top: 6px;
-  right: 6px;
-  width: 30px;
-  height: 30px;
-}
 
-.cardRow .heart svg {
-  width: 22px;
-  height: 22px;
-}
 
 .cardRow .name {
   margin: 8px 2px 0;

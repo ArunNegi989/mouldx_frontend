@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import styles from "./OwnerHome.module.css";
 
 const OWNER = {
-  name: "Rohit",
   earningsMonth: "SEP",
   totalEarnings: 248500,
   vsLastMonth: 18.4,
@@ -13,15 +13,30 @@ const OWNER = {
   available: 3,
   rented: 4,
   maintenance: 1,
-  actionRequiredCount: 3,
   bookingRequests: [
     { id: "1", mouldCode: "MX-000123", customerName: "Nova Plastics" },
   ],
   rating: 4.8,
   reviewCount: 32,
   upcoming: [
-    { id: "u1", type: "Pickup", mouldCode: "MX-000198", customer: "Vector Molds", date: "18 Sep" },
-    { id: "u2", type: "Return", mouldCode: "MX-000077", customer: "Sharma Industries", date: "20 Sep" },
+    {
+      id: "u1",
+      type: "Pickup",
+      name: "Blow Mould — 5L Can",
+      mouldCode: "MX-000198",
+      customer: "Vector Molds",
+      date: "18 Sep",
+      image: "https://picsum.photos/seed/owner-upcoming-1/800/600",
+    },
+    {
+      id: "u2",
+      type: "Return",
+      name: "Die-Cast Housing Mould",
+      mouldCode: "MX-000077",
+      customer: "Sharma Industries",
+      date: "20 Sep",
+      image: "https://picsum.photos/seed/owner-upcoming-2/800/600",
+    },
   ],
   activity: [
     { id: "a1", text: "Payout of ₹12,600 credited to your account", time: "2h ago" },
@@ -30,30 +45,80 @@ const OWNER = {
   ],
 };
 
+interface UpcomingItem {
+  id: string;
+  type: string;
+  name: string;
+  mouldCode: string;
+  customer: string;
+  date: string;
+  image: string;
+}
+
+function UpcomingCard({ item }: { item: UpcomingItem }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <Link href={`/owner/bookings/${item.id}`} className={styles.upcomingCard}>
+      <div className={styles.upcomingImageWrap}>
+        {!imgError ? (
+          <img
+            src={item.image}
+            alt={item.name}
+            className={styles.upcomingImage}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className={styles.upcomingPlaceholder} aria-hidden>
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <circle cx="9" cy="10" r="1.5" />
+              <path d="M21 16l-5-5-8 8" />
+            </svg>
+          </div>
+        )}
+
+        <span
+          className={`${styles.upcomingTag} ${
+            item.type === "Pickup" ? styles.upcomingTagPickup : styles.upcomingTagReturn
+          }`}
+        >
+          {item.type}
+        </span>
+
+        <span className={styles.upcomingDate}>{item.date}</span>
+      </div>
+
+      <div className={styles.upcomingInfo}>
+        <p className={styles.upcomingName}>{item.name}</p>
+        <p className={styles.upcomingMeta}>
+          {item.mouldCode} · {item.customer}
+        </p>
+      </div>
+    </Link>
+  );
+}
+
 export default function OwnerHomePage() {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Good morning, {OWNER.name}</h1>
         <p className={styles.subtitle}>Your MouldX business at a glance.</p>
 
-        {/* ---------- Earnings hero card ---------- */}
         <div className={styles.earningsCard}>
           <span className={styles.earningsPill}>TOTAL EARNINGS · {OWNER.earningsMonth}</span>
           <p className={styles.earningsValue}>₹{OWNER.totalEarnings.toLocaleString("en-IN")}</p>
           <p className={styles.earningsDelta}>↑ {OWNER.vsLastMonth}% vs last month</p>
         </div>
 
-        {/* ---------- Quick actions ---------- */}
         <div className={styles.quickActions}>
           <Link href="/owner/moulds/new" className={styles.quickAction}>
             <span className={styles.quickActionIcon} aria-hidden>➕</span>
             <span className={styles.quickActionLabel}>List a Mould</span>
           </Link>
-          
         </div>
 
-        {/* ---------- Mould utilization ---------- */}
         <div className={styles.card}>
           <div className={styles.utilizationHeader}>
             <h2 className={styles.cardTitle}>Mould Utilization</h2>
@@ -89,7 +154,6 @@ export default function OwnerHomePage() {
           </div>
         </div>
 
-        {/* ---------- Rating summary ---------- */}
         <Link href="/owner/reviews" className={styles.ratingCard}>
           <div>
             <p className={styles.ratingLabel}>Your Rating</p>
@@ -102,12 +166,8 @@ export default function OwnerHomePage() {
           <span className={styles.ratingArrow} aria-hidden>→</span>
         </Link>
 
-        {/* ---------- Action required ---------- */}
         <div className={styles.actionHeader}>
-          <h2 className={styles.actionTitle}>Action Required</h2>
-          {OWNER.actionRequiredCount > 0 && (
-            <span className={styles.actionBadge}>{OWNER.actionRequiredCount}</span>
-          )}
+          <h2 className={styles.actionTitle}>Ending Soon</h2>
         </div>
 
         {OWNER.bookingRequests.map((req) => (
@@ -123,7 +183,6 @@ export default function OwnerHomePage() {
           </Link>
         ))}
 
-        {/* ---------- Upcoming pickups / returns ---------- */}
         <div className={styles.sectionHeader}>
           <h2 className={styles.actionTitle}>Upcoming</h2>
           <Link href="/owner/bookings" className={styles.sectionLink}>
@@ -131,46 +190,9 @@ export default function OwnerHomePage() {
           </Link>
         </div>
 
-        <div className={styles.card}>
-          {OWNER.upcoming.map((item, i) => (
-            <div
-              key={item.id}
-              className={`${styles.upcomingRow} ${i < OWNER.upcoming.length - 1 ? styles.upcomingRowBorder : ""}`}
-            >
-              <span
-                className={`${styles.upcomingTag} ${
-                  item.type === "Pickup" ? styles.upcomingTagPickup : styles.upcomingTagReturn
-                }`}
-              >
-                {item.type}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className={styles.upcomingTitle}>
-                  {item.mouldCode} · {item.customer}
-                </p>
-              </div>
-              <span className={styles.upcomingDate}>{item.date}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* ---------- Recent activity ---------- */}
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.actionTitle}>Recent Activity</h2>
-        </div>
-
-        <div className={styles.card}>
-          {OWNER.activity.map((item, i) => (
-            <div
-              key={item.id}
-              className={`${styles.activityRow} ${i < OWNER.activity.length - 1 ? styles.upcomingRowBorder : ""}`}
-            >
-              <span className={styles.activityDot} aria-hidden />
-              <div className="min-w-0 flex-1">
-                <p className={styles.activityText}>{item.text}</p>
-                <p className={styles.activityTime}>{item.time}</p>
-              </div>
-            </div>
+        <div className={styles.upcomingGrid}>
+          {OWNER.upcoming.map((item) => (
+            <UpcomingCard key={item.id} item={item} />
           ))}
         </div>
       </div>
