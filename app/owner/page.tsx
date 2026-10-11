@@ -16,8 +16,8 @@ const OWNER = {
   bookingRequests: [
     { id: "1", mouldCode: "MX-000123", customerName: "Nova Plastics" },
   ],
-  rating: 4.8,
-  reviewCount: 32,
+  // counts per star (5 → 1). Average + percentages are calculated from this.
+  ratingCounts: { 5: 27, 4: 4, 3: 1, 2: 0, 1: 0 } as Record<number, number>,
   upcoming: [
     {
       id: "u1",
@@ -38,11 +38,6 @@ const OWNER = {
       image: "https://picsum.photos/seed/owner-upcoming-2/800/600",
     },
   ],
-  activity: [
-    { id: "a1", text: "Payout of ₹12,600 credited to your account", time: "2h ago" },
-    { id: "a2", text: "Nova Plastics requested to book MX-000123", time: "5h ago" },
-    { id: "a3", text: "MX-000045 returned in good condition", time: "1d ago" },
-  ],
 };
 
 interface UpcomingItem {
@@ -53,6 +48,16 @@ interface UpcomingItem {
   customer: string;
   date: string;
   image: string;
+}
+
+function Stars({ value, size = 14 }: { value: number; size?: number }) {
+  const pct = Math.max(0, Math.min(100, (value / 5) * 100));
+  return (
+    <span className={styles.stars} style={{ fontSize: size }} aria-label={`${value.toFixed(1)} out of 5`}>
+      <span className={styles.starsBase} aria-hidden>★★★★★</span>
+      <span className={styles.starsFill} style={{ width: `${pct}%` }} aria-hidden>★★★★★</span>
+    </span>
+  );
 }
 
 function UpcomingCard({ item }: { item: UpcomingItem }) {
@@ -101,6 +106,11 @@ function UpcomingCard({ item }: { item: UpcomingItem }) {
 }
 
 export default function OwnerHomePage() {
+  const counts = OWNER.ratingCounts;
+  const reviewCount = Object.values(counts).reduce((a, b) => a + b, 0);
+  const ratingSum = Object.entries(counts).reduce((a, [star, c]) => a + Number(star) * c, 0);
+  const rating = reviewCount ? ratingSum / reviewCount : 0;
+
   return (
     <div className={styles.page}>
       <div className={styles.content}>
@@ -128,42 +138,65 @@ export default function OwnerHomePage() {
             <div className={styles.progressFill} style={{ width: `${OWNER.utilization}%` }} />
           </div>
 
+          {/* Each chip opens My Moulds (filtered by status) */}
           <div className={styles.statsGrid}>
-            <div className={styles.statChip}>
+            <Link href="/owner/moulds" className={styles.statChip}>
               <span className={styles.statValue}>{String(OWNER.totalMoulds).padStart(2, "0")}</span>
               <span className={styles.statLabel}>Total Moulds</span>
-            </div>
-            <div className={styles.statChip}>
+            </Link>
+
+            <Link href="/owner/moulds?status=available" className={styles.statChip}>
               <span className={`${styles.statValue} ${styles.statValueGreen}`}>
                 {String(OWNER.available).padStart(2, "0")}
               </span>
               <span className={styles.statLabel}>Available</span>
-            </div>
-            <div className={styles.statChip}>
+            </Link>
+
+            <Link href="/owner/moulds?status=rented" className={styles.statChip}>
               <span className={`${styles.statValue} ${styles.statValueAmber}`}>
                 {String(OWNER.rented).padStart(2, "0")}
               </span>
               <span className={styles.statLabel}>Rented</span>
-            </div>
-            <div className={styles.statChip}>
+            </Link>
+
+            <Link href="/owner/moulds?status=maintenance" className={styles.statChip}>
               <span className={`${styles.statValue} ${styles.statValueRed}`}>
                 {String(OWNER.maintenance).padStart(2, "0")}
               </span>
               <span className={styles.statLabel}>Maintenance</span>
-            </div>
+            </Link>
           </div>
         </div>
 
+        {/* Rating card — same design as the Your Ratings page summary */}
         <Link href="/owner/reviews" className={styles.ratingCard}>
-          <div>
+          <div className={styles.ratingHeader}>
             <p className={styles.ratingLabel}>Your Rating</p>
-            <div className={styles.ratingRow}>
-              <span className={styles.ratingValue}>{OWNER.rating.toFixed(1)}</span>
-              <span className={styles.ratingStars} aria-hidden>★★★★★</span>
-            </div>
-            <p className={styles.ratingMeta}>Based on {OWNER.reviewCount} reviews</p>
+            <span className={styles.ratingArrow} aria-hidden>→</span>
           </div>
-          <span className={styles.ratingArrow} aria-hidden>→</span>
+
+          <div className={styles.ratingSummary}>
+            <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+            <div>
+              <Stars value={rating} size={16} />
+              <p className={styles.ratingMeta}>Based on {reviewCount} reviews</p>
+            </div>
+          </div>
+
+          <div className={styles.ratingBars}>
+            {[5, 4, 3, 2, 1].map((star) => {
+              const pct = reviewCount ? Math.round((counts[star] / reviewCount) * 100) : 0;
+              return (
+                <div key={star} className={styles.ratingBarRow}>
+                  <span className={styles.ratingBarLabel}>{star} ★</span>
+                  <div className={styles.ratingBarTrack}>
+                    <div className={styles.ratingBarFill} style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className={styles.ratingBarPercent}>{pct}%</span>
+                </div>
+              );
+            })}
+          </div>
         </Link>
 
         <div className={styles.actionHeader}>
