@@ -80,17 +80,7 @@ export default function SignupPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.topBar}>
-        <div className={styles.logoWrap}>
-          <Image
-            src="/images/logo.png"
-            alt="MouldX"
-            fill
-            priority
-            className={styles.logo}
-          />
-        </div>
-      </div>
+     
 
 
       <h1 className={styles.title}>Create Account</h1>

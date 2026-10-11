@@ -39,7 +39,7 @@ interface BigCardProps {
 }
 
 function BigCard({ id, name, code, city, category, price, image, rating, variant }: BigCardProps) {
-  const [liked, setLiked] = useState(false);
+  
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -70,23 +70,7 @@ function BigCard({ id, name, code, city, category, price, image, rating, variant
         </p>
       </Link>
 
-      {/* Kept outside the Link so toggling the wishlist does not navigate */}
-      <button
-        type="button"
-        className={styles.heart}
-        aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
-        onClick={() => setLiked((v) => !v)}
-      >
-        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
-          <path
-            d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"
-            fill={liked ? "#ff385c" : "rgba(0,0,0,0.45)"}
-            stroke="#ffffff"
-            strokeWidth="2"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+     
     </article>
   );
 }
