@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./MyMoulds.module.css";
 
 type AvailabilityStatus = "AVAILABLE" | "RENTED" | "MAINTENANCE";
+type StatusFilter = "ALL" | AvailabilityStatus;
 
 interface Mould {
   id: string;
@@ -80,6 +81,13 @@ const STATUS_OPTIONS: {
     description: "Hidden from booking until you mark it available",
     dot: "dotMaintenance",
   },
+];
+
+const FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
+  { value: "ALL", label: "All" },
+  { value: "AVAILABLE", label: "Available" },
+  { value: "RENTED", label: "Rented" },
+  { value: "MAINTENANCE", label: "Maintenance" },
 ];
 
 const MAX_NOTE = 140;
@@ -269,6 +277,8 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
 
 export default function MyMouldsPage() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [moulds, setMoulds] = useState<Mould[]>(INITIAL_MOULDS);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState("");
@@ -279,13 +289,37 @@ export default function MyMouldsPage() {
     return () => clearTimeout(t);
   }, [toast]);
 
+  const counts = useMemo(() => {
+    const base: Record<StatusFilter, number> = {
+      ALL: moulds.length,
+      AVAILABLE: 0,
+      RENTED: 0,
+      MAINTENANCE: 0,
+    };
+    moulds.forEach((m) => {
+      base[m.status] += 1;
+    });
+    return base;
+  }, [moulds]);
+
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (q === "") return moulds;
-    return moulds.filter(
-      (m) => m.name.toLowerCase().includes(q) || m.code.toLowerCase().includes(q)
-    );
-  }, [search, moulds]);
+    const tokens = search.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
+    return moulds.filter((m) => {
+      const matchesStatus = statusFilter === "ALL" || m.status === statusFilter;
+      const haystack = `${m.name} ${m.code} ${m.status}`.toLowerCase();
+      const matchesSearch = tokens.every((t) => haystack.includes(t));
+      return matchesStatus && matchesSearch;
+    });
+  }, [search, statusFilter, moulds]);
+
+  const activeFilterCount = statusFilter !== "ALL" ? 1 : 0;
+  const isFiltering = search.trim() !== "" || activeFilterCount > 0;
+
+  const clearAll = () => {
+    setSearch("");
+    setStatusFilter("ALL");
+  };
 
   const editingMould = moulds.find((m) => m.id === editingId) ?? null;
 
@@ -342,12 +376,70 @@ export default function MyMouldsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={styles.searchInput}
+            aria-label="Search moulds"
           />
+          {search && (
+            <button
+              type="button"
+              className={styles.clearSearchBtn}
+              onClick={() => setSearch("")}
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
         </div>
-        <button type="button" className={styles.filterBtn}>
-          <span aria-hidden>⚙</span> Filter
+        <button
+          type="button"
+          className={`${styles.filterBtn} ${
+            isFilterOpen || activeFilterCount > 0 ? styles.filterBtnActive : ""
+          }`}
+          onClick={() => setIsFilterOpen((v) => !v)}
+          aria-expanded={isFilterOpen}
+        >
+          <span aria-hidden>⚙</span> 
+          {activeFilterCount > 0 && (
+            <span className={styles.filterCount}>{activeFilterCount}</span>
+          )}
         </button>
       </div>
+
+      {isFilterOpen && (
+        <div className={styles.filterPanel}>
+          <p className={styles.filterLabel}>Status</p>
+          <div className={styles.chipsRow}>
+            {FILTER_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setStatusFilter(opt.value)}
+                className={`${styles.chip} ${
+                  statusFilter === opt.value ? styles.chipActive : ""
+                }`}
+              >
+                {opt.label}
+                <span className={styles.chipCount}>{counts[opt.value]}</span>
+              </button>
+            ))}
+          </div>
+
+          {activeFilterCount > 0 && (
+            <button
+              type="button"
+              className={styles.clearFilters}
+              onClick={() => setStatusFilter("ALL")}
+            >
+              Clear filter
+            </button>
+          )}
+        </div>
+      )}
+
+      {isFiltering && (
+        <p className={styles.resultsText}>
+          {filtered.length} mould{filtered.length === 1 ? "" : "s"} found
+        </p>
+      )}
 
       <div className={styles.list}>
         {filtered.map((m) => (
@@ -406,7 +498,14 @@ export default function MyMouldsPage() {
         ))}
 
         {filtered.length === 0 && (
-          <p className={styles.emptyText}>No moulds match your search.</p>
+          <div className={styles.emptyBox}>
+            <p className={styles.emptyText}>No moulds match your search or filter.</p>
+            {isFiltering && (
+              <button type="button" className={styles.clearFilters} onClick={clearAll}>
+                Clear search & filter
+              </button>
+            )}
+          </div>
         )}
       </div>
 

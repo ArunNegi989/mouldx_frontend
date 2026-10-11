@@ -121,11 +121,26 @@
   gap: 10px;
 }
 
+/* clickable chip → My Moulds */
 .statChip {
+  display: block;
   background: #ffffff;
   border: 1px solid #eef0f2;
   border-radius: 12px;
   padding: 12px 14px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.statChip:hover {
+  border-color: #dbeafe;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+.statChip:active {
+  transform: scale(0.97);
 }
 
 .statValue {
@@ -268,16 +283,49 @@
   text-align: center;
 }
 
+/* ---------- Stars ---------- */
+.stars {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.starsBase {
+  color: #e5e7eb;
+}
+
+.starsFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  color: #e8a33d;
+  white-space: nowrap;
+}
+
+/* ---------- Rating card (matches Your Ratings page) ---------- */
 .ratingCard {
   margin-top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: block;
   background: #fafafa;
   border: 1px solid #eef0f2;
   border-radius: 18px;
   padding: 16px;
   text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ratingCard:active {
+  transform: scale(0.99);
+}
+
+.ratingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .ratingLabel {
@@ -289,34 +337,70 @@
   margin: 0;
 }
 
-.ratingRow {
-  margin-top: 4px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.ratingValue {
-  font-size: 22px;
-  font-weight: 800;
-  color: #111827;
-}
-
-.ratingStars {
-  font-size: 12px;
-  color: #fbbf24;
-  letter-spacing: 1px;
-}
-
-.ratingMeta {
-  margin-top: 2px;
-  font-size: 11px;
-  color: #9ca3af;
-}
-
 .ratingArrow {
   color: #9ca3af;
   font-size: 16px;
+}
+
+.ratingSummary {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ratingValue {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  color: #e8a33d;
+}
+
+.ratingMeta {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.ratingBars {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.ratingBarRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ratingBarLabel {
+  width: 26px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ratingBarTrack {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.ratingBarFill {
+  height: 100%;
+  background: #e8a33d;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.ratingBarPercent {
+  width: 32px;
+  text-align: right;
+  font-size: 11px;
+  color: #6b7280;
 }
 
 .sectionHeader {
