@@ -8,7 +8,7 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaLinkedinIn } from "react-icons/
 import styles from "./Footer.module.css";
 
 // Footer sirf in routes pe dikhega
-const SHOW_FOOTER_ON = ["/", "/home", "/owner"];
+const SHOW_FOOTER_ON = ["/", "/owner"];
 
 const SERVICEABLE_AREAS = ["Delhi", "Haryana", "Uttar Pradesh", "Punjab", "Chandigarh", "Uttarakhand"];
 
@@ -41,7 +41,7 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Brand */}
           <div className={styles.brandCol}>
-            <Link href="/home" className={styles.logoLink}>
+            <Link href="/" className={styles.logoLink}>
               <Image
                 src="/images/logo.png"
                 alt="MouldX"
