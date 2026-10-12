@@ -25,7 +25,7 @@ const MORE_LINKS = [
   { label: "Rent Agreement", href: "/owner/profile/rent-agreement", icon: "📄" },
   { label: "FAQs", href: "/owner/profile/faqs", icon: "❓" },
   { label: "Policy", href: "/owner/profile/policy", icon: "🛡️" },
-  { label: "Settings", href: "/owner/profile/settings", icon: "⚙️" },
+  { label: "Settings", href: "/owner/profile/settings", icon: "▽️" },
 ];
 
 export default function OwnerProfilePage() {

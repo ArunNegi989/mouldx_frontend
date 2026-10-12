@@ -38,7 +38,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "14 – 20 Sep",
     status: "APPROVAL PENDING",
     tab: "upcoming",
-    image: "https://picsum.photos/seed/mould-1/800/600",
+    image: "https://picsum.photos/seed/mould-1/600/600",
   },
   {
     id: "BK-24512",
@@ -47,7 +47,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "22 – 28 Sep",
     status: "ARRIVED",
     tab: "upcoming",
-    image: "https://picsum.photos/seed/mould-2/800/600",
+    image: "https://picsum.photos/seed/mould-2/600/600",
   },
   {
     id: "BK-24390",
@@ -56,7 +56,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "5 – 12 Sep",
     status: "IN PROGRESS",
     tab: "active",
-    image: "https://picsum.photos/seed/mould-3/800/600",
+    image: "https://picsum.photos/seed/mould-3/600/600",
   },
   {
     id: "BK-23988",
@@ -65,7 +65,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "10 – 15 Aug",
     status: "COMPLETED",
     tab: "completed",
-    image: "https://picsum.photos/seed/mould-4/800/600",
+    image: "https://picsum.photos/seed/mould-4/600/600",
   },
   {
     id: "BK-23700",
@@ -74,7 +74,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "20 – 26 Jul",
     status: "COMPLETED",
     tab: "completed",
-    image: "https://picsum.photos/seed/mould-6/800/600",
+    image: "https://picsum.photos/seed/mould-6/600/600",
     rating: 4,
   },
   {
@@ -84,7 +84,7 @@ const BOOKINGS: Booking[] = [
     dateRange: "1 – 6 Aug",
     status: "CANCELLED",
     tab: "completed",
-    image: "https://picsum.photos/seed/mould-5/800/600",
+    image: "https://picsum.photos/seed/mould-5/600/600",
   },
 ];
 
@@ -97,32 +97,28 @@ const STATUS_CLASS: Record<BookingStatus, string> = {
   CANCELLED: "badgeCancelled",
 };
 
-function BookingImage({ booking }: { booking: Booking }) {
+function BookingImage({ src, alt }: { src: string; alt: string }) {
   const [imgError, setImgError] = useState(false);
 
   return (
     <div className={styles.imageWrap}>
       {!imgError ? (
         <img
-          src={booking.image}
-          alt={booking.name}
+          src={src}
+          alt={alt}
           className={styles.image}
           loading="lazy"
           onError={() => setImgError(true)}
         />
       ) : (
         <div className={styles.placeholder} aria-hidden>
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5">
             <rect x="3" y="5" width="18" height="14" rx="2" />
             <circle cx="9" cy="10" r="1.5" />
             <path d="M21 16l-5-5-8 8" />
           </svg>
         </div>
       )}
-
-      <span className={`${styles.badge} ${styles[STATUS_CLASS[booking.status]]}`}>
-        {booking.status}
-      </span>
     </div>
   );
 }
@@ -161,6 +157,39 @@ function ReviewCta({ booking }: { booking: Booking }) {
   );
 }
 
+function BookingCard({ booking }: { booking: Booking }) {
+  return (
+    <article className={styles.cardWrap}>
+      <Link href={`/bookings/${booking.id}`} className={styles.card}>
+        <div className={styles.cardTop}>
+          <BookingImage src={booking.image} alt={booking.name} />
+
+          <div className={styles.cardInfo}>
+            <h3 className={styles.cardName}>{booking.name}</h3>
+            <p className={styles.cardLine}>
+              <strong>Mould:</strong> {booking.code}
+            </p>
+            <p className={styles.cardLine}>
+              <strong>Booking ID:</strong> {booking.id}
+            </p>
+            <span className={`${styles.badge} ${styles[STATUS_CLASS[booking.status]]}`}>
+              {booking.status}
+            </span>
+          </div>
+        </div>
+
+        <hr className={styles.divider} />
+
+        <p className={styles.cardBooking}>
+          <span aria-hidden>🗓</span> Booking: {booking.dateRange}
+        </p>
+      </Link>
+
+      {booking.status === "COMPLETED" && <ReviewCta booking={booking} />}
+    </article>
+  );
+}
+
 export default function BookingsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("upcoming");
 
@@ -171,41 +200,31 @@ export default function BookingsPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My Bookings</h1>
+      <div className={styles.content}>
+        <h1 className={styles.title}>My Bookings</h1>
 
-      <div className={styles.tabs}>
-        {TABS.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`${styles.tabBtn} ${activeTab === tab.key ? styles.tabBtnActive : ""}`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+        <div className={styles.tabs}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={`${styles.tabBtn} ${activeTab === tab.key ? styles.tabBtnActive : ""}`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      <div className={styles.list}>
-        {filtered.map((b) => (
-          <div key={b.id} className={styles.cardWrap}>
-            <Link href={`/bookings/${b.id}`} className={styles.card}>
-              <BookingImage booking={b} />
+        <div className={styles.list}>
+          {filtered.map((b) => (
+            <BookingCard key={b.id} booking={b} />
+          ))}
 
-              <div className={styles.cardInfo}>
-                <p className={styles.cardName}>{b.name}</p>
-                <p className={styles.cardMeta}>
-                  {b.code} · {b.dateRange}
-                </p>
-              </div>
-            </Link>
-
-            {b.status === "COMPLETED" && <ReviewCta booking={b} />}
-          </div>
-        ))}
-
-        {filtered.length === 0 && (
-          <p className={styles.emptyText}>No bookings in this tab yet.</p>
-        )}
+          {filtered.length === 0 && (
+            <p className={styles.emptyText}>No bookings in this tab yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );

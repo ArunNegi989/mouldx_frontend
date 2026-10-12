@@ -54,7 +54,7 @@ function BigCard({ id, name, code, city, category, price, image, rating, onNavig
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className={styles.placeholder} aria-hidden>⚙</div>
+            <div className={styles.placeholder} aria-hidden>▽</div>
           )}
         </div>
 

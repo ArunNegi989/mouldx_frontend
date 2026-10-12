@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./MyMoulds.module.css";
 
 type AvailabilityStatus = "AVAILABLE" | "RENTED" | "MAINTENANCE";
+type EditableStatus = Exclude<AvailabilityStatus, "RENTED">;
 type StatusFilter = "ALL" | AvailabilityStatus;
 
 interface Mould {
@@ -14,42 +15,47 @@ interface Mould {
   rating: number;
   status: AvailabilityStatus;
   pricePerDay: number;
-  gradient: string;
+  image: string;
   maintenanceNote?: string;
   maintenanceUntil?: string;
 }
 
-const INITIAL_MOULDS: Mould[] = [
-  {
-    id: "1",
-    name: "Bottle Cap Mould",
-    code: "MX-000123",
-    rating: 4.8,
-    status: "AVAILABLE",
-    pricePerDay: 18000,
-    gradient: "#2563eb",
-  },
-  {
-    id: "2",
-    name: "PET Preform Mould",
-    code: "MX-000198",
-    rating: 4.6,
-    status: "RENTED",
-    pricePerDay: 22000,
-    gradient: "#2563eb",
-  },
-  {
-    id: "3",
-    name: "Chair Leg Mould",
-    code: "MX-000077",
-    rating: 4.7,
-    status: "MAINTENANCE",
-    pricePerDay: 15000,
-    gradient: "#2563eb",
-    maintenanceNote: "Cooling channel cleaning",
-    maintenanceUntil: "2026-10-20",
-  },
+const PAGE_SIZE = 10;
+
+// TEMP dummy data (24 records so pagination can be tested) — will be replaced by the real moulds API
+const MOULD_NAMES = [
+  "Bottle Cap Mould",
+  "PET Preform Mould",
+  "Chair Leg Mould",
+  "Blow Mould — 5L Can",
+  "Die-Cast Housing Mould",
+  "Bucket Handle Mould",
 ];
+
+const STATUS_CYCLE: AvailabilityStatus[] = ["AVAILABLE", "RENTED", "MAINTENANCE", "AVAILABLE"];
+
+const MAINTENANCE_NOTES = [
+  "Cooling channel cleaning",
+  "Cavity polishing",
+  "Ejector pin replacement",
+];
+
+const INITIAL_MOULDS: Mould[] = Array.from({ length: 24 }, (_, i) => {
+  const status = STATUS_CYCLE[i % STATUS_CYCLE.length];
+  const isMaintenance = status === "MAINTENANCE";
+
+  return {
+    id: String(i + 1),
+    name: MOULD_NAMES[i % MOULD_NAMES.length],
+    code: `MX-${String(100 + i * 7).padStart(6, "0")}`,
+    rating: Number((4.3 + ((i * 3) % 7) / 10).toFixed(1)),
+    status,
+    pricePerDay: 15000 + (i % 5) * 2000,
+    image: `https://picsum.photos/seed/owner-mould-${i + 1}/600/600`,
+    maintenanceNote: isMaintenance ? MAINTENANCE_NOTES[i % MAINTENANCE_NOTES.length] : undefined,
+    maintenanceUntil: isMaintenance ? "2026-10-20" : undefined,
+  };
+});
 
 const STATUS_CLASS: Record<AvailabilityStatus, string> = {
   AVAILABLE: "badgeAvailable",
@@ -57,8 +63,9 @@ const STATUS_CLASS: Record<AvailabilityStatus, string> = {
   MAINTENANCE: "badgeMaintenance",
 };
 
+// The owner can only switch between these two. "Rented" is set automatically by bookings.
 const STATUS_OPTIONS: {
-  value: AvailabilityStatus;
+  value: EditableStatus;
   label: string;
   description: string;
   dot: string;
@@ -68,12 +75,6 @@ const STATUS_OPTIONS: {
     label: "Available",
     description: "Visible to customers and open for booking",
     dot: "dotAvailable",
-  },
-  {
-    value: "RENTED",
-    label: "Rented",
-    description: "Currently with a customer",
-    dot: "dotRented",
   },
   {
     value: "MAINTENANCE",
@@ -115,6 +116,8 @@ async function updateMouldStatus(payload: {
   return payload;
 }
 
+/* ---------- Status bottom sheet ---------- */
+
 interface StatusSheetProps {
   mould: Mould;
   onClose: () => void;
@@ -130,20 +133,33 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
   const [note, setNote] = useState(mould.maintenanceNote ?? "");
   const [until, setUntil] = useState(mould.maintenanceUntil ?? "");
   const [saving, setSaving] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState("");
 
+  const isRented = mould.status === "RENTED";
+
+  // Lock the page scroll while the sheet is open
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
-      window.removeEventListener("keydown", onKey);
     };
-  }, [onClose]);
+  }, []);
+
+  // Escape closes the confirmation popup first, then the sheet
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || saving) return;
+      if (confirming) {
+        setConfirming(false);
+      } else {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose, confirming, saving]);
 
   const unchanged =
     status === mould.status &&
@@ -151,18 +167,35 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
       (note === (mould.maintenanceNote ?? "") &&
         until === (mould.maintenanceUntil ?? "")));
 
-  const handleSave = async () => {
-    if (unchanged || saving) return;
+  const handleSaveClick = () => {
+    if (unchanged || saving || isRented) return;
+    setError("");
+    setConfirming(true);
+  };
+
+  const handleConfirm = async () => {
+    if (saving) return;
     setSaving(true);
     setError("");
     try {
       await onSave(status, note.trim(), until);
       onClose();
     } catch {
-      setError("Could not update the status. Please try again.");
+      setConfirming(false);
       setSaving(false);
+      setError("Could not update the status. Please try again.");
     }
   };
+
+  const confirmTitle =
+    status === "MAINTENANCE" ? "Mark as under maintenance?" : "Mark as available?";
+
+  const confirmText =
+    status === "MAINTENANCE"
+      ? `${mould.name} will be hidden from booking until you mark it available.${
+          until ? ` Expected back on ${formatDate(until)}.` : ""
+        }`
+      : `${mould.name} will be visible to customers and open for booking.`;
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -180,6 +213,13 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
           {mould.name} · {mould.code}
         </p>
 
+        {isRented && (
+          <p className={styles.notice}>
+            This mould is currently rented. Its status updates automatically once it is
+            returned.
+          </p>
+        )}
+
         <div className={styles.options} role="radiogroup" aria-label="Status">
           {STATUS_OPTIONS.map((opt) => (
             <button
@@ -187,6 +227,7 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
               type="button"
               role="radio"
               aria-checked={status === opt.value}
+              disabled={isRented}
               className={`${styles.option} ${
                 status === opt.value ? styles.optionActive : ""
               }`}
@@ -207,22 +248,8 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
           ))}
         </div>
 
-        {status === "RENTED" && mould.status !== "RENTED" && (
-          <p className={styles.notice}>
-            Rentals booked through MouldX are marked automatically. Use this
-            only for rentals you gave offline.
-          </p>
-        )}
-
-        {status === "MAINTENANCE" && (
+        {status === "MAINTENANCE" && !isRented && (
           <div className={styles.maintenanceFields}>
-            {mould.status === "RENTED" && (
-              <p className={styles.notice}>
-                This mould is currently rented. Mark maintenance only after it
-                has been returned.
-              </p>
-            )}
-
             <label htmlFor="maintenance-note" className={styles.fieldLabel}>
               Reason <span className={styles.optional}>(optional)</span>
             </label>
@@ -264,16 +291,163 @@ function StatusSheet({ mould, onClose, onSave }: StatusSheetProps) {
           <button
             type="button"
             className={styles.saveBtn}
-            onClick={handleSave}
-            disabled={unchanged || saving}
+            onClick={handleSaveClick}
+            disabled={unchanged || saving || isRented}
           >
-            {saving ? "Saving..." : "Save status"}
+            Save status
           </button>
         </div>
+      </div>
+
+      {/* ---------- Confirmation popup ---------- */}
+      {confirming && (
+        <div
+          className={styles.confirmOverlay}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!saving) setConfirming(false);
+          }}
+        >
+          <div
+            className={styles.confirmBox}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="confirm-title"
+            aria-describedby="confirm-text"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span
+              className={`${styles.confirmIcon} ${
+                status === "MAINTENANCE" ? styles.confirmIconRed : styles.confirmIconGreen
+              }`}
+              aria-hidden
+            >
+              {status === "MAINTENANCE" ? "🔧" : "✓"}
+            </span>
+
+            <h3 id="confirm-title" className={styles.confirmTitle}>
+              {confirmTitle}
+            </h3>
+            <p id="confirm-text" className={styles.confirmText}>
+              {confirmText}
+            </p>
+
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                className={styles.cancelBtn}
+                onClick={() => setConfirming(false)}
+                disabled={saving}
+              >
+                Go back
+              </button>
+              <button
+                type="button"
+                className={styles.saveBtn}
+                onClick={handleConfirm}
+                disabled={saving}
+              >
+                {saving ? "Saving..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Mould image with placeholder fallback ---------- */
+
+function MouldImage({ src, alt }: { src: string; alt: string }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className={styles.imageWrap}>
+      {!imgError ? (
+        <img
+          src={src}
+          alt={alt}
+          className={styles.image}
+          loading="lazy"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <div className={styles.placeholder} aria-hidden>
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <circle cx="9" cy="10" r="1.5" />
+            <path d="M21 16l-5-5-8 8" />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Mould card (same design as the review card) ---------- */
+
+function MouldCard({
+  mould,
+  onEditStatus,
+}: {
+  mould: Mould;
+  onEditStatus: (id: string) => void;
+}) {
+  return (
+    <div className={styles.card}>
+      <div className={styles.cardTop}>
+        <MouldImage src={mould.image} alt={mould.name} />
+
+        <div className={styles.cardInfo}>
+          <h3 className={styles.mouldName}>{mould.name}</h3>
+          <p className={styles.mouldMeta}>
+            {mould.code} · <span className={styles.ratingStar}>★</span> {mould.rating}
+          </p>
+          <p className={styles.mouldLine}>
+            <strong>Rent:</strong> ₹{mould.pricePerDay.toLocaleString("en-IN")}/day
+          </p>
+          <span className={`${styles.badge} ${styles[STATUS_CLASS[mould.status]]}`}>
+            {mould.status}
+          </span>
+        </div>
+      </div>
+
+      {mould.status === "MAINTENANCE" && (mould.maintenanceNote || mould.maintenanceUntil) && (
+        <div className={styles.maintenanceInfo}>
+          {mould.maintenanceNote && (
+            <p className={styles.maintenanceNote}>{mould.maintenanceNote}</p>
+          )}
+          {mould.maintenanceUntil && (
+            <p className={styles.maintenanceUntil}>
+              Back on {formatDate(mould.maintenanceUntil)}
+            </p>
+          )}
+        </div>
+      )}
+
+      <hr className={styles.divider} />
+
+      <div className={styles.actionsRow}>
+        <Link href={`/owner/moulds/${mould.id}/calendar`} className={styles.actionBtn}>
+          <span aria-hidden>📅</span> Calendar
+        </Link>
+        <button
+          type="button"
+          className={styles.actionBtn}
+          onClick={() => onEditStatus(mould.id)}
+        >
+          <span aria-hidden>🔧</span> Status
+        </button>
+        <Link href={`/owner/moulds/${mould.id}/edit`} className={styles.actionBtn}>
+          <span aria-hidden>✎</span> Edit
+        </Link>
       </div>
     </div>
   );
 }
+
+/* ---------- Page ---------- */
 
 export default function MyMouldsPage() {
   const [search, setSearch] = useState("");
@@ -282,6 +456,7 @@ export default function MyMouldsPage() {
   const [moulds, setMoulds] = useState<Mould[]>(INITIAL_MOULDS);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (!toast) return;
@@ -313,12 +488,35 @@ export default function MyMouldsPage() {
     });
   }, [search, statusFilter, moulds]);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = filtered.slice(startIndex, startIndex + PAGE_SIZE);
+
   const activeFilterCount = statusFilter !== "ALL" ? 1 : 0;
   const isFiltering = search.trim() !== "" || activeFilterCount > 0;
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+
+  const handleStatusFilterChange = (value: StatusFilter) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
 
   const clearAll = () => {
     setSearch("");
     setStatusFilter("ALL");
+    setPage(1);
+  };
+
+  const goToPage = (next: number) => {
+    setPage(next);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const editingMould = moulds.find((m) => m.id === editingId) ?? null;
@@ -363,155 +561,141 @@ export default function MyMouldsPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My Moulds</h1>
+      <div className={styles.content}>
+        <h1 className={styles.title}>My Products</h1>
 
-      <div className={styles.searchRow}>
-        <div className={styles.searchWrap}>
-          <span className={styles.searchIcon} aria-hidden>
-            🔍
-          </span>
-          <input
-            type="text"
-            placeholder="Search Moulds"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={styles.searchInput}
-            aria-label="Search moulds"
-          />
-          {search && (
-            <button
-              type="button"
-              className={styles.clearSearchBtn}
-              onClick={() => setSearch("")}
-              aria-label="Clear search"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-        <button
-          type="button"
-          className={`${styles.filterBtn} ${
-            isFilterOpen || activeFilterCount > 0 ? styles.filterBtnActive : ""
-          }`}
-          onClick={() => setIsFilterOpen((v) => !v)}
-          aria-expanded={isFilterOpen}
-        >
-          <span aria-hidden>⚙</span> 
-          {activeFilterCount > 0 && (
-            <span className={styles.filterCount}>{activeFilterCount}</span>
-          )}
-        </button>
-      </div>
-
-      {isFilterOpen && (
-        <div className={styles.filterPanel}>
-          <p className={styles.filterLabel}>Status</p>
-          <div className={styles.chipsRow}>
-            {FILTER_OPTIONS.map((opt) => (
+        <div className={styles.searchRow}>
+          <div className={styles.searchWrap}>
+            <span className={styles.searchIcon} aria-hidden>
+              🔍
+            </span>
+            <input
+              type="text"
+              placeholder="Search Moulds"
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className={styles.searchInput}
+              aria-label="Search moulds"
+            />
+            {search && (
               <button
-                key={opt.value}
                 type="button"
-                onClick={() => setStatusFilter(opt.value)}
-                className={`${styles.chip} ${
-                  statusFilter === opt.value ? styles.chipActive : ""
-                }`}
+                className={styles.clearSearchBtn}
+                onClick={() => handleSearchChange("")}
+                aria-label="Clear search"
               >
-                {opt.label}
-                <span className={styles.chipCount}>{counts[opt.value]}</span>
+                ✕
               </button>
-            ))}
-          </div>
-
-          {activeFilterCount > 0 && (
-            <button
-              type="button"
-              className={styles.clearFilters}
-              onClick={() => setStatusFilter("ALL")}
-            >
-              Clear filter
-            </button>
-          )}
-        </div>
-      )}
-
-      {isFiltering && (
-        <p className={styles.resultsText}>
-          {filtered.length} mould{filtered.length === 1 ? "" : "s"} found
-        </p>
-      )}
-
-      <div className={styles.list}>
-        {filtered.map((m) => (
-          <div key={m.id} className={styles.card}>
-            <div className={styles.cardTop}>
-              <div className={styles.avatar} style={{ background: m.gradient }}>
-                <span aria-hidden>✻</span>
-              </div>
-              <div className={styles.cardInfo}>
-                <p className={styles.mouldName}>{m.name}</p>
-                <p className={styles.mouldMeta}>
-                  {m.code} · <span className={styles.ratingStar}>★</span> {m.rating}
-                </p>
-              </div>
-              <span className={`${styles.badge} ${styles[STATUS_CLASS[m.status]]}`}>
-                {m.status}
-              </span>
-            </div>
-
-            {m.status === "MAINTENANCE" && (m.maintenanceNote || m.maintenanceUntil) && (
-              <div className={styles.maintenanceInfo}>
-                {m.maintenanceNote && (
-                  <p className={styles.maintenanceNote}>{m.maintenanceNote}</p>
-                )}
-                {m.maintenanceUntil && (
-                  <p className={styles.maintenanceUntil}>
-                    Back on {formatDate(m.maintenanceUntil)}
-                  </p>
-                )}
-              </div>
             )}
+          </div>
+          <button
+            type="button"
+            className={`${styles.filterBtn} ${
+              isFilterOpen || activeFilterCount > 0 ? styles.filterBtnActive : ""
+            }`}
+            onClick={() => setIsFilterOpen((v) => !v)}
+            aria-expanded={isFilterOpen}
+            aria-label="Filter moulds"
+          >
+            <span aria-hidden>▽</span>
+            {activeFilterCount > 0 && (
+              <span className={styles.filterCount}>{activeFilterCount}</span>
+            )}
+          </button>
+        </div>
 
-            <div className={styles.priceRow}>
-              <span className={styles.priceLabel}>Rent</span>
-              <span className={styles.priceValue}>
-                ₹{m.pricePerDay.toLocaleString("en-IN")}/day
-              </span>
+        {isFilterOpen && (
+          <div className={styles.filterPanel}>
+            <p className={styles.filterLabel}>Status</p>
+            <div className={styles.chipsRow}>
+              {FILTER_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => handleStatusFilterChange(opt.value)}
+                  className={`${styles.chip} ${
+                    statusFilter === opt.value ? styles.chipActive : ""
+                  }`}
+                >
+                  {opt.label}
+                  <span className={styles.chipCount}>{counts[opt.value]}</span>
+                </button>
+              ))}
             </div>
 
-            <div className={styles.actionsRow}>
-              <Link href={`/owner/moulds/${m.id}/calendar`} className={styles.actionBtn}>
-                <span aria-hidden>📅</span> Calendar
-              </Link>
+            {activeFilterCount > 0 && (
               <button
                 type="button"
-                className={styles.actionBtn}
-                onClick={() => setEditingId(m.id)}
+                className={styles.clearFilters}
+                onClick={() => handleStatusFilterChange("ALL")}
               >
-                <span aria-hidden>🔧</span> Status
-              </button>
-              <Link href={`/owner/moulds/${m.id}/edit`} className={styles.actionBtn}>
-                <span aria-hidden>✎</span> Edit
-              </Link>
-            </div>
-          </div>
-        ))}
-
-        {filtered.length === 0 && (
-          <div className={styles.emptyBox}>
-            <p className={styles.emptyText}>No moulds match your search or filter.</p>
-            {isFiltering && (
-              <button type="button" className={styles.clearFilters} onClick={clearAll}>
-                Clear search & filter
+                Clear filter
               </button>
             )}
           </div>
         )}
-      </div>
 
-      <Link href="/owner/moulds/new" className={`${styles.addBtn} btn-primary`}>
-        + Add New Listing
-      </Link>
+        {/* ---------- Add New Listing button (below search + filter) ---------- */}
+        <Link href="/owner/moulds/new/product" className={`${styles.addBtn} btn-primary`}>
+          + Add New Listing
+        </Link>
+
+        {isFiltering && (
+          <p className={styles.resultsText}>
+            {filtered.length} mould{filtered.length === 1 ? "" : "s"} found
+          </p>
+        )}
+
+        <div className={styles.list}>
+          {pageItems.map((m) => (
+            <MouldCard key={m.id} mould={m} onEditStatus={setEditingId} />
+          ))}
+
+          {filtered.length === 0 && (
+            <div className={styles.emptyBox}>
+              <p className={styles.emptyText}>No moulds match your search or filter.</p>
+              {isFiltering && (
+                <button type="button" className={styles.clearFilters} onClick={clearAll}>
+                  Clear search &amp; filter
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* ---------- Pagination (only when there is more than one page) ---------- */}
+        {totalPages > 1 && (
+          <nav className={styles.pagination} aria-label="Moulds pagination">
+            <p className={styles.paginationInfo}>
+              Showing {startIndex + 1}–{startIndex + pageItems.length} of {filtered.length}
+            </p>
+
+            <div className={styles.paginationControls}>
+              <button
+                type="button"
+                className={styles.pageBtn}
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ← Previous
+              </button>
+
+              <span className={styles.pageIndicator}>
+                {currentPage} / {totalPages}
+              </span>
+
+              <button
+                type="button"
+                className={`${styles.pageBtn} ${styles.pageBtnPrimary}`}
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
+            </div>
+          </nav>
+        )}
+      </div>
 
       {editingMould && (
         <StatusSheet

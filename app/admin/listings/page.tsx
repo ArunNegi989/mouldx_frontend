@@ -208,7 +208,7 @@ export default function ListingApprovalsPage() {
             className={`${styles.filterBtn} ${isFilterActive ? styles.filterBtnActive : ""}`}
             onClick={() => setIsFilterOpen((v) => !v)}
           >
-            <span aria-hidden>⚙</span>
+            <span aria-hidden>▽</span>
             {isFilterActive && <span className={styles.filterDot} aria-hidden />}
           </button>
 
