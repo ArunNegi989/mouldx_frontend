@@ -18,7 +18,7 @@ const MORE_LINKS = [
   { label: "Rent Agreement", href: "/profile/rent-agreement", icon: "📄" },
   { label: "FAQs", href: "/profile/faqs", icon: "❓" },
   { label: "Policy", href: "/profile/policy", icon: "🛡️" },
-  { label: "Settings", href: "/profile/settings", icon: "⚙️" },
+  { label: "Settings", href: "/profile/settings", icon: "▽️" },
 ];
 
 const formatPhone = (phone?: string) => {

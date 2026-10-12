@@ -15,10 +15,10 @@ interface OwnerBookingDetail {
   days: number;
   total: number;
   status: "REQUESTED" | "UPCOMING" | "ACTIVE" | "COMPLETED";
-  gradient: string;
+  image: string;
 }
 
-// TEMP dummy data — real bookings API se aayega
+// TEMP dummy data — will be replaced by the real bookings API
 const DUMMY_BOOKINGS: Record<string, OwnerBookingDetail> = {
   "1": {
     id: "1",
@@ -30,7 +30,7 @@ const DUMMY_BOOKINGS: Record<string, OwnerBookingDetail> = {
     days: 7,
     total: 126000,
     status: "REQUESTED",
-    gradient: "linear-gradient(135deg, #22d3ee, #2563eb)",
+    image: "https://picsum.photos/seed/owner-booking-1/600/600",
   },
   "2": {
     id: "2",
@@ -42,7 +42,7 @@ const DUMMY_BOOKINGS: Record<string, OwnerBookingDetail> = {
     days: 4,
     total: 72000,
     status: "ACTIVE",
-    gradient: "linear-gradient(135deg, #818cf8, #7c3aed)",
+    image: "https://picsum.photos/seed/owner-booking-2/600/600",
   },
   "3": {
     id: "3",
@@ -54,7 +54,7 @@ const DUMMY_BOOKINGS: Record<string, OwnerBookingDetail> = {
     days: 4,
     total: 90000,
     status: "COMPLETED",
-    gradient: "linear-gradient(135deg, #f3f4f6, #e5e7eb)",
+    image: "https://picsum.photos/seed/owner-booking-3/600/600",
   },
   "4": {
     id: "4",
@@ -66,9 +66,35 @@ const DUMMY_BOOKINGS: Record<string, OwnerBookingDetail> = {
     days: 7,
     total: 108000,
     status: "REQUESTED",
-    gradient: "linear-gradient(135deg, #22d3ee, #2563eb)",
+    image: "https://picsum.photos/seed/owner-booking-4/600/600",
   },
 };
+
+function ProductImage({ src, alt }: { src: string; alt: string }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className={styles.imageWrap}>
+      {!imgError ? (
+        <img
+          src={src}
+          alt={alt}
+          className={styles.image}
+          loading="lazy"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <div className={styles.placeholder} aria-hidden>
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <circle cx="9" cy="10" r="1.5" />
+            <path d="M21 16l-5-5-8 8" />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function OwnerBookingDetailPage({
   params,
@@ -122,29 +148,28 @@ export default function OwnerBookingDetailPage({
           </div>
 
           <div className={styles.productRow}>
-            <div className={styles.productIcon} style={{ background: booking.gradient }}>
-              <span aria-hidden>✻</span>
-            </div>
-            <div className="min-w-0">
+            <ProductImage src={booking.image} alt={booking.productName} />
+
+            <div className={styles.productInfo}>
               <p className={styles.productName}>{booking.productName}</p>
               <p className={styles.productMeta}>{booking.productMeta}</p>
             </div>
           </div>
 
           <div className={styles.detailsGrid}>
-            <div>
+            <div className={styles.detailItem}>
               <p className={styles.detailLabel}>Customer</p>
               <p className={styles.detailValue}>{booking.customer}</p>
             </div>
-            <div>
+            <div className={styles.detailItem}>
               <p className={styles.detailLabel}>Rental</p>
               <p className={styles.detailValue}>{booking.dateRange}</p>
             </div>
-            <div>
+            <div className={styles.detailItem}>
               <p className={styles.detailLabel}>Days</p>
               <p className={styles.detailValue}>{booking.days} days</p>
             </div>
-            <div>
+            <div className={styles.detailItem}>
               <p className={styles.detailLabel}>Total</p>
               <p className={styles.detailValueAccent}>₹{booking.total.toLocaleString("en-IN")}</p>
             </div>
@@ -161,7 +186,7 @@ export default function OwnerBookingDetailPage({
           <span className={styles.infoIcon} aria-hidden>
             i
           </span>
-          <div>
+          <div className={styles.infoBody}>
             <p className={styles.infoTitle}>Pre-dispatch media</p>
             <p className={styles.infoText}>Photo/video will be uploaded before dispatch.</p>
           </div>

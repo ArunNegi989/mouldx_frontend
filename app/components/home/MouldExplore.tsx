@@ -56,7 +56,7 @@ function BigCard({ id, name, code, city, category, price, image, rating, variant
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className={styles.placeholder} aria-hidden>⚙</div>
+            <div className={styles.placeholder} aria-hidden>▽</div>
           )}
         </div>
 
@@ -175,7 +175,7 @@ export default function MouldExplore({ search: searchProp, onSearchChange }: Mou
           onClick={() => setIsFilterOpen((v) => !v)}
           className={`${styles.filterToggle} ${isFilterOpen ? styles.filterToggleActive : ""}`}
         >
-          <span aria-hidden>⚙</span>
+          <span aria-hidden>▽</span>
           {activeFilterCount > 0 && <span className={styles.filterCount}>{activeFilterCount}</span>}
         </button>
       </div>

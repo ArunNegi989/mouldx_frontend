@@ -1,6 +1,7 @@
 import styles from "./Stepper.module.css";
 
-const DEFAULT_STEPS = ["Basic", "Technical", "General", "Product"];
+// Flow: Basic → Product (product + components/moulds, technical & general inside) → Submit
+const DEFAULT_STEPS = ["Kyc", "Product", "Submit"];
 
 export default function Stepper({
   current,
