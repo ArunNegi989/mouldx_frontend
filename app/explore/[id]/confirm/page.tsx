@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./ConfirmPay.module.css";
 
-type PaymentMethod = "platform" | "direct";
+type PaymentMode = "online" | "cash";
 
-// TEMP dummy data — real booking summary API se aayega
+// TEMP dummy data - the real booking summary will come from the API
 const BOOKING_SUMMARY = {
   dateRange: "14 – 20 Sep",
   days: 7,
@@ -16,35 +15,42 @@ const BOOKING_SUMMARY = {
   platformFee: 0,
 };
 
+const PAYMENT_OPTIONS: { value: PaymentMode; title: string; desc: string }[] = [
+  {
+    value: "online",
+    title: "Pay Online to Owner",
+    desc: "Transfer rent & deposit directly to the owner via UPI or bank transfer.",
+  },
+  {
+    value: "cash",
+    title: "Pay in Cash",
+    desc: "Hand over rent & deposit to the owner in cash at the time of pickup.",
+  },
+];
+
 export default function ConfirmPayPage() {
   const router = useRouter();
-  const [method, setMethod] = useState<PaymentMethod>("platform");
+  const [mode, setMode] = useState<PaymentMode>("online");
   const [acknowledged, setAcknowledged] = useState(false);
 
   const rent = BOOKING_SUMMARY.pricePerDay * BOOKING_SUMMARY.days;
   const total = rent + BOOKING_SUMMARY.securityDeposit + BOOKING_SUMMARY.platformFee;
 
-  const canProceed = method === "platform" || (method === "direct" && acknowledged);
+  const canProceed = acknowledged;
 
-  const handleSelectMethod = (next: PaymentMethod) => {
-    setMethod(next);
-    if (next === "platform") setAcknowledged(false);
+  const handleSelectMode = (next: PaymentMode) => {
+    setMode(next);
+    setAcknowledged(false);
   };
 
   const handleProceed = () => {
-  if (!canProceed) return;
-  if (method === "platform") {
-    // TODO: trigger Razorpay checkout, redirect only after payment success callback
-    router.push("/booking-success");
-  } else {
-    // TODO: submit booking for owner approval (no payment yet)
-    router.push("/booking-success?status=pending-approval");
-  }
-};
+    if (!canProceed) return;
+    // TODO: submit booking for owner approval (no payment yet), include the selected mode
+    router.push(`/booking-success?status=pending-approval&mode=${mode}`);
+  };
 
   return (
     <div className={styles.page}>
-    
       <div className={styles.content}>
         <h1 className={styles.title}>Confirm &amp; pay</h1>
         <p className={styles.subtitle}>
@@ -88,82 +94,61 @@ export default function ConfirmPayPage() {
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>How do you want to pay?</h2>
 
-          <label className={`${styles.methodOption} ${method === "platform" ? styles.methodOptionActive : ""}`}>
-            <input
-              type="radio"
-              name="paymentMethod"
-              checked={method === "platform"}
-              onChange={() => handleSelectMethod("platform")}
-              className={styles.radio}
-            />
-            <div className={styles.methodInfo}>
-              <p className={styles.methodTitle}>Pay via Platform</p>
-              <p className={styles.methodDesc}>
-                Secure payment, deposit protection &amp; dispute support from MouldX.
-              </p>
-            </div>
-          </label>
-
-          {method === "platform" && (
-            <div className={styles.payViaRow}>
-              <span className={styles.payViaDot} aria-hidden />
-              <div className={styles.payViaInfo}>
-                <p className={styles.payViaTitle}>Pay via</p>
-                <p className={styles.payViaText}>Razorpay — UPI / Card / NetBanking</p>
+          {PAYMENT_OPTIONS.map((option) => (
+            <label
+              key={option.value}
+              className={`${styles.methodOption} ${
+                mode === option.value ? styles.methodOptionActive : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="paymentMode"
+                checked={mode === option.value}
+                onChange={() => handleSelectMode(option.value)}
+                className={styles.radio}
+              />
+              <div className={styles.methodInfo}>
+                <p className={styles.methodTitle}>{option.title}</p>
+                <p className={styles.methodDesc}>{option.desc}</p>
               </div>
-              <span className={styles.secureBadge}>SECURE</span>
-            </div>
-          )}
+            </label>
+          ))}
 
-          <label className={`${styles.methodOption} ${method === "direct" ? styles.methodOptionActive : ""}`}>
-            <input
-              type="radio"
-              name="paymentMethod"
-              checked={method === "direct"}
-              onChange={() => handleSelectMethod("direct")}
-              className={styles.radio}
-            />
-            <div className={styles.methodInfo}>
-              <p className={styles.methodTitle}>Pay Direct to Owner</p>
-              <p className={styles.methodDesc}>
-                Settle rent &amp; deposit directly with the owner outside the platform.
-              </p>
-            </div>
-          </label>
-
-          {method === "direct" && (
-            <div className={styles.warningBox}>
-              <p className={styles.warningText}>
-                If you pay the owner directly, MouldX will not be responsible for any
-                issues with the payment, deposit, or mould condition. Your booking will
-                be sent for owner approval instead of payment.
-              </p>
-              <label className={styles.ackRow}>
-                <input
-                  type="checkbox"
-                  checked={acknowledged}
-                  onChange={(e) => setAcknowledged(e.target.checked)}
-                  className={styles.checkbox}
-                />
-                I understand and agree to proceed without platform protection.
-              </label>
-            </div>
-          )}
+          {/* ---------- Direct-to-owner warning ---------- */}
+          <div className={styles.warningBox}>
+            <p className={styles.warningText}>
+              If you pay the owner directly
+              {mode === "cash" ? " in cash" : " online"}, MouldX will not be responsible
+              for any issues with the payment, deposit, or mould condition.
+              {mode === "cash"
+                ? " Please ask the owner for a written receipt when you hand over the cash."
+                : " Please keep a screenshot or reference number of your transfer."}{" "}
+              Your booking will be sent for owner approval instead of payment.
+            </p>
+            <label className={styles.ackRow}>
+              <input
+                type="checkbox"
+                checked={acknowledged}
+                onChange={(e) => setAcknowledged(e.target.checked)}
+                className={styles.checkbox}
+              />
+              I understand and agree to proceed without platform protection.
+            </label>
+          </div>
         </div>
       </div>
 
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
         <button
-  type="button"
-  disabled={!canProceed}
-  onClick={handleProceed}
-  className={`${styles.ctaBtn} ${canProceed ? "btn-primary" : styles.ctaBtnDisabled}`}
->
-  {method === "platform"
-    ? `Pay ₹${total.toLocaleString("en-IN")} →`
-    : "Send for Approval →"}
-</button>
+          type="button"
+          disabled={!canProceed}
+          onClick={handleProceed}
+          className={`${styles.ctaBtn} ${canProceed ? "btn-primary" : styles.ctaBtnDisabled}`}
+        >
+          Send for Approval →
+        </button>
       </div>
     </div>
   );

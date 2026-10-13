@@ -11,7 +11,6 @@ import Stepper from "@/app/components/Stepper/Stepper";
 const REGEX = {
   name: /^[a-zA-Z0-9\s.,'\-()]{2,80}$/,
   mouldNameOrId: /^[a-zA-Z0-9\s.,'\-·]{3,80}$/,
-  manufacturer: /^[a-zA-Z0-9\s.,'&-]{2,80}$/,
   text: /^[a-zA-Z0-9\s.,'\-\/]{2,60}$/,
   year: /^(19|20)\d{2}$/,
   posInt: /^[1-9]\d*$/,
@@ -31,8 +30,6 @@ const SUB_CATEGORIES: Record<string, string[]> = {
 };
 
 const MOULD_TYPES = ["Injection", "Blow", "Die-Cast", "Compression"];
-const CONDITIONS = ["Excellent", "Good", "Fair", "Needs Repair"];
-const ELIGIBILITY_OPTIONS = ["Pan India", "State-restricted", "Neighbouring States Only"];
 const RUNNER_TYPES = ["Hot Runner", "Cold Runner"];
 const YES_NO = ["No", "Yes"];
 const MAX_COMPONENTS = 10;
@@ -94,14 +91,6 @@ interface MouldState {
   tonnage: string;
   runnerType: string;
   changeableLogo: string;
-  condition: string;
-  manufacturer: string;
-  invoice: File | null;
-  actualValue: string;
-  salesStateEligibility: string;
-  hourlyProduction: string;
-  maxInjectionVolume: string;
-  coolingTemp: string;
 }
 
 const emptyProduct = (): ProductState => ({
@@ -121,7 +110,7 @@ const emptyProduct = (): ProductState => ({
   surfaceFinish: "",
   perDayCharges: "",
   securityDeposit: "",
-  componentCount: "0", // 0 = nothing selected, component/mould forms hidden
+  componentCount: "0", // 0 = nothing selected, component and mould forms stay hidden
 });
 
 const emptyComponent = (): ComponentState => ({
@@ -151,14 +140,6 @@ const emptyMould = (): MouldState => ({
   tonnage: "",
   runnerType: RUNNER_TYPES[0],
   changeableLogo: "No",
-  condition: CONDITIONS[0],
-  manufacturer: "",
-  invoice: null,
-  actualValue: "",
-  salesStateEligibility: ELIGIBILITY_OPTIONS[0],
-  hourlyProduction: "",
-  maxInjectionVolume: "",
-  coolingTemp: "",
 });
 
 /* =====================================================================
@@ -211,7 +192,7 @@ function validateAll(product: ProductState, components: ComponentState[], moulds
     });
   }
 
-  // ----- Moulds (one per component / one for the product) -----
+  // ----- Moulds (one per component, or one for the product) -----
   if (count >= 1) {
     moulds.slice(0, count).forEach((m, i) => {
       const k = `m.${i}`;
@@ -224,12 +205,6 @@ function validateAll(product: ProductState, components: ComponentState[], moulds
       add(`${k}.cavities`, int(m.cavities));
       add(`${k}.cycleTime`, int(m.cycleTime));
       add(`${k}.tonnage`, dec(m.tonnage));
-      add(`${k}.manufacturer`, req(m.manufacturer, REGEX.manufacturer, "Enter a valid manufacturer name"));
-      add(`${k}.invoice`, m.invoice ? "" : "Invoice upload is required");
-      add(`${k}.actualValue`, dec(m.actualValue));
-      add(`${k}.hourlyProduction`, dec(m.hourlyProduction));
-      add(`${k}.maxInjectionVolume`, dec(m.maxInjectionVolume));
-      add(`${k}.coolingTemp`, int(m.coolingTemp));
     });
   }
 
@@ -259,7 +234,7 @@ const clean = (raw: string, mode: Mode) => {
 
 const fmtGeo = (c: Coords) => `📍 ${c.lat.toFixed(4)}°N, ${c.lng.toFixed(4)}°E`;
 
-/** Badge text for a media item (image/video) that has been picked. */
+/** Badge text for a media item (image or video) that has been picked. */
 const geoLabel = (hasFile: boolean, geo: Coords | null, status: LocationStatus) => {
   if (!hasFile) return null;
   if (geo) return fmtGeo(geo);
@@ -485,9 +460,6 @@ function MouldFields({
   m: MouldState;
   set: (patch: Partial<MouldState>) => void;
 }) {
-  const invoiceId = `${base}.invoice`;
-  const invoiceError = ctx.touched[invoiceId] ? ctx.errors[invoiceId] : "";
-
   return (
     <>
       <Field ctx={ctx} id={`${base}.mouldNameOrId`} label="Mould Name / ID" value={m.mouldNameOrId} placeholder="Bottle Cap Mould · MX-000123" onChange={(v) => set({ mouldNameOrId: v })} />
@@ -515,51 +487,6 @@ function MouldFields({
         <SelectField label="Hot Runner / Cold Runner" value={m.runnerType} options={RUNNER_TYPES} onChange={(v) => set({ runnerType: v })} />
         <SelectField label="Changeable Brand Logo" value={m.changeableLogo} options={YES_NO} onChange={(v) => set({ changeableLogo: v })} />
       </div>
-
-      <div className={styles.divider} />
-      <p className={styles.subTitle}>Technical &amp; commercial details</p>
-
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <Field ctx={ctx} id={`${base}.hourlyProduction`} label="Estimated Hourly Production" value={m.hourlyProduction} mode="dec" placeholder="120" onChange={(v) => set({ hourlyProduction: v })} />
-        <Field ctx={ctx} id={`${base}.maxInjectionVolume`} label="Max. Injection Volume (cm³)" value={m.maxInjectionVolume} mode="dec" placeholder="650" onChange={(v) => set({ maxInjectionVolume: v })} />
-      </div>
-
-      <div className="mt-3">
-        <Field ctx={ctx} id={`${base}.coolingTemp`} label="Recommended Cooling Water Temp (°C)" value={m.coolingTemp} mode="int" placeholder="18" onChange={(v) => set({ coolingTemp: v })} />
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <SelectField label="Condition" value={m.condition} options={CONDITIONS} onChange={(v) => set({ condition: v })} />
-        <Field ctx={ctx} id={`${base}.manufacturer`} label="Manufacturer" value={m.manufacturer} placeholder="Precision Ltd." onChange={(v) => set({ manufacturer: v })} />
-      </div>
-
-      <div className="mt-3">
-        <label className={`${styles.uploadBox} ${invoiceError ? styles.uploadBoxError : ""}`}>
-          {m.invoice ? (
-            <span className={styles.uploadFileName}>📎 {m.invoice.name}</span>
-          ) : (
-            <span className={styles.uploadPlaceholder}>+ Upload Mould Invoice</span>
-          )}
-          <input
-            type="file"
-            accept=".pdf,image/*"
-            onChange={(e) => {
-              set({ invoice: e.target.files?.[0] ?? null });
-              ctx.touch(invoiceId);
-            }}
-            className={styles.uploadInput}
-          />
-        </label>
-        {invoiceError && <p className={styles.errorText}>{invoiceError}</p>}
-      </div>
-
-      <div className="mt-3">
-        <Field ctx={ctx} id={`${base}.actualValue`} label="Mould Actual Value (₹)" value={m.actualValue} mode="dec" placeholder="450000" onChange={(v) => set({ actualValue: v })} />
-      </div>
-
-      <div className="mt-3">
-        <SelectField label="Sales / State Eligibility" value={m.salesStateEligibility} options={ELIGIBILITY_OPTIONS} onChange={(v) => set({ salesStateEligibility: v })} />
-      </div>
     </>
   );
 }
@@ -576,7 +503,7 @@ export default function ProductDetailsPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [open, setOpen] = useState<Record<number, boolean>>({});
 
-  // ---------- Geo-tag state (shared by every image / video) ----------
+  // ---------- Geo-tag state (shared by every image and video) ----------
   const [coords, setCoords] = useState<Coords | null>(null);
   const [locationStatus, setLocationStatus] = useState<LocationStatus>("idle");
 
@@ -607,7 +534,7 @@ export default function ProductDetailsPage() {
     const n = Number(value);
     setP({ componentCount: value });
     setTouched((prev) => ({ ...prev, count: true }));
-    // only grow the arrays so already-typed data is not lost when count is reduced
+    // arrays only grow, so typed data is kept when the count is reduced
     setComponents((prev) =>
       prev.length >= n ? prev : [...prev, ...Array.from({ length: n - prev.length }, emptyComponent)]
     );
@@ -674,15 +601,15 @@ export default function ProductDetailsPage() {
   const handleSubmit = () => {
     setTouched(Object.fromEntries(Object.keys(errors).map((k) => [k, true])));
     if (Object.keys(errors).length > 0) {
-      // open every component so the user can see what is wrong
+      // open every component so every error is visible
       if (count > 0) {
         setOpen(Object.fromEntries(Array.from({ length: count }, (_, i) => [i, true])));
       }
       return;
     }
     // TODO: submit {
-    //   product,                       // includes imageGeo / videoGeo
-    //   components: multiple ? components.slice(0, count) : [],  // each has imageGeo / videoGeo
+    //   product,                                                  // includes imageGeo / videoGeo
+    //   components: multiple ? components.slice(0, count) : [],   // each has imageGeo / videoGeo
     //   moulds: moulds.slice(0, count),
     //   geoLocation: coords,
     // }
@@ -747,11 +674,11 @@ export default function ProductDetailsPage() {
               <p className={styles.geoFlagTitle}>Location capture</p>
               <p className={styles.geoFlagMsg}>
                 {locationStatus === "idle" &&
-                  "Location will be auto-attached to every photo & video (product and components) once captured."}
+                  "Location will be auto-attached to every photo and video (product and components) once captured."}
                 {locationStatus === "fetching" && "Capturing location…"}
                 {locationStatus === "done" &&
                   coords &&
-                  `Captured at ${coords.lat.toFixed(4)}°N, ${coords.lng.toFixed(4)}°E — attached to all photos & videos and visible to customer with the listing.`}
+                  `Captured at ${coords.lat.toFixed(4)}°N, ${coords.lng.toFixed(4)}°E — attached to all photos and videos and visible to customer with the listing.`}
                 {locationStatus === "denied" &&
                   "Location permission was not granted — media will upload without a geotag."}
               </p>
@@ -820,10 +747,10 @@ export default function ProductDetailsPage() {
           {countError && <p className={styles.errorText}>{countError}</p>}
           <p className={styles.helperText}>
             {!hasSelection
-              ? "Select how many components / moulds are involved — the forms will appear below."
+              ? "Select how many components / moulds are involved. The forms will appear below."
               : multiple
               ? `Fill details for all ${count} components below (example: Pen → Cap, Body, Bottom, Top).`
-              : "Single mould — fill the mould details below."}
+              : "Single mould. Fill the mould details below."}
           </p>
         </div>
 
@@ -846,7 +773,7 @@ export default function ProductDetailsPage() {
               <Accordion
                 key={i}
                 title={`Component ${i + 1}`}
-                subtitle={c.name || "Tap to fill component & mould details"}
+                subtitle={c.name || "Tap to fill component and mould details"}
                 open={isOpen(i)}
                 onToggle={() => toggle(i)}
                 hasError={sectionHasError(i)}
