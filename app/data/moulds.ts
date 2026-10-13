@@ -26,46 +26,52 @@ export interface Dimensions {
   height: string;
 }
 
-export interface MouldDetail extends MouldBase {
-  deposit: string;
+export interface MouldInfo {
+  mouldNameOrId: string;
+  mouldType: string;
+  yearOfManufacturing: string;
+  dimensions: Dimensions;
+  weight: string;
+  cavities: string;
+  expectedCycleTime: string;
+  recommendedMachineTonnage: string;
+  runnerType: RunnerType;
+  changeableBrandLogo: "Yes" | "No";
+}
+
+export interface ComponentDetail {
+  id: string;
+  componentName: string;
   photos: string[];
   videos: string[];
+  dimensions: Dimensions;
+  weight: string;
+  surfaceFinish: string;
+  mould: MouldInfo;
+}
+
+export interface ProductInfo {
+  productName: string;
+  category: ProductCategory;
+  subCategory: string;
+  photos: string[];
+  videos: string[];
+  dimensions: Dimensions;
+  weight: string;
+  material: string;
+  surfaceFinish: string;
+  perDayRentalCharges: string;
+  securityDeposit: string;
+}
+
+export interface MouldDetail extends MouldBase {
+  deposit: string;
   quickSpecs: { label: string; value: string; sub: string }[];
-
-  general: {
-    mouldNameOrId: string;
-    mouldType: string;
-    mouldCondition: string;
-    yearOfManufacturing: string;
-    mouldManufacturer: string;
-    mouldInvoice: string;
-    mouldActualValue: string;
-    setOfMouldsInvolved: string;
-    salesStateEligibility: string;
-    perDayRentalCharges: string;
-  };
-
-  technical: {
-    dimensions: Dimensions;
-    weight: string;
-    cavities: string;
-    expectedCycleTime: string;
-    estimatedHourlyProduction: string;
-    recommendedMachineTonnage: string;
-    maxInjectionVolume: string;
-    runnerType: RunnerType;
-    recommendedCoolingWaterTemp: string;
-    changeableBrandLogo: "Yes" | "No";
-  };
-
-  product: {
-    productName: string;
-    category: ProductCategory;
-    dimensions: Dimensions;
-    weight: string;
-    material: string;
-    surfaceFinish: string;
-  };
+  product: ProductInfo;
+  /** Set only when a single mould is involved. */
+  mould: MouldInfo | null;
+  /** Filled only when more than one component / mould is involved. */
+  components: ComponentDetail[];
 }
 
 export const DUMMY_MOULDS: MouldBase[] = [
@@ -95,55 +101,89 @@ export const DUMMY_MOULDS: MouldBase[] = [
   { id: "24", code: "MX-002370", name: "Crate Mould — Stackable", city: "Meerut", price: "₹2,650/day", category: "Injection", availability: "BOOKED", image: "https://picsum.photos/seed/mould24/400/400" },
 ];
 
-const HAND_CRAFTED: Record<string, Partial<MouldDetail>> = {
+const PRODUCT_CATEGORIES: ProductCategory[] = [
+  "Chair",
+  "Table",
+  "Baby Chair",
+  "Stool",
+  "Fix Table",
+  "Folding Table",
+];
+
+// Placeholder values, replace with the real sub categories from the Excel sheet.
+const SUB_CATEGORIES: Record<ProductCategory, string[]> = {
+  Chair: ["Armless Chair", "Arm Chair", "Plastic Chair"],
+  Table: ["Dining Table", "Side Table", "Center Table"],
+  "Baby Chair": ["High Chair", "Feeding Chair"],
+  Stool: ["Bar Stool", "Round Stool"],
+  "Fix Table": ["Study Table", "Utility Table"],
+  "Folding Table": ["Portable Table", "Picnic Table"],
+};
+
+const COMPONENT_NAMES = ["Cap", "Body", "Bottom", "Top", "Handle", "Base"];
+
+interface HandCrafted {
+  deposit?: string;
+  quickSpecs?: MouldDetail["quickSpecs"];
+  product?: Partial<ProductInfo>;
+}
+
+const HAND_CRAFTED: Record<string, HandCrafted> = {
   "1": {
     deposit: "₹15,000 DEPOSIT",
-    photos: [
-      "https://picsum.photos/seed/mould1-a/900/700",
-      "https://picsum.photos/seed/mould1-b/900/700",
-      "https://picsum.photos/seed/mould1-c/900/700",
-      "https://picsum.photos/seed/mould1-d/900/700",
-    ],
-    videos: ["https://picsum.photos/seed/mould1-vid/900/700"],
     quickSpecs: [
       { label: "TONNAGE", value: "120T", sub: "" },
       { label: "CAVITY", value: "2", sub: "" },
       { label: "STEEL", value: "P20", sub: "" },
     ],
-    general: {
-      mouldNameOrId: "2-Cavity Injection Mould / MX-000123",
-      mouldType: "Injection Mould",
-      mouldCondition: "Good — minor wear",
-      yearOfManufacturing: "2019",
-      mouldManufacturer: "Precision Tool & Die, Pune",
-      mouldInvoice: "Available on request",
-      mouldActualValue: "₹4,20,000",
-      setOfMouldsInvolved: "Single set",
-      salesStateEligibility: "Maharashtra, Gujarat, MP",
-      perDayRentalCharges: "₹1,800/day",
-    },
-    technical: {
-      dimensions: { length: "480", breadth: "380", height: "420" },
-      weight: "640 kg",
-      cavities: "2 Cavity",
-      expectedCycleTime: "28 sec (virgin material)",
-      estimatedHourlyProduction: "~257 pcs/hr",
-      recommendedMachineTonnage: "120T",
-      maxInjectionVolume: "185 cm³",
-      runnerType: "Cold Runner",
-      recommendedCoolingWaterTemp: "18–22°C",
-      changeableBrandLogo: "Yes",
-    },
     product: {
       productName: "Plastic Chair — Armless",
       category: "Chair",
+      subCategory: "Armless Chair",
       dimensions: { length: "560", breadth: "540", height: "820" },
       weight: "2.1 kg",
       material: "PP (Polypropylene)",
       surfaceFinish: "Matte, textured back panel",
+      perDayRentalCharges: "₹1,800/day",
+      securityDeposit: "₹15,000",
     },
   },
 };
+
+function componentCountFor(id: string): number {
+  if (id === "1") return 4;
+  const seed = Number(id);
+  return [1, 2, 4, 3][seed % 4];
+}
+
+function buildMouldInfo(args: {
+  name: string;
+  code: string;
+  category: Category;
+  salt: number;
+}): MouldInfo {
+  const { name, code, category, salt } = args;
+  const tonnage = [80, 120, 150, 200, 250][salt % 5];
+  const cavities = (salt % 4) + 1;
+  const cycle = 20 + (salt % 15);
+
+  return {
+    mouldNameOrId: `${name} / ${code}`,
+    mouldType: `${category} Mould`,
+    yearOfManufacturing: `${2015 + (salt % 9)}`,
+    dimensions: {
+      length: `${400 + salt * 3}`,
+      breadth: `${320 + salt * 2}`,
+      height: `${360 + salt}`,
+    },
+    weight: `${500 + salt * 12} kg`,
+    cavities: `${cavities} Cavity`,
+    expectedCycleTime: `${cycle} sec (virgin material)`,
+    recommendedMachineTonnage: `${tonnage}T`,
+    runnerType: salt % 2 === 0 ? "Cold Runner" : "Hot Runner",
+    changeableBrandLogo: salt % 2 === 0 ? "Yes" : "No",
+  };
+}
 
 function buildMouldDetail(base: MouldBase): MouldDetail {
   const seed = Number(base.id);
@@ -151,86 +191,119 @@ function buildMouldDetail(base: MouldBase): MouldDetail {
   const cavities = (seed % 4) + 1;
   const isBlow = base.category === "Blow";
   const isDieCast = base.category === "Die-Cast";
+  const count = componentCountFor(base.id);
 
-  const runner: RunnerType = seed % 2 === 0 ? "Cold Runner" : "Hot Runner";
-  const productCategoryOptions: ProductCategory[] = [
-    "Chair", "Table", "Baby Chair", "Stool", "Fix Table", "Folding Table",
-  ];
+  const productCategory = PRODUCT_CATEGORIES[seed % PRODUCT_CATEGORIES.length];
+  const subOptions = SUB_CATEGORIES[productCategory];
+  const securityDeposit = `₹${(tonnage * 100).toLocaleString("en-IN")}`;
 
-  return {
-    ...base,
-    deposit: `₹${(tonnage * 100).toLocaleString("en-IN")} DEPOSIT`,
+  const product: ProductInfo = {
+    productName: base.name,
+    category: productCategory,
+    subCategory: subOptions[seed % subOptions.length],
     photos: [
       `https://picsum.photos/seed/mould${base.id}-a/900/700`,
       `https://picsum.photos/seed/mould${base.id}-b/900/700`,
       `https://picsum.photos/seed/mould${base.id}-c/900/700`,
     ],
     videos: seed % 2 === 0 ? [`https://picsum.photos/seed/mould${base.id}-vid/900/700`] : [],
-    quickSpecs: isDieCast
-      ? [
-          { label: "TONNAGE", value: `${tonnage}T`, sub: "" },
-          { label: "CAVITY", value: `${cavities}`, sub: "" },
-          { label: "ALLOY", value: "Al A380", sub: "" },
-        ]
-      : isBlow
-      ? [
-          { label: "CAPACITY", value: "5L", sub: "" },
-          { label: "CAVITY", value: `${cavities}`, sub: "" },
-          { label: "MATERIAL", value: "HDPE", sub: "" },
-        ]
-      : [
-          { label: "TONNAGE", value: `${tonnage}T`, sub: "" },
-          { label: "CAVITY", value: `${cavities}`, sub: "" },
-          { label: "STEEL", value: "P20", sub: "" },
-        ],
-    general: {
-      mouldNameOrId: `${base.name} / ${base.code}`,
-      mouldType: `${base.category} Mould`,
-      mouldCondition: seed % 4 === 0 ? "Excellent" : "Good — minor wear",
-      yearOfManufacturing: `${2015 + (seed % 9)}`,
-      mouldManufacturer: `${base.city} Tool & Die Works`,
-      mouldInvoice: "Available on request",
-      mouldActualValue: `₹${(tonnage * 3200).toLocaleString("en-IN")}`,
-      setOfMouldsInvolved: seed % 5 === 0 ? "2 sets (core + cavity spare)" : "Single set",
-      salesStateEligibility: "All India",
-      perDayRentalCharges: base.price,
+    dimensions: {
+      length: `${500 + seed * 2}`,
+      breadth: `${450 + seed}`,
+      height: `${700 + seed * 3}`,
     },
-    technical: {
-      dimensions: {
-        length: `${400 + seed * 3}`,
-        breadth: `${320 + seed * 2}`,
-        height: `${360 + seed}`,
-      },
-      weight: `${500 + seed * 12} kg`,
-      cavities: `${cavities} Cavity`,
-      expectedCycleTime: `${20 + (seed % 15)} sec (virgin material)`,
-      estimatedHourlyProduction: `~${Math.round((3600 / (20 + (seed % 15))) * cavities)} pcs/hr`,
-      recommendedMachineTonnage: `${tonnage}T`,
-      maxInjectionVolume: `${120 + seed * 4} cm³`,
-      runnerType: runner,
-      recommendedCoolingWaterTemp: "18–22°C",
-      changeableBrandLogo: seed % 2 === 0 ? "Yes" : "No",
-    },
-    product: {
-      productName: base.name,
-      category: productCategoryOptions[seed % productCategoryOptions.length],
-      dimensions: {
-        length: `${500 + seed * 2}`,
-        breadth: `${450 + seed}`,
-        height: `${700 + seed * 3}`,
-      },
-      weight: `${1.5 + (seed % 5) * 0.3}`.slice(0, 4) + " kg",
-      material: isBlow ? "HDPE" : isDieCast ? "Aluminium A380" : "PP (Polypropylene)",
-      surfaceFinish: seed % 2 === 0 ? "Matte, textured" : "Glossy, smooth",
-    },
-    ...HAND_CRAFTED[base.id],
-  } as MouldDetail;
+    weight: `${1.5 + (seed % 5) * 0.3}`.slice(0, 4) + " kg",
+    material: isBlow ? "HDPE" : isDieCast ? "Aluminium A380" : "PP (Polypropylene)",
+    surfaceFinish: seed % 2 === 0 ? "Matte, textured" : "Glossy, smooth",
+    perDayRentalCharges: base.price,
+    securityDeposit,
+  };
+
+  const components: ComponentDetail[] =
+    count > 1
+      ? Array.from({ length: count }, (_, i) => {
+          const componentName = COMPONENT_NAMES[i % COMPONENT_NAMES.length];
+          const salt = seed + i + 1;
+          return {
+            id: `${base.id}-c${i + 1}`,
+            componentName,
+            photos: [
+              `https://picsum.photos/seed/mould${base.id}-c${i + 1}-a/900/700`,
+              `https://picsum.photos/seed/mould${base.id}-c${i + 1}-b/900/700`,
+            ],
+            videos:
+              (seed + i) % 2 === 0
+                ? [`https://picsum.photos/seed/mould${base.id}-c${i + 1}-vid/900/700`]
+                : [],
+            dimensions: {
+              length: `${120 + salt * 4}`,
+              breadth: `${90 + salt * 3}`,
+              height: `${60 + salt * 2}`,
+            },
+            weight: `${(0.3 + i * 0.2).toFixed(1)} kg`,
+            surfaceFinish: (seed + i) % 2 === 0 ? "Matte" : "Glossy",
+            mould: buildMouldInfo({
+              name: `${componentName} Mould`,
+              code: `${base.code}-C${i + 1}`,
+              category: base.category,
+              salt,
+            }),
+          };
+        })
+      : [];
+
+  const mould: MouldInfo | null =
+    count === 1
+      ? buildMouldInfo({
+          name: base.name,
+          code: base.code,
+          category: base.category,
+          salt: seed,
+        })
+      : null;
+
+  const quickSpecs: MouldDetail["quickSpecs"] = isDieCast
+    ? [
+        { label: "TONNAGE", value: `${tonnage}T`, sub: "" },
+        { label: "CAVITY", value: `${cavities}`, sub: "" },
+        { label: "ALLOY", value: "Al A380", sub: "" },
+      ]
+    : isBlow
+    ? [
+        { label: "CAPACITY", value: "5L", sub: "" },
+        { label: "CAVITY", value: `${cavities}`, sub: "" },
+        { label: "MATERIAL", value: "HDPE", sub: "" },
+      ]
+    : [
+        { label: "TONNAGE", value: `${tonnage}T`, sub: "" },
+        { label: "CAVITY", value: `${cavities}`, sub: "" },
+        { label: "STEEL", value: "P20", sub: "" },
+      ];
+
+  return {
+    ...base,
+    deposit: `${securityDeposit} DEPOSIT`,
+    quickSpecs,
+    product,
+    mould,
+    components,
+  };
 }
 
 export function getMouldDetail(id: string): MouldDetail | null {
   const base = DUMMY_MOULDS.find((m) => m.id === id);
   if (!base) return null;
-  return buildMouldDetail(base);
+
+  const detail = buildMouldDetail(base);
+  const crafted = HAND_CRAFTED[id];
+  if (!crafted) return detail;
+
+  return {
+    ...detail,
+    deposit: crafted.deposit ?? detail.deposit,
+    quickSpecs: crafted.quickSpecs ?? detail.quickSpecs,
+    product: { ...detail.product, ...crafted.product },
+  };
 }
 
 export function getBookedDaysForMonth(

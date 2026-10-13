@@ -36,7 +36,7 @@ export default function CustomerHome() {
             />
           </div>
 
-          <p className={styles.eyebrow}>Precision Engineered</p>
+          
 
           <h1 className={styles.heading}>
             <span className={styles.headingAccent}>Turning Moulds</span>

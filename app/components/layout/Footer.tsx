@@ -7,8 +7,8 @@ import { Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaXTwitter, FaLinkedinIn } from "react-icons/fa6";
 import styles from "./Footer.module.css";
 
-// Footer sirf in routes pe dikhega
-const SHOW_FOOTER_ON = ["/", "/home", "/owner"];
+
+const SHOW_FOOTER_ON = ["/", "/home", "/owner" , "/about", "/faqs", "/agreement", "/contact", "/privacy-policy", "/terms"];
 
 const SERVICEABLE_AREAS = ["Delhi", "Haryana", "Uttar Pradesh", "Punjab", "Chandigarh", "Uttarakhand"];
 
@@ -27,10 +27,9 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
-  const pathname = usePathname(); // hook hamesha return se pehle
+  const pathname = usePathname(); 
   const year = new Date().getFullYear();
 
-  // trailing slash hata do (e.g. "/owner/" -> "/owner"), "/" ko as-is rakho
   const cleanPath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
 
   if (!SHOW_FOOTER_ON.includes(cleanPath)) return null;

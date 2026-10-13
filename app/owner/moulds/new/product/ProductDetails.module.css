@@ -102,42 +102,6 @@
   cursor: not-allowed;
 }
 
-/* ---------- File upload (invoice) ---------- */
-.uploadBox {
-  position: relative;
-  display: block;
-  border: 1.5px dashed #d1d5db;
-  border-radius: 10px;
-  background: #f5f5f6;
-  padding: 13px 14px;
-  text-align: center;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.uploadBoxError {
-  border-color: #ef4444;
-}
-
-.uploadPlaceholder {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.uploadFileName {
-  font-size: 12px;
-  font-weight: 600;
-  color: #374151;
-  word-break: break-all;
-}
-
-.uploadInput {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
 /* ---------- Media upload boxes ---------- */
 .mediaBox {
   position: relative;
@@ -212,6 +176,24 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.videoInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  text-align: center;
+}
+
+.videoGeoBadge {
+  font-size: 10px;
+  font-weight: 600;
+  color: #047857;
+  background: #ecfdf5;
+  border-radius: 999px;
+  padding: 2px 8px;
 }
 
 /* ---------- Location info flag ---------- */
@@ -447,24 +429,6 @@
   padding: 15px;
   font-size: 14px;
   justify-content: center;
-}
-
-.videoInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 6px;
-  text-align: center;
-}
-
-.videoGeoBadge {
-  font-size: 10px;
-  font-weight: 600;
-  color: #047857;
-  background: #ecfdf5;
-  border-radius: 999px;
-  padding: 2px 8px;
 }
 
 /* ---------- Responsive ---------- */

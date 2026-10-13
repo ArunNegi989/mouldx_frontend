@@ -46,6 +46,7 @@
   box-sizing: border-box;
 }
 
+/* ---------- Gallery ---------- */
 .gallery {
   display: flex;
   flex-direction: column;
@@ -174,6 +175,7 @@
   font-size: 12px;
 }
 
+/* ---------- Title, specs, price ---------- */
 .titleRow {
   margin-top: 18px;
   display: flex;
@@ -285,16 +287,12 @@
   font-weight: 700;
 }
 
+/* ---------- Tabs (wrap instead of scrolling) ---------- */
 .tabsRow {
   margin-top: 22px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.tabsRow::-webkit-scrollbar {
-  display: none;
 }
 
 .tabBtn {
@@ -317,11 +315,48 @@
   color: #ffffff;
 }
 
-.detailsCard {
+/* ---------- Collapsible sections ---------- */
+.section {
   margin-top: 12px;
   background: #f6f7f9;
   border-radius: 16px;
-  padding: 4px 14px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.sectionChevron {
+  display: inline-block;
+  font-size: 16px;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.sectionChevronOpen {
+  transform: rotate(180deg);
+}
+
+.sectionBody {
+  padding: 0 14px 4px;
+  border-top: 1px solid #e9eaec;
 }
 
 .detailRow {
@@ -350,6 +385,7 @@
   color: #111827;
 }
 
+/* ---------- CTA ---------- */
 .ctaBar {
   position: fixed;
   left: 0;
@@ -434,6 +470,10 @@
   .logoWrap {
     width: 80px;
     height: 24px;
+  }
+  .tabBtn {
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 
