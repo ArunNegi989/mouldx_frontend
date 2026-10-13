@@ -4,12 +4,16 @@ import { useMemo, useState, useRef, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getMouldDetail } from "@/app/data/moulds";
+import type { Dimensions, MouldInfo } from "@/app/data/moulds";
 import styles from "./MouldDetailsFull.module.css";
 
 const BOOKING_TO_MOULD_ID: Record<string, string> = {
   "BK-24581": "1",
   "BK-24512": "2",
 };
+
+const formatDimensions = (d: Dimensions) =>
+  `${d.length} × ${d.breadth} × ${d.height} mm`;
 
 export default function ReceivedMouldDetailsPage({
   params,
@@ -20,6 +24,8 @@ export default function ReceivedMouldDetailsPage({
   const mouldId = BOOKING_TO_MOULD_ID[bookingId] ?? "1";
   const mould = useMemo(() => getMouldDetail(mouldId), [mouldId]);
 
+  // 0 = Product, 1..N = Component 1..N
+  const [activeTab, setActiveTab] = useState(0);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
@@ -34,11 +40,33 @@ export default function ReceivedMouldDetailsPage({
     );
   }
 
-  const media = [
-    ...mould.photos.map((src) => ({ type: "image" as const, src })),
-    ...mould.videos.map((src) => ({ type: "video" as const, src })),
+  const { product, components } = mould;
+  const hasComponents = components.length > 0;
+  const activeComponent = activeTab > 0 ? components[activeTab - 1] : null;
+
+  const tabs = [
+    { label: "Product" },
+    ...components.map((_, i) => ({ label: `Component ${i + 1}` })),
   ];
-  const activeMedia = media[activeMediaIndex];
+
+  const photos = activeComponent ? activeComponent.photos : product.photos;
+  const videos = activeComponent ? activeComponent.videos : product.videos;
+  const galleryLabel = activeComponent
+    ? activeComponent.componentName
+    : product.productName;
+
+  const media = [
+    ...photos.map((src) => ({ type: "image" as const, src })),
+    ...videos.map((src) => ({ type: "video" as const, src })),
+  ];
+
+  const safeMediaIndex = Math.min(activeMediaIndex, Math.max(media.length - 1, 0));
+  const activeMedia = media[safeMediaIndex];
+
+  const selectTab = (index: number) => {
+    setActiveTab(index);
+    setActiveMediaIndex(0);
+  };
 
   const goToMedia = (index: number) => {
     if (index < 0 || index >= media.length) return;
@@ -52,19 +80,20 @@ export default function ReceivedMouldDetailsPage({
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
     const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    if (deltaX > 40) goToMedia(activeMediaIndex - 1);
-    else if (deltaX < -40) goToMedia(activeMediaIndex + 1);
+    const SWIPE_THRESHOLD = 40;
+    if (deltaX > SWIPE_THRESHOLD) goToMedia(safeMediaIndex - 1);
+    else if (deltaX < -SWIPE_THRESHOLD) goToMedia(safeMediaIndex + 1);
     touchStartX.current = null;
   };
 
   return (
     <div className={styles.page}>
-      {/* ---------- Header ---------- */}
-
       <div className={styles.content}>
         {/* ---------- Received banner ---------- */}
         <div className={styles.receivedBanner}>
-          <span className={styles.receivedIcon} aria-hidden>✓</span>
+          <span className={styles.receivedIcon} aria-hidden>
+            ✓
+          </span>
           <div>
             <p className={styles.receivedTitle}>Mould received</p>
             <p className={styles.receivedSubtitle}>
@@ -73,39 +102,44 @@ export default function ReceivedMouldDetailsPage({
           </div>
         </div>
 
-        {/* ---------- Media gallery ---------- */}
-        <div className={styles.gallery}>
+        {/* ---------- Gallery (changes with the selected tab) ---------- */}
+        <div className={`${styles.gallery} ${styles.galleryTop}`}>
           <div
             className={styles.galleryMain}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {activeMedia.type === "image" ? (
-              <Image
-                src={activeMedia.src}
-                alt={`${mould.name} photo ${activeMediaIndex + 1}`}
-                fill
-                className={styles.galleryImage}
-                priority
-              />
-            ) : (
-              <div className={styles.galleryVideoWrap}>
+            {activeMedia &&
+              (activeMedia.type === "image" ? (
                 <Image
+                  key={`${activeTab}-${safeMediaIndex}`}
                   src={activeMedia.src}
-                  alt={`${mould.name} video thumbnail`}
+                  alt={`${galleryLabel} photo ${safeMediaIndex + 1}`}
                   fill
                   className={styles.galleryImage}
+                  priority
                 />
-                <span className={styles.playIcon} aria-hidden>▶</span>
-              </div>
-            )}
+              ) : (
+                <div className={styles.galleryVideoWrap}>
+                  <Image
+                    key={`${activeTab}-${safeMediaIndex}`}
+                    src={activeMedia.src}
+                    alt={`${galleryLabel} video thumbnail`}
+                    fill
+                    className={styles.galleryImage}
+                  />
+                  <span className={styles.playIcon} aria-hidden>
+                    ▶
+                  </span>
+                </div>
+              ))}
 
             {media.length > 1 && (
               <>
                 <button
                   type="button"
-                  onClick={() => goToMedia(activeMediaIndex - 1)}
-                  disabled={activeMediaIndex === 0}
+                  onClick={() => goToMedia(safeMediaIndex - 1)}
+                  disabled={safeMediaIndex === 0}
                   className={`${styles.galleryNav} ${styles.galleryNavLeft}`}
                   aria-label="Previous media"
                 >
@@ -113,8 +147,8 @@ export default function ReceivedMouldDetailsPage({
                 </button>
                 <button
                   type="button"
-                  onClick={() => goToMedia(activeMediaIndex + 1)}
-                  disabled={activeMediaIndex === media.length - 1}
+                  onClick={() => goToMedia(safeMediaIndex + 1)}
+                  disabled={safeMediaIndex === media.length - 1}
                   className={`${styles.galleryNav} ${styles.galleryNavRight}`}
                   aria-label="Next media"
                 >
@@ -123,19 +157,24 @@ export default function ReceivedMouldDetailsPage({
               </>
             )}
 
-            <span className={styles.galleryCounter}>
-              {activeMedia.type === "video" ? "Video" : "Photo"} · {activeMediaIndex + 1}/{media.length}
-            </span>
+            {activeMedia && (
+              <span className={styles.galleryCounter}>
+                {activeMedia.type === "video" ? "Video" : "Photo"} · {safeMediaIndex + 1}/
+                {media.length}
+              </span>
+            )}
           </div>
 
           {media.length > 1 && (
             <div className={styles.thumbStrip}>
               {media.map((item, index) => (
                 <button
-                  key={`${item.type}-${index}`}
+                  key={`${activeTab}-${item.type}-${index}`}
                   type="button"
                   onClick={() => goToMedia(index)}
-                  className={`${styles.thumb} ${index === activeMediaIndex ? styles.thumbActive : ""}`}
+                  className={`${styles.thumb} ${
+                    index === safeMediaIndex ? styles.thumbActive : ""
+                  }`}
                   aria-label={`View ${item.type} ${index + 1}`}
                 >
                   <Image src={item.src} alt="" fill className={styles.thumbImage} />
@@ -146,62 +185,92 @@ export default function ReceivedMouldDetailsPage({
           )}
         </div>
 
-        {/* ---------- Title ---------- */}
+        {/* ---------- Title + quick specs ---------- */}
         <div className={styles.titleRow}>
           <h1 className={styles.title}>{mould.name}</h1>
         </div>
-       
-        {/* ---------- General details ---------- */}
-        <h2 className={styles.sectionHeading}>Mould Details (General)</h2>
-        <div className={styles.detailsCard}>
-          <Row label="Mould Name / ID" value={mould.general.mouldNameOrId} />
-          <Row label="Mould Type" value={mould.general.mouldType} />
-          <Row label="Mould Condition" value={mould.general.mouldCondition} />
-          <Row label="Year of Manufacturing" value={mould.general.yearOfManufacturing} />
-          <Row label="Mould Manufacturer" value={mould.general.mouldManufacturer} />
-          <Row label="Mould Invoice" value={mould.general.mouldInvoice} />
-          <Row label="Mould Actual Value" value={mould.general.mouldActualValue} />
-          <Row label="Set of Moulds Involved" value={mould.general.setOfMouldsInvolved} />
-          <Row label="Sales / State Eligibility" value={mould.general.salesStateEligibility} />
-          <Row label="Per Day Rental Charges" value={mould.general.perDayRentalCharges} isLast />
+
+        <p className={styles.metaRow}>{mould.code}</p>
+
+        <div className={styles.quickSpecs}>
+          {mould.quickSpecs.map((spec) => (
+            <div key={spec.label} className={styles.quickSpecCard}>
+              <p className={styles.quickSpecValue}>{spec.value}</p>
+              <p className={styles.quickSpecLabel}>{spec.label}</p>
+            </div>
+          ))}
         </div>
 
-        {/* ---------- Technical details ---------- */}
-        <h2 className={styles.sectionHeading}>Mould Details (Technical)</h2>
-        <div className={styles.detailsCard}>
-          <Row
-            label="Dimensions (L × B × H)"
-            value={`${mould.technical.dimensions.length} × ${mould.technical.dimensions.breadth} × ${mould.technical.dimensions.height} mm`}
-          />
-          <Row label="Weight" value={mould.technical.weight} />
-          <Row label="No. of Cavities / Core" value={mould.technical.cavities} />
-          <Row label="Expected Cycle Time (virgin material)" value={mould.technical.expectedCycleTime} />
-          <Row label="Estimated Hourly Production" value={mould.technical.estimatedHourlyProduction} />
-          <Row label="Recommended Machine Tonnage" value={mould.technical.recommendedMachineTonnage} />
-          <Row label="Max. Injection Volume Required" value={mould.technical.maxInjectionVolume} />
-          <Row label="Hot Runner / Cold Runner" value={mould.technical.runnerType} />
-          <Row label="Recommended Cooling Water Temperature" value={mould.technical.recommendedCoolingWaterTemp} />
-          <Row label="Changeable Brand Logo" value={mould.technical.changeableBrandLogo} isLast />
-        </div>
+        {/* ---------- Tabs: Product + one tab per component ---------- */}
+        {hasComponents && (
+          <div className={styles.tabsRow} role="tablist">
+            {tabs.map((tab, index) => (
+              <button
+                key={tab.label}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === index}
+                onClick={() => selectTab(index)}
+                className={`${styles.tabBtn} ${
+                  activeTab === index ? styles.tabBtnActive : ""
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {/* ---------- Product details ---------- */}
-        <h2 className={styles.sectionHeading}>Product Details</h2>
-        <div className={styles.detailsCard}>
-          <Row label="Product Name" value={mould.product.productName} />
-          <Row label="Category" value={mould.product.category} />
-          <Row
-            label="Dimensions (L × B × H)"
-            value={`${mould.product.dimensions.length} × ${mould.product.dimensions.breadth} × ${mould.product.dimensions.height} mm`}
-          />
-          <Row label="Weight" value={mould.product.weight} />
-          <Row label="Material" value={mould.product.material} />
-          <Row label="Surface Finish" value={mould.product.surfaceFinish} isLast />
-        </div>
+        {/* ---------- Product tab ---------- */}
+        {activeTab === 0 && (
+          <>
+            <Section key="product" title="Product Details">
+              <Row label="Product Name" value={product.productName} />
+              <Row label="Category" value={product.category} />
+              <Row label="Sub Category" value={product.subCategory} />
+              <Row label="Dimensions (L × B × H)" value={formatDimensions(product.dimensions)} />
+              <Row label="Weight" value={product.weight} />
+              <Row label="Material" value={product.material} />
+              <Row label="Surface Finish" value={product.surfaceFinish} />
+              <Row label="Per Day Rental Charges" value={product.perDayRentalCharges} />
+              <Row label="Security Deposit Amount" value={product.securityDeposit} isLast />
+            </Section>
+
+            {/* Single mould: mould details follow the product details */}
+            {!hasComponents && mould.mould && (
+              <Section key="single-mould" title="Mould Details">
+                <MouldRows info={mould.mould} />
+              </Section>
+            )}
+          </>
+        )}
+
+        {/* ---------- Component tabs ---------- */}
+        {activeComponent && (
+          <>
+            <Section key={`${activeComponent.id}-component`} title="Component Details">
+              <Row label="Component Name" value={activeComponent.componentName} />
+              <Row
+                label="Dimensions (L × B × H)"
+                value={formatDimensions(activeComponent.dimensions)}
+              />
+              <Row label="Weight" value={activeComponent.weight} />
+              <Row label="Surface Finish" value={activeComponent.surfaceFinish} isLast />
+            </Section>
+
+            <Section key={`${activeComponent.id}-mould`} title="Mould Details">
+              <MouldRows info={activeComponent.mould} />
+            </Section>
+          </>
+        )}
       </div>
 
       {/* ---------- Sticky CTA ---------- */}
       <div className={styles.ctaBar}>
-        <Link href={`/bookings/${bookingId}`} className={`${styles.ctaBtn} btn-primary`}>
+        <Link
+          href={`/bookings/${bookingId}`}
+          className={`${styles.ctaBtn} flex items-center justify-center no-underline btn-primary`}
+        >
           Back to Booking
         </Link>
       </div>
@@ -209,7 +278,67 @@ export default function ReceivedMouldDetailsPage({
   );
 }
 
-function Row({ label, value, isLast = false }: { label: string; value: string; isLast?: boolean }) {
+/* =====================================================================
+   SMALL PIECES
+===================================================================== */
+function Section({
+  title,
+  children,
+  defaultOpen = true,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className={styles.section}>
+      <button
+        type="button"
+        className={styles.sectionHeader}
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        <span className={styles.sectionTitle}>{title}</span>
+        <span
+          className={`${styles.sectionChevron} ${open ? styles.sectionChevronOpen : ""}`}
+          aria-hidden
+        >
+          ▾
+        </span>
+      </button>
+      {open && <div className={styles.sectionBody}>{children}</div>}
+    </div>
+  );
+}
+
+function MouldRows({ info }: { info: MouldInfo }) {
+  return (
+    <>
+      <Row label="Mould Name / ID" value={info.mouldNameOrId} />
+      <Row label="Mould Type" value={info.mouldType} />
+      <Row label="Year of Manufacturing" value={info.yearOfManufacturing} />
+      <Row label="Dimensions (L × B × H)" value={formatDimensions(info.dimensions)} />
+      <Row label="Weight" value={info.weight} />
+      <Row label="No. of Cavities / Core" value={info.cavities} />
+      <Row label="Expected Cycle Time (virgin material)" value={info.expectedCycleTime} />
+      <Row label="Recommended Machine Tonnage" value={info.recommendedMachineTonnage} />
+      <Row label="Hot Runner / Cold Runner" value={info.runnerType} />
+      <Row label="Changeable Brand Logo" value={info.changeableBrandLogo} isLast />
+    </>
+  );
+}
+
+function Row({
+  label,
+  value,
+  isLast = false,
+}: {
+  label: string;
+  value: string;
+  isLast?: boolean;
+}) {
   return (
     <div className={`${styles.detailRow} ${isLast ? styles.detailRowLast : ""}`}>
       <span className={styles.detailLabel}>{label}</span>
